@@ -1,15 +1,18 @@
 import { Assets } from 'pixi.js';
-import { sound } from '@pixi/sound';
+import { sound, SoundLibrary } from '@pixi/sound';
+import { SoundManager } from './SoundManager';
 
 export class LoaderHelper {
     loader: any;
     resources: {};
-    sound: any;
+    sound: SoundLibrary;
+    soundsManager: SoundManager;
 
-    constructor(loader) {
+    constructor(loader, soundsManager) {
         this.loader = loader;
         this.resources = {};
         this.sound = sound;
+        this.soundsManager = soundsManager;
     }
 
     /**
@@ -26,7 +29,7 @@ export class LoaderHelper {
                 Assets.add(key, asset.data?.default)
             }
             if (asset.key.indexOf(".mp3") !== -1) {
-                this.sound.add(key, asset.data?.default)
+                this.soundsManager.addSound(key, this.sound.add(key, asset.data?.default))
             }
             if (asset.key.indexOf(".json") !== -1) {
                 jsonData[key] = asset.data

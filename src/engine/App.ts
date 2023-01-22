@@ -11,10 +11,10 @@ class PixiEngine {
     config: any;
     scene: any;
     private loader: LoaderHelper;
-    private sounds: SoundManager;
+    private soundsManager: SoundManager;
 
     constructor(){
-        this.sounds = new SoundManager();
+        
     }
 
     run(config) {
@@ -30,9 +30,11 @@ class PixiEngine {
         this.app = new PIXI.Application({ resizeTo: window });
         document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
 
-        this.loader = new LoaderHelper(massiveRequire(loaderData));
+        this.soundsManager = new SoundManager();
+        this.loader = new LoaderHelper(massiveRequire(loaderData), this.soundsManager);
         this.loader.preload().then((result) => {
             console.log('Resources loaded: ', this.loader.resources);
+           
             this.start();
         });
     }
@@ -50,7 +52,8 @@ class PixiEngine {
 
     // 
     playSound(key: string) {
-        this.loader.sound.play(key);
+        // this.loader.sound.play(key);
+        this.soundsManager.playSound(key);
     }
 
     start() {
