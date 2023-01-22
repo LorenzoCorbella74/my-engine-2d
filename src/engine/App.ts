@@ -1,25 +1,36 @@
+import { SoundManager } from './SoundManager';
 import * as PIXI from "pixi.js";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { LoaderHelper } from "./LoaderHelper";
 import { Texture } from "pixi.js";
+import { massiveRequire } from './utils';
 
 class PixiEngine {
     app: PIXI.Application;
     config: any;
     scene: any;
-    loader: any;
-    
+    private loader: LoaderHelper;
+    private sounds: SoundManager;
+
+    constructor(){
+        this.sounds = new SoundManager();
+    }
+
     run(config) {
         gsap.registerPlugin(PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
+
+        // NOTE: https://webpack.js.org/guides/dependency-management/#requirecontext
+        // NOTE: The arguments passed to require.context must be literals!
+        const loaderData = require["context"]('./../assets/', true, /\.(mp3|png|jpe?g|json)$/);
 
         this.config = config;
 
         this.app = new PIXI.Application({ resizeTo: window });
         document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
 
-        this.loader = new LoaderHelper(this.config);
+        this.loader = new LoaderHelper(massiveRequire(loaderData));
         this.loader.preload().then((result) => {
             console.log('Resources loaded: ', this.loader.resources);
             this.start();
@@ -27,10 +38,10 @@ class PixiEngine {
     }
 
     // recupera gli asset precaricati (sia JSON che IMG)
-    loadAsset(key:string) {
+    loadAsset(key: string) {
         const what = this.loader.resources[key];
         // IMGs
-        if(what instanceof Texture){
+        if (what instanceof Texture) {
             return new PIXI.Sprite(this.loader.resources[key]);
         }
         // JSON
@@ -38,14 +49,14 @@ class PixiEngine {
     }
 
     // 
-    playSound(key:string){
+    playSound(key: string) {
         this.loader.sound.play(key);
     }
 
     start() {
-        this.scene = new this.config["startScene"]();   // TODO
+        this.scene = new this.config.scenes[0]();   // TODO
         this.app.stage.addChild(this.scene.container);
     }
 }
 
-export const App = new PixiEngine();
+export const Engine = new PixiEngine();

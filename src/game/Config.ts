@@ -1,12 +1,8 @@
 // importing default scene
 import { Game } from "./Scenes/Game";
 
-import { massiveRequire } from './../engine/utils';
-
 export const Config = {
-    loader: massiveRequire(require["context"]('./../assets/', true, /\.(mp3|png|jpe?g|json)$/)),
-    startScene: Game,
-    scenes: []
+    scenes: [Game]  // the first is the startScene
 };
 
 /*

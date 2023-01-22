@@ -2,12 +2,12 @@ import { Assets } from 'pixi.js';
 import { sound } from '@pixi/sound';
 
 export class LoaderHelper {
-    config: any;
+    loader: any;
     resources: {};
     sound: any;
 
-    constructor(config) {
-        this.config = config;
+    constructor(loader) {
+        this.loader = loader;
         this.resources = {};
         this.sound = sound;
     }
@@ -18,7 +18,7 @@ export class LoaderHelper {
     async preload() {
         let assets:string[] = []
         let jsonData = {}
-        for (const asset of this.config.loader) {
+        for (const asset of this.loader) {
             let key = asset.key.substr(asset.key.lastIndexOf('/') + 1);
             key = key.substring(0, key.indexOf('.'));
             if (asset.key.indexOf(".png") !== -1 || asset.key.indexOf(".jpg") !== -1) {

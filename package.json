@@ -1,7 +1,7 @@
 {
-  "name": "pixijs-engine",
-  "version": "1.0.0",
-  "description": "",
+  "name": "pixi-engine",
+  "version": "0.0.1",
+  "description": "A 2d game engine based on pixijs",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack/prod.js ",
