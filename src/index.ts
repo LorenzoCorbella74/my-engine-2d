@@ -1,4 +1,4 @@
-import { PixiEngine } from "./engine/Engine";
+import { Engine, PixiEngine } from "./engine/Engine";
 import { Config } from "./game/Config";
 
 import  "./index.css";

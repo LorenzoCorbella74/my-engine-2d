@@ -1,22 +1,53 @@
 import { Application } from "pixi.js";
 
+type Timer = {
+    duration: number;
+    cacheDuration: number;
+    callback: () => any;
+    repeat?: number; // if 
+}
+
 export class TimeManager {
-    private elapsed: number = 0;
-    private dt: number;
-    private _frame: number;
+    private elapsed: number;        // il trempo totale [in secondi]
+    private dt: number;             // il dt, this.app.ticker.deltaMS [in secondi]
+    private _frame: number;         // il frame corrente
+
+    private timers: Timer[] = []     // timers
 
     constructor(public app: Application) {
-        this.elapsed += this.app.ticker.elapsedMS; // il dt, this.app.ticker.deltaMS
-        this.dt = this.app.ticker.elapsedMS; // il dt, this.app.ticker.deltaMS
+        this.elapsed = 0;
         this._frame = 0;
+        this.dt = this.app.ticker.elapsedMS / 1000;
     }
 
     update(deltaTime: number) {
+        this.elapsed += this.app.ticker.elapsedMS / 1000;
         this._frame++;
         if (this._frame > this.app.ticker.maxFPS) {
-            this._frame = 0;
+            this._frame = 1;
         }
-        console.log(this.dt, this.getElapsedTime(), this._frame, this.app.ticker.FPS);
+        // console.log(this.dt, this.getElapsedTime(), this._frame, this.app.ticker.FPS);
+
+        // timers
+        for (var i = this.timers.length - 1; i >= 0; i--) {
+            let timer = this.timers[i];
+            timer.duration -= this.getDeltaTime();
+            if (timer.duration < 0 && timer.repeat) {
+                timer.repeat--;
+                timer.duration = timer.cacheDuration;
+                timer.callback();
+            } else if (timer.duration < 0) {
+                if(timer.repeat!==0){
+                    timer.callback();
+                }
+                this.timers.splice(i, 1);
+            }
+        }
+
+    }
+
+    after(sec: number, callback: () => any, repeat?: number) {
+        this.timers.push({ duration: sec, callback, cacheDuration: sec, repeat })
     }
 
     setGameSpeed(speed: number) {
@@ -35,8 +66,13 @@ export class TimeManager {
         return this._frame;
     }
 
-    runOnFrameNum(number: number, fn: () => any) {
-        if (number === this._frame) {
+    /**
+     * Esegue la fn al frame indicato
+     * @param frameNumber 
+     * @param fn 
+     */
+    runOnFrameNum(frameNumber: number, fn: () => any) {
+        if (frameNumber === this._frame) {
             fn()
         }
     }

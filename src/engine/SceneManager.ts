@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { GameConfig } from "../game/Config";
 
 export class Scene extends PIXI.Container {
     constructor() {
@@ -19,7 +20,7 @@ export class SceneManager {
     currentScene: Scene;
     private scenes: { [key: string]: Scene } = {}
 
-    constructor(public app: PIXI.Application, public config: any) {
+    constructor(public app: PIXI.Application, public config: GameConfig) {
         this.currentScene = null;
         this.config.scenes.forEach(scene => {
             this.scenes[scene.name] = new scene()
@@ -36,7 +37,7 @@ export class SceneManager {
             this.app.stage.addChild(this.currentScene);
             this.currentScene.setup();
         }else {
-
+            // ERRORE
         }
 
     }

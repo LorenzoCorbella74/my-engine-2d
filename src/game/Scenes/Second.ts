@@ -27,7 +27,8 @@ export class SecondScene extends Scene {
     }
 
     update(delta: number) {
-        PixiEngine.log(PixiEngine.time.getFrame().toString())
+        // PixiEngine.log(PixiEngine.time.getFrame().toString())
+        this.text.x = Math.sin(PixiEngine.time.getElapsedTime()) * window.innerWidth / 2;
     }
 
     destroy() {

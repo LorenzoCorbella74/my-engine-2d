@@ -32,9 +32,18 @@ export class FirstScene extends Scene {
         this.bunny.anchor.set(0.5);
         this.bunny.interactive = true;
 
+        // Test timer
         this.bunny.on("mousedown", function (e) {
-            PixiEngine.scenes.changeScene('SecondScene')
+            PixiEngine.time.after(5,()=> {
+                PixiEngine.log('Testing timer with repeat')
+            })
         });
+        // test changeScene
+/*         this.bunny.on("mousedown", function (e) {
+            PixiEngine.time.after(5,()=> {
+                PixiEngine.scenes.changeScene('SecondScene')
+            })
+        }); */
 
 
         // 3 JSON

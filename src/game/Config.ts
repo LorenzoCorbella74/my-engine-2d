@@ -1,9 +1,16 @@
 // importing scenes
+import { Scene } from "../engine/SceneManager";
 import { FirstScene } from "./Scenes/FirstScene";
 import { SecondScene } from './Scenes/Second';
 
+export type GameConfig = {
+    name: string;
+    scenes: any[],
+    storagePrefix: string;
+}
+
 export const Config = {
-    name: 'Test Game',
+    name: 'My Game',
     scenes: [FirstScene, SecondScene],  // the first is the startScene
     storagePrefix: 'app_',
 };

@@ -10,12 +10,13 @@ import { massiveRequire } from './utils';
 import { TimeManager } from './TimeManager';
 import { StorageDB } from './StorageManager';
 import { SceneManager } from './SceneManager';
+import { GameConfig } from "../game/Config";
 
 export const engineMessage = "[PIXI-ENGINE]: "
 
 export class Engine {
     app: PIXI.Application;
-    config: any;
+    config: GameConfig;
 
     private loader: LoaderHelper;
     public sounds: SoundManager;
