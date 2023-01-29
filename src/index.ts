@@ -1,6 +1,6 @@
-import { Engine } from "./engine/App";
+import { PixiEngine } from "./engine/Engine";
 import { Config } from "./game/Config";
 
 import  "./index.css";
 
-Engine.run(Config);
+PixiEngine.run(Config);

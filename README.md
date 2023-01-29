@@ -8,8 +8,11 @@ All the `.png` and `.jpeg` images, `.mp3` sounds and `.json` files included in t
 
 ## TODO
 - [x] Sound manager: it has a map of all the .mp3 resources loaded that can be used in the game
-- [ ] Scene manager
-- [ ] Game Loop + Time Manager and Scheduler
+- [x] Scene manager
+- [x] Object pool
+- [x] Storage in localstorage
+- [x] Game Loop + Time ManagerScheduler
+- [ ] Scheduler
 - [ ] 
 
 

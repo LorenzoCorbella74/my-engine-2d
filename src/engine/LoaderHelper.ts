@@ -8,7 +8,7 @@ export class LoaderHelper {
     sound: SoundLibrary;
     soundsManager: SoundManager;
 
-    constructor(loader, soundsManager) {
+    constructor(loader, soundsManager: SoundManager) {
         this.loader = loader;
         this.resources = {};
         this.sound = sound;

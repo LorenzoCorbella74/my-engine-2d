@@ -1,8 +1,12 @@
-// importing default scene
-import { Game } from "./Scenes/Game";
+// importing scenes
+import { FirstScene } from "./Scenes/FirstScene";
+import { SecondScene } from './Scenes/Second';
 
 export const Config = {
-    scenes: [Game]  // the first is the startScene
+    name: 'Test Game',
+    scenes: [FirstScene, SecondScene],  // the first is the startScene
+    storagePrefix: 'app_',
+    fps: 60
 };
 
 /*
