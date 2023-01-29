@@ -6,7 +6,6 @@ export const Config = {
     name: 'Test Game',
     scenes: [FirstScene, SecondScene],  // the first is the startScene
     storagePrefix: 'app_',
-    fps: 60
 };
 
 /*

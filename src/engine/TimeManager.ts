@@ -1,36 +1,34 @@
 import { Application } from "pixi.js";
 
 export class TimeManager {
-    private _elapsedTime: number;
-    private _deltaTime: number;
+    private elapsed: number = 0;
+    private dt: number;
     private _frame: number;
 
     constructor(public app: Application) {
-        this._elapsedTime = 0;
-        this._deltaTime = 0;
+        this.elapsed += this.app.ticker.elapsedMS; // il dt, this.app.ticker.deltaMS
+        this.dt = this.app.ticker.elapsedMS; // il dt, this.app.ticker.deltaMS
         this._frame = 0;
     }
 
     update(deltaTime: number) {
-        this._deltaTime = deltaTime;
-        this._elapsedTime += deltaTime;
         this._frame++;
-        if(this._frame>this.app.ticker.FPS){
-            this._frame=0;
+        if (this._frame > this.app.ticker.maxFPS) {
+            this._frame = 0;
         }
-        console.log(/* this._deltaTime, this._elapsedTime, */ this._frame, /* this.app.ticker.FPS */);
+        console.log(this.dt, this.getElapsedTime(), this._frame, this.app.ticker.FPS);
     }
 
     setGameSpeed(speed: number) {
-        this.app.ticker.speed=speed;
+        this.app.ticker.speed = speed;
     }
 
     getElapsedTime(): number {
-        return this._elapsedTime;
+        return this.elapsed;
     }
 
     getDeltaTime(): number {
-        return this._deltaTime;
+        return this.dt;
     }
 
     getFrame(): number {

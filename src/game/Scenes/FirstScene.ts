@@ -56,4 +56,8 @@ export class FirstScene extends Scene {
         this.bunny.rotation += 0.01 * delta;
     }
 
+    destroy() {
+        PixiEngine.log(this.constructor.name + ' destroyed!')
+    }
+
 }

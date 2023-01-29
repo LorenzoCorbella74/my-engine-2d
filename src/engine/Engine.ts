@@ -23,7 +23,7 @@ export class Engine {
     public time: TimeManager;
     public scenes: SceneManager;
 
-    paused:boolean = false
+    paused: boolean = false
 
     constructor() { }
 
@@ -37,9 +37,11 @@ export class Engine {
 
         this.config = config;
 
+        document.title = config.name || 'PIXI-ENGINE';
+
         this.app = new PIXI.Application({
-            resizeTo: window, 
-            autoStart: false, 
+            resizeTo: window,
+            autoStart: false,
             antialias: true,
             autoDensity: true,
             backgroundColor: 0x0,
@@ -61,7 +63,8 @@ export class Engine {
             this.start();
         });
 
-        this.app.ticker.maxFPS= config.fps || 60; 
+        this.app.ticker.maxFPS = 60;
+        this.app.ticker.minFPS = 30;
         this.app.ticker.add((delta) => {
             /*             
             time += delta;
@@ -83,13 +86,13 @@ export class Engine {
         this.app.ticker.stop();
     }
 
-    toggle(){
-        if(!this.paused){
+    toggle() {
+        if (!this.paused) {
             this.stop();
-            this.paused= true;
-        }else{
+            this.paused = true;
+        } else {
             this.start();
-            this.paused= false;
+            this.paused = false;
         }
     }
 
