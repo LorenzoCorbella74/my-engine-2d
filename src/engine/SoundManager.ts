@@ -2,7 +2,7 @@ import { sound } from '@pixi/sound';
 
 export class SoundManager {
      
-    sounds = new Map()
+    sounds = new Map()  // sounds are loaded via the LoaderHelper
 
     constructor() {
     }
@@ -15,7 +15,6 @@ export class SoundManager {
         if (this.sounds.has(name)) {
             this.sounds.get(name).play();
         }
-        // console.log(this.sounds);
     }
 
     stopSound(name) {
@@ -48,7 +47,8 @@ export class SoundManager {
         return false;
     }
 
-    randomSound(keys:string[]){
-        // TODO
+    playRandomSound(keys:string[]){
+        let soundName = Math.ceil(Math.random()* keys.length)
+        this.playSound(soundName);
     }
 }

@@ -12,6 +12,9 @@ export class TimeManager {
     private dt: number;             // il dt, this.app.ticker.deltaMS [in secondi]
     private _frame: number;         // il frame corrente
 
+
+    private gameSpeed = 1;
+
     private timers: Timer[] = []     // timers
 
     constructor(public app: Application) {
@@ -46,12 +49,19 @@ export class TimeManager {
 
     }
 
+    /**
+     * Esegue una fn dopo un certo intervallo di tempo
+     * @param sec 
+     * @param callback 
+     * @param repeat 
+     */
     after(sec: number, callback: () => any, repeat?: number) {
         this.timers.push({ duration: sec, callback, cacheDuration: sec, repeat })
     }
 
     setGameSpeed(speed: number) {
-        this.app.ticker.speed = speed;
+        this.app.ticker.speed = speed;  // velocità in termini di pixel 30, 60 fps ...
+        this.gameSpeed = speed;
     }
 
     getElapsedTime(): number {
@@ -59,7 +69,7 @@ export class TimeManager {
     }
 
     getDeltaTime(): number {
-        return this.dt;
+        return this.dt * this.gameSpeed;
     }
 
     getFrame(): number {

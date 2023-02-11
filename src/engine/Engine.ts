@@ -10,6 +10,7 @@ import { massiveRequire } from './utils';
 import { TimeManager } from './TimeManager';
 import { StorageDB } from './StorageManager';
 import { SceneManager } from './SceneManager';
+import { InputManager } from './InputManager';
 import { GameConfig } from "../game/Config";
 
 export const engineMessage = "[PIXI-ENGINE]: "
@@ -23,12 +24,13 @@ export class Engine {
     public storage: StorageDB;
     public time: TimeManager;
     public scenes: SceneManager;
+    public input: InputManager
 
     paused: boolean = false
 
     constructor() { }
 
-    run(config) {
+    run(config: GameConfig) {
         gsap.registerPlugin(PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
 
@@ -76,6 +78,15 @@ export class Engine {
             } */
             this.time.update(delta)
             this.scenes.currentScene.update(delta);
+        });
+
+        this.input = new InputManager({
+            ...{
+                'UP': 'w',
+                'DOWN': 's',
+                'RIGHT': 'd',
+                'LEFT': 'a',
+            }, ...config.input
         });
     }
 
