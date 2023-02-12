@@ -13,6 +13,8 @@ import { SceneManager } from './SceneManager';
 import { InputManager } from './InputManager';
 import { GameConfig } from "../game/Config";
 
+import { GameObject } from "./GameObject";
+
 export const engineMessage = "[PIXI-ENGINE]: "
 
 export class Engine {
@@ -25,6 +27,9 @@ export class Engine {
     public time: TimeManager;
     public scenes: SceneManager;
     public input: InputManager
+
+    gameObjectsMap = new Map<string, GameObject>();
+    gameObjectsNameMap = new Map<string, GameObject>();
 
     paused: boolean = false
 
@@ -90,14 +95,17 @@ export class Engine {
         });
     }
 
+    // TODO: spostare nel time
     start() {
         this.app.ticker.start();
     }
 
+    // TODO: spostare nel time
     stop() {
         this.app.ticker.stop();
     }
 
+    // TODO: spostare nel time, vedere se utile
     toggle() {
         if (!this.paused) {
             this.stop();
@@ -124,6 +132,36 @@ export class Engine {
         // JSON
         return what
     }
+
+    /**
+     * Take the object from the gameObjects store
+     * @param name the name of the object
+     * @returns the object
+     */
+    getObjectByName(name: string) {
+        if (this.gameObjectsNameMap.has(name)) {
+            return this.gameObjectsNameMap.get(name)
+        }
+        return null
+    }
+
+    /**
+     * Take the object from the gameObjects store
+     * @param id the id of the object
+     * @returns the object
+     */
+    getObjectById(id: string) {
+        if (this.gameObjectsMap.has(id)) {
+            return this.gameObjectsMap.get(id)
+        }
+        return null
+    }
+
+    getObjectByTag(tags: string[]) {
+        // TODO: implementare i tag
+    }
+
+
 }
 
 export const PixiEngine = new Engine();

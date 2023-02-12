@@ -1,12 +1,14 @@
+import { Player } from './../entities/player';
 import { Sprite, Text } from "pixi.js";
 import { PixiEngine as $PE } from "../../engine/Engine";
 import { Scene } from "../../engine/SceneManager";
+import { GameObject } from '../../engine/GameObject';
 
 export class SecondScene extends Scene {
 
     text: Text
 
-    player: Sprite;
+    player: GameObject;
     playerSpeed: number;
 
     gameSpeed = 1;
@@ -30,31 +32,16 @@ export class SecondScene extends Scene {
         this.text.y = window.innerHeight / 2;
         this.addChild(this.text)
 
-        this.player = $PE.getAsset("player")
-        this.player.x = window.innerWidth / 2;
-        this.player.y = window.innerHeight / 2 -100;
-        this.playerSpeed = 150; // 150 px/sec
-        this.addChild(this.player);
+        this.player = new Player('Lorenzo','player')
+
+        // get the reference of the objecty in the gameObjects repository
+        $PE.log('Player', $PE.getObjectByName('Lorenzo'));
     }
 
     update(delta: number) {
         // PixiEngine.log(PixiEngine.time.getFrame().toString())
         const dt = $PE.time.getDeltaTime()
         this.text.x = Math.sin($PE.time.getElapsedTime()) * window.innerWidth / 2;
-
-        // PLayer movement
-        if($PE.input.isKeyDown('UP')){
-            this.player.y -=  this.playerSpeed* dt;
-        }
-        if($PE.input.isKeyDown('DOWN')){
-            this.player.y +=  this.playerSpeed* dt;
-        }
-        if($PE.input.isKeyDown('RIGHT')){
-            this.player.x +=  this.playerSpeed* dt;
-        }
-        if($PE.input.isKeyDown('LEFT')){
-            this.player.x -=  this.playerSpeed* dt;
-        }
 
         // updating game speed
         if($PE.input.isMouseButton1Down()){
@@ -67,6 +54,10 @@ export class SecondScene extends Scene {
             this.gameSpeed += dt
             $PE.time.setGameSpeed(this.gameSpeed )
         }
+
+        this.player.update()
+
+
 
     }
 
