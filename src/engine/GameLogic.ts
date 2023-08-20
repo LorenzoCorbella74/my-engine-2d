@@ -1,13 +1,15 @@
+export interface IGameConditionEntity { isSatisfied: () => boolean }
+
 export class GameLogic {
-    private winConditions: any[];
-    private loseConditions: any[];
+    private winConditions: IGameConditionEntity[];
+    private loseConditions: IGameConditionEntity[];
 
     constructor() {
         this.winConditions = [];
         this.loseConditions = [];
     }
 
-    registerObject(obj: any, isWinCondition: boolean) {
+    registerGameWinLoseConditions(obj: any, isWinCondition: boolean = true) {
         if (isWinCondition) {
             this.winConditions.push(obj);
         } else {

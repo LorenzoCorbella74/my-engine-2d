@@ -12,13 +12,14 @@ import { StorageDB } from './StorageManager';
 import { SceneManager } from './SceneManager';
 import { InputManager } from './InputManager';
 import { GameConfig } from "../game/Config";
+import { Camera } from './Camera';
 
 import { GameObject } from "./GameObject";
 
 export const engineMessage = "[PIXI-ENGINE]: "
 
 export class Engine {
-    app: PIXI.Application;
+    app: PIXI.Application<PIXI.ICanvas>;
     config: GameConfig;
 
     private loader: LoaderHelper;
@@ -26,10 +27,12 @@ export class Engine {
     public storage: StorageDB;
     public time: TimeManager;
     public scenes: SceneManager;
-    public input: InputManager
+    public input: InputManager;
+    public camera: Camera
 
-    gameObjectsMap = new Map<string, GameObject>();
+    gameObjectsIdMap = new Map<string, GameObject>();
     gameObjectsNameMap = new Map<string, GameObject>();
+    gameObjectsIdNameMap = new Map<string, string>();
 
     paused: boolean = false
 
@@ -58,6 +61,7 @@ export class Engine {
         this.storage = new StorageDB(config.storagePrefix);
         this.time = new TimeManager(this.app);
         this.scenes = new SceneManager(this.app, this.config);
+        this.camera = new Camera(this.app, this.scenes);
 
         document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
 
@@ -82,7 +86,9 @@ export class Engine {
                 downloadImage(image, "img.png");
             } */
             this.time.update(delta)
+            this.camera.update();
             this.scenes.currentScene.update(delta);
+
         });
 
         this.input = new InputManager({
@@ -91,6 +97,9 @@ export class Engine {
                 'DOWN': 's',
                 'RIGHT': 'd',
                 'LEFT': 'a',
+                'SPACE': ' ',
+                'Z': 'z',
+                'X': 'x',
             }, ...config.input
         });
     }
@@ -98,10 +107,12 @@ export class Engine {
     // TODO: spostare nel time
     start() {
         this.app.ticker.start();
+        this.paused = false;
     }
 
     // TODO: spostare nel time
     stop() {
+        this.paused = true;
         this.app.ticker.stop();
     }
 
@@ -151,8 +162,8 @@ export class Engine {
      * @returns the object
      */
     getObjectById(id: string) {
-        if (this.gameObjectsMap.has(id)) {
-            return this.gameObjectsMap.get(id)
+        if (this.gameObjectsIdMap.has(id)) {
+            return this.gameObjectsIdMap.get(id)
         }
         return null
     }

@@ -1,19 +1,8 @@
 import * as PIXI from "pixi.js";
 import { GameConfig } from "../game/Config";
+import { PixiEngine as $PE } from "./Engine";
 
-export class Scene extends PIXI.Container {
-    constructor() {
-        super();
-    }
-
-    setup() { }
-
-    destroy() { }
-
-    update(deltaTime) {
-        // Utilizzare deltaTime per aggiornare gli elementi della scena
-    }
-}
+import { Scene } from './Scene';
 
 export class SceneManager {
 
@@ -28,7 +17,7 @@ export class SceneManager {
     }
 
     changeScene(sceneName: string) {
-        if(sceneName in this.scenes){
+        if (sceneName in this.scenes) {
             if (this.currentScene) {
                 this.currentScene.destroy();
                 this.app.stage.removeChild(this.currentScene);
@@ -36,14 +25,19 @@ export class SceneManager {
             this.currentScene = this.scenes[sceneName];
             this.app.stage.addChild(this.currentScene);
             this.currentScene.setup();
-        }else {
-            // ERRORE
+        } else {
+            $PE.log(`Scene "${sceneName}" not found`);
         }
-
     }
 
     startDefaultScene() {
         const startScene = this.config.scenes[0].name;   // si istanzia
-        this.changeScene(startScene);
+        if (startScene) {
+            $PE.log(`Start default Scene ${startScene}`);
+            this.changeScene(startScene);
+        } else {
+            $PE.log(`Default Scene not present!`);
+
+        }
     }
 }

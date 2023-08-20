@@ -1,6 +1,6 @@
 import { Sprite } from "pixi.js";
-import { PixiEngine } from "../../engine/Engine";
-import { Scene } from "../../engine/SceneManager";
+import { PixiEngine as $PE } from "../../engine/Engine";
+import { Scene } from "../../engine/Scene";
 
 export class FirstScene extends Scene {
 
@@ -14,17 +14,19 @@ export class FirstScene extends Scene {
 
     setup() {
         // 1 test 
-        this.bg = PixiEngine.getAsset("bg");
+        this.bg = $PE.getAsset("bg");
         this.bg.width = window.innerWidth;
         this.bg.height = window.innerHeight;
         this.bg.interactive = true;
 
+        $PE.camera.focusOn(null, this)
+
         this.bg.on("mousedown", function (e) {
-            PixiEngine.toggle();
+            $PE.toggle();
         });
 
         // 2
-        this.bunny = PixiEngine.getAsset("bunny") as Sprite;
+        this.bunny = $PE.getAsset("bunny") as Sprite;
         this.bunny.width = 64;
         this.bunny.height = 64;
         this.bunny.x = 100
@@ -34,31 +36,31 @@ export class FirstScene extends Scene {
 
         // Test timer
         /* this.bunny.on("mousedown", function (e) {
-            PixiEngine.time.after(5,()=> {
-                PixiEngine.log('Testing timer with repeat')
+            $PE.time.after(5,()=> {
+                $PE.log('Testing timer with repeat')
             })
         }); */
         // test changeScene
         this.bunny.on("mousedown", function (e) {
-            PixiEngine.time.after(5,()=> {
-                PixiEngine.scenes.changeScene('SecondScene')
+            $PE.time.after(5, () => {
+                $PE.scenes.changeScene('SecondScene')
             })
         });
 
 
         // 3 JSON
-        this.json = PixiEngine.getAsset("test");
+        this.json = $PE.getAsset("test");
         console.log(this.json);
 
         // 4. SOUNDS (mp3)
-        PixiEngine.sounds.playSound("mp3_test");
+        $PE.sounds.playSound("mp3_test");
 
         // aggiunge al container 
         this.addChild(this.bg);
         this.addChild(this.bunny);
 
         // test Stortage
-        PixiEngine.storage.save('test-engine', { lore: 'is ok!' })
+        $PE.storage.save('test-engine', { lore: 'is ok!' })
     }
 
     update(delta: number) {
@@ -66,7 +68,7 @@ export class FirstScene extends Scene {
     }
 
     destroy() {
-        PixiEngine.log(this.constructor.name + ' destroyed!')
+        $PE.log(this.constructor.name + ' destroyed!')
     }
 
 }

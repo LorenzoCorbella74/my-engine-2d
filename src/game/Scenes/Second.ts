@@ -1,7 +1,7 @@
 import { Player } from './../entities/player';
-import { Sprite, Text } from "pixi.js";
+import { Graphics, Text } from "pixi.js";
 import { PixiEngine as $PE } from "../../engine/Engine";
-import { Scene } from "../../engine/SceneManager";
+import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 
 export class SecondScene extends Scene {
@@ -12,6 +12,7 @@ export class SecondScene extends Scene {
     playerSpeed: number;
 
     gameSpeed = 1;
+    rectangle: Graphics;
 
     constructor() {
         super()
@@ -32,7 +33,16 @@ export class SecondScene extends Scene {
         this.text.y = window.innerHeight / 2;
         this.addChild(this.text)
 
-        this.player = new Player('Lorenzo','player')
+        this.player = new Player('Lorenzo', 'player')
+        $PE.camera.focusOn(this.player, this)
+
+
+
+        // rettangolo
+        this.rectangle = new Graphics();
+        this.rectangle.beginFill(0xff0000);
+        this.rectangle.drawRect(0, 0, 200, 100);
+        this.addChild(this.rectangle)
 
         // get the reference of the objecty in the gameObjects repository
         $PE.log('Player', $PE.getObjectByName('Lorenzo'));
@@ -41,28 +51,32 @@ export class SecondScene extends Scene {
     update(delta: number) {
         // PixiEngine.log(PixiEngine.time.getFrame().toString())
         const dt = $PE.time.getDeltaTime()
-        this.text.x = Math.sin($PE.time.getElapsedTime()) * window.innerWidth / 2;
+        this.text.x = Math.sin($PE.time.getElapsedTime()) * window.innerWidth / 8;
 
         // updating game speed
-        if($PE.input.isMouseButton1Down()){
+        if ($PE.input.isMouseButton1Down()) {
             // $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
             this.gameSpeed -= dt
-            $PE.time.setGameSpeed(this.gameSpeed )
+            $PE.time.setGameSpeed(this.gameSpeed)
         }
-        if($PE.input.isMouseButton3Down()){
+        if ($PE.input.isMouseButton3Down()) {
             // $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
             this.gameSpeed += dt
-            $PE.time.setGameSpeed(this.gameSpeed )
+            $PE.time.setGameSpeed(this.gameSpeed)
+        }
+
+        if ($PE.input.isKeyDown('Z')) {
+            $PE.camera.zoomIn();
+        }
+        if ($PE.input.isKeyDown('X')) {
+            $PE.camera.zoomOut();
         }
 
         this.player.update()
-
-
-
     }
 
     destroy() {
-        
+
     }
 
 }

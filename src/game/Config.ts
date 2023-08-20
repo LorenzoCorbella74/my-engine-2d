@@ -1,5 +1,4 @@
 // importing scenes
-import { Scene } from "../engine/SceneManager";
 import { FirstScene } from "./Scenes/FirstScene";
 import { SecondScene } from './Scenes/Second';
 

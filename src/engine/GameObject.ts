@@ -1,6 +1,8 @@
 import { PixiEngine } from './Engine';
 import { Sprite } from "pixi.js";
 
+import { IGameConditionEntity } from './GameLogic'
+
 export function GameObjectEntity(target: any) {
   const original = target;
 
@@ -11,8 +13,9 @@ export function GameObjectEntity(target: any) {
 
     instance.id = Math.random().toString(36).substring(2, 15); // `${Date.now()}${Math.random()*1000000}`;
     // si registra nell'InstanceTracker
-    PixiEngine.gameObjectsMap.set(instance.id, instance);
+    PixiEngine.gameObjectsIdMap.set(instance.id, instance);
     PixiEngine.gameObjectsNameMap.set(instance.name, instance);
+    PixiEngine.gameObjectsIdNameMap.set(instance.id, instance.name);
     PixiEngine.scenes.currentScene.addChild(instance.entity);
     // ritorna l'istanza
     return instance;
@@ -22,21 +25,25 @@ export function GameObjectEntity(target: any) {
   return newConstructor;
 }
 
-export class GameObject {
+export class GameObject implements IGameConditionEntity {
+
   private _id: string;
   private _name: string;
   private _sprite: Sprite;
 
-  constructor(name: string, spriteName:string) {
+  constructor(name: string, spriteName: string) {
     this._name = name;
     this._sprite = PixiEngine.getAsset(spriteName);
   }
+
+
+  isSatisfied: () => boolean;
 
   get id(): string {
     return this._id;
   }
 
-  set id(id:string){
+  set id(id: string) {
     this._id = id
   }
 
@@ -56,13 +63,13 @@ export class GameObject {
     this._sprite = value;
   }
 
-  hide(){
+  hide() {
     this._sprite.visible = false;
   }
 
-  show(){
+  show() {
     this._sprite.visible = true;
   }
 
-  update(){}
+  update() { }
 }
