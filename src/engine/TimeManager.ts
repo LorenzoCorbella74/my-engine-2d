@@ -40,13 +40,12 @@ export class TimeManager {
                 timer.duration = timer.cacheDuration;
                 timer.callback();
             } else if (timer.duration < 0) {
-                if(timer.repeat!==0){
+                if (!timer.repeat || timer.repeat !== 0) {
                     timer.callback();
                 }
                 this.timers.splice(i, 1);
             }
         }
-
     }
 
     /**
