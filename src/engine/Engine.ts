@@ -53,7 +53,7 @@ export class Engine {
         this.app = new PIXI.Application({
             resizeTo: window,
             autoStart: false,
-            antialias: true,
+            /* antialias: true, */
             autoDensity: true,
             backgroundColor: 0x0,
             resolution: devicePixelRatio
@@ -92,16 +92,13 @@ export class Engine {
         });
 
         this.input = new InputManager({
+            // DEFAULTS
             ...{
                 'UP': 'w',
                 'DOWN': 's',
                 'RIGHT': 'd',
                 'LEFT': 'a',
                 'SPACE': ' ',
-                'Z': 'z',
-                'X': 'x',
-                'N': 'n',
-                'M': 'm',
             }, ...config.input
         });
     }

@@ -18,6 +18,10 @@ export const Config = {
         'DOWN': 's',
         'RIGHT': 'd',
         'LEFT': 'a',
+        'Z': 'z',       // ZOOM IN
+        'X': 'x',       // ZOOM OUT
+        'N': 'n',       // ZOOM TO
+        'M': 'm',       // CAMERA SHAKING
     }
 };
 

@@ -74,18 +74,20 @@ export class Camera {
             const elapsedTime = currentTime - this.shakeStartTime;
 
             if (elapsedTime < this.shakeDuration) {
-                const offsetX = (Math.random() - 0.95) < 0 ? 0 : this.shakeAmplitude;
-                const offsetY = (Math.random() - 0.95) < 0 ? 0 : this.shakeAmplitude;
+                // TODO: improve camera shaking
+                const offsetX = (Math.random() - 0.85) < 0 ? 0 : this.shakeAmplitude;
+                const offsetY = (Math.random() - 0.85) < 0 ? 0 : this.shakeAmplitude;
 
-                this.container.position.x = this.app.screen.width / 2 - (this.target.entity.x + offsetX) * this.zoomLevel;
-                this.container.position.y = this.app.screen.height / 2 - (this.target.entity.y + offsetY) * this.zoomLevel;
+                // updating player coordinates
+                this.target.entity.x = this.target.entity.x + offsetX;
+                this.target.entity.y = this.target.entity.y + offsetY;
             }
         } else {
             this.shakeDuration = 0;
-            // Aggiorna la posizione della telecamera in base al target
-            this.container.position.x = this.app.screen.width / 2 - (this.target.entity.x * this.zoomLevel);
-            this.container.position.y = this.app.screen.height / 2 - (this.target.entity.y * this.zoomLevel);
         }
+        // Aggiorna la posizione della telecamera in base al target
+        this.container.position.x = this.app.screen.width / 2 - (this.target.entity.x * this.zoomLevel);
+        this.container.position.y = this.app.screen.height / 2 - (this.target.entity.y * this.zoomLevel);
 
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel);
