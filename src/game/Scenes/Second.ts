@@ -1,4 +1,6 @@
 import { Player } from './../entities/player';
+import { Enemy } from './../entities/enemy';
+
 import { Graphics, Text } from "pixi.js";
 import { PixiEngine as $PE } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
@@ -9,6 +11,8 @@ export class SecondScene extends Scene {
     text: Text
 
     player: GameObject;
+    enemy: GameObject;
+
     playerSpeed: number;
 
     gameSpeed = 1;
@@ -34,6 +38,7 @@ export class SecondScene extends Scene {
         this.addChild(this.text)
 
         this.player = new Player('Lorenzo', 'player')
+        this.enemy = new Enemy('Nemico', 'player')
         $PE.camera.focusOn(this.player, this)
 
 
@@ -74,11 +79,19 @@ export class SecondScene extends Scene {
         if ($PE.input.isKeyDown('N')) {
             $PE.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
         }
+
+        // test zoomTo
         if ($PE.input.isKeyDown('M')) {
             $PE.camera.zoomTo($PE.camera.zoomLevel > 1 ? $PE.camera.zoomLevel - 0.5 : $PE.camera.zoomLevel + 0.5, 2000); // Zoom in di 0.2 e durata di 1000 ms
         }
 
-        this.player.update()
+        // test change camera target
+        if ($PE.input.isKeyDown('O')) {
+            const target = $PE.camera.target.name === 'Lorenzo' ? this.enemy : this.player
+            $PE.camera.focusOn(target, this)
+        }
+
+        this.player.update(delta)
     }
 
     destroy() {

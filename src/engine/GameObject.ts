@@ -71,5 +71,5 @@ export class GameObject implements IGameConditionEntity {
     this._sprite.visible = true;
   }
 
-  update() { }
+  update(deltaTime: number) { }
 }

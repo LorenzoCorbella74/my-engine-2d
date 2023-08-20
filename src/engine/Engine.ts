@@ -85,8 +85,9 @@ export class Engine {
                 console.log(image);
                 downloadImage(image, "img.png");
             } */
-            this.time.update(delta)
-            this.scenes.currentScene.update(delta);
+            this.time.update()
+
+            this.scenes.currentScene.update(this.time.getDeltaTime());     // NOTE: delta è intorno a 1 !!!!!
             this.camera.update();
 
         });

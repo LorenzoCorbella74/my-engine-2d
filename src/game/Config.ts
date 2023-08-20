@@ -22,6 +22,7 @@ export const Config = {
         'X': 'x',       // ZOOM OUT
         'N': 'n',       // ZOOM TO
         'M': 'm',       // CAMERA SHAKING
+        'O': 'o',       // Change camera focus
     }
 };
 

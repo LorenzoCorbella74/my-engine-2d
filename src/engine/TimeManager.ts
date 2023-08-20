@@ -23,13 +23,14 @@ export class TimeManager {
         this.dt = this.app.ticker.elapsedMS / 1000;
     }
 
-    update(deltaTime: number) {
-        this.elapsed += this.app.ticker.elapsedMS / 1000;
+    update() {
+        this.elapsed += this.dt;        // quanto è trascorso
         this._frame++;
+
+        // conteggio frame
         if (this._frame > this.app.ticker.maxFPS) {
             this._frame = 1;
         }
-        // console.log(this.dt, this.getElapsedTime(), this._frame, this.app.ticker.FPS);
 
         // timers
         for (var i = this.timers.length - 1; i >= 0; i--) {

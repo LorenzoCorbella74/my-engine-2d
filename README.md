@@ -37,7 +37,7 @@ It's possible to focus the camera on a specific entity with the focusOn(element:
 
 ### Time Manager
 
-It's possible to set the game spped with the `setGameSpeed(speed: number)` and manage timers with the `after(sec: number, callback: () => any, repeat?: number)`
+It's possible to set the game speed with the `setGameSpeed(speed: number)` and manage timers with the method `after(sec: number, callback: () => any, repeat?: number)`
 
 ### Utils
 
