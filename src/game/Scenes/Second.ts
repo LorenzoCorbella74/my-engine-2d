@@ -54,22 +54,28 @@ export class SecondScene extends Scene {
         this.text.x = Math.sin($PE.time.getElapsedTime()) * window.innerWidth / 8;
 
         // updating game speed
-        if ($PE.input.isMouseButton1Down()) {
-            // $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
+        /* if ($PE.input.isMouseButton2Down()) {
+            $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
             this.gameSpeed -= dt
             $PE.time.setGameSpeed(this.gameSpeed)
         }
         if ($PE.input.isMouseButton3Down()) {
-            // $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
+             $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
             this.gameSpeed += dt
             $PE.time.setGameSpeed(this.gameSpeed)
-        }
+        } */
 
         if ($PE.input.isKeyDown('Z')) {
             $PE.camera.zoomIn();
         }
         if ($PE.input.isKeyDown('X')) {
             $PE.camera.zoomOut();
+        }
+        if ($PE.input.isKeyDown('N')) {
+            $PE.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
+        }
+        if ($PE.input.isKeyDown('M')) {
+            $PE.camera.zoomTo($PE.camera.zoomLevel > 1 ? $PE.camera.zoomLevel - 0.5 : $PE.camera.zoomLevel + 0.5, 2000); // Zoom in di 0.2 e durata di 1000 ms
         }
 
         this.player.update()

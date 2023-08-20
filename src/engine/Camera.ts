@@ -6,21 +6,35 @@ import { Scene } from "./Scene";
 
 export class Camera {
 
-    zoomLevel: number;
-    zoomSpeed: number;
-
     app: PIXI.Application<PIXI.ICanvas>;
     target: GameObject;
     container: PIXI.Container<PIXI.DisplayObject>;
 
+    // ZOOM
+    zoomLevel: number;
+    zoomSpeed: number;
+    targetZoom: number;
+    isZooming: boolean;
+    zoomStartTime: number;
+    zoomDuration: number;
+
+    // SHAKE EFFECT
+    shakeDuration: number;
+    shakeAmplitude: number;
+    shakeStartTime: number;
 
     constructor(app: PIXI.Application, sceneManager: SceneManager) {
         this.app = app;
         this.target = null; // L'elemento su cui la telecamera dovrebbe essere centrata
 
-
         this.zoomLevel = 1;
-        this.zoomSpeed = 0.01;
+        this.targetZoom = 1;
+        this.zoomSpeed = 0.05;
+        this.isZooming = false;
+
+        this.shakeDuration = 0;
+        this.shakeAmplitude = 0;
+        this.shakeStartTime = 0;
     }
 
     focusOn(element: GameObject, currentScene: Scene) {
@@ -39,26 +53,71 @@ export class Camera {
     }
 
     update() {
-        // Aggiorna la posizione della telecamera in base al target
-        this.container.position.x = this.app.screen.width / 2 - this.target.entity.x;
-        this.container.position.y = this.app.screen.height / 2 - this.target.entity.y;
+        if (!this.target) return
+
+        if (this.isZooming) {
+            const currentTime = performance.now();
+            const elapsedTime = currentTime - this.zoomStartTime;
+
+            if (elapsedTime < this.zoomDuration) {
+                const progress = elapsedTime / this.zoomDuration;
+                const zoomDiff = this.targetZoom - this.zoomLevel;
+                this.zoomLevel = this.zoomLevel + zoomDiff * progress;
+            } else {
+                this.zoomLevel = this.targetZoom;
+                this.isZooming = false;
+            }
+        }
+
+        if (this.shakeDuration > 0) {
+            const currentTime = performance.now();
+            const elapsedTime = currentTime - this.shakeStartTime;
+
+            if (elapsedTime < this.shakeDuration) {
+                const offsetX = (Math.random() - 0.95) < 0 ? 0 : this.shakeAmplitude;
+                const offsetY = (Math.random() - 0.95) < 0 ? 0 : this.shakeAmplitude;
+
+                this.container.position.x = this.app.screen.width / 2 - (this.target.entity.x + offsetX) * this.zoomLevel;
+                this.container.position.y = this.app.screen.height / 2 - (this.target.entity.y + offsetY) * this.zoomLevel;
+            }
+        } else {
+            this.shakeDuration = 0;
+            // Aggiorna la posizione della telecamera in base al target
+            this.container.position.x = this.app.screen.width / 2 - (this.target.entity.x * this.zoomLevel);
+            this.container.position.y = this.app.screen.height / 2 - (this.target.entity.y * this.zoomLevel);
+        }
 
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel);
     }
 
+    startShake(duration: number, amplitude: number) {
+        this.shakeDuration = duration;
+        this.shakeAmplitude = amplitude;
+        this.shakeStartTime = performance.now();
+    }
+
     zoomIn() {
         this.zoomLevel += this.zoomSpeed;
-        if (this.zoomLevel > 10) {
-            this.zoomLevel = 10;
+        if (this.zoomLevel > 2) {
+            this.zoomLevel = 2;
         }
+        console.log('Zoom Level: ', this.zoomLevel)
     }
 
     zoomOut() {
         this.zoomLevel -= this.zoomSpeed;
-        if (this.zoomLevel < 0.1) {
-            this.zoomLevel = 0.1;
+        if (this.zoomLevel < 0.5) {
+            this.zoomLevel = 0.5;
         }
+        console.log('Zoom Level: ', this.zoomLevel)
+    }
+
+    zoomTo(targetZoom, duration) {
+        this.targetZoom = targetZoom;
+        this.zoomDuration = duration;
+        this.zoomStartTime = performance.now();
+        this.isZooming = true;
     }
 
 }

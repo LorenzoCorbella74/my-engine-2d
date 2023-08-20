@@ -18,6 +18,7 @@ export class FirstScene extends Scene {
         this.bg.width = window.innerWidth;
         this.bg.height = window.innerHeight;
         this.bg.interactive = true;
+        this.addChild(this.bg);
 
         $PE.camera.focusOn(null, this)
 
@@ -33,7 +34,7 @@ export class FirstScene extends Scene {
         this.bunny.y = 100
         this.bunny.anchor.set(0.5);
         this.bunny.interactive = true;
-
+        this.addChild(this.bunny);
         // Test timer
         /* this.bunny.on("mousedown", function (e) {
             $PE.time.after(5,()=> {
@@ -42,11 +43,10 @@ export class FirstScene extends Scene {
         }); */
         // test changeScene
         this.bunny.on("mousedown", function (e) {
-            $PE.time.after(5, () => {
+            $PE.time.after(1, () => {
                 $PE.scenes.changeScene('SecondScene')
             })
         });
-
 
         // 3 JSON
         this.json = $PE.getAsset("test");
@@ -54,10 +54,6 @@ export class FirstScene extends Scene {
 
         // 4. SOUNDS (mp3)
         $PE.sounds.playSound("mp3_test");
-
-        // aggiunge al container 
-        this.addChild(this.bg);
-        this.addChild(this.bunny);
 
         // test Stortage
         $PE.storage.save('test-engine', { lore: 'is ok!' })

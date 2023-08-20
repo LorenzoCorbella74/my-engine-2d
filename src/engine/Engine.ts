@@ -86,8 +86,8 @@ export class Engine {
                 downloadImage(image, "img.png");
             } */
             this.time.update(delta)
-            this.camera.update();
             this.scenes.currentScene.update(delta);
+            this.camera.update();
 
         });
 
@@ -100,6 +100,8 @@ export class Engine {
                 'SPACE': ' ',
                 'Z': 'z',
                 'X': 'x',
+                'N': 'n',
+                'M': 'm',
             }, ...config.input
         });
     }
