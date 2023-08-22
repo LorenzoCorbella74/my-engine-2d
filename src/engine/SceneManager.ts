@@ -3,6 +3,7 @@ import { GameConfig } from "../game/Config";
 import { PixiEngine as $PE } from "./Engine";
 
 import { Scene } from './Scene';
+import { gsap } from "gsap";
 
 export class SceneManager {
 
@@ -16,15 +17,33 @@ export class SceneManager {
         });
     }
 
+    setupNewScene(sceneName: string) {
+        this.currentScene = this.scenes[sceneName];
+        this.app.stage.addChild(this.currentScene);
+        this.currentScene.setup();
+        this.currentScene.alpha = 0;
+        gsap.to(this.currentScene, {
+            alpha: 1, // Valore di opacità finale
+            duration: 0.25
+        })
+    }
+
     changeScene(sceneName: string) {
         if (sceneName in this.scenes) {
             if (this.currentScene) {
-                this.currentScene.destroy();
-                this.app.stage.removeChild(this.currentScene);
+                gsap.to(this.currentScene, {
+                    alpha: 0, // Valore di opacità finale
+                    duration: 0.5,         // in  secondi,
+                    onComplete: () => {
+                        this.currentScene.destroy();
+                        this.app.stage.removeChild(this.currentScene);
+                        this.setupNewScene(sceneName);
+                    }
+                })
+            } else {
+                this.setupNewScene(sceneName);
             }
-            this.currentScene = this.scenes[sceneName];
-            this.app.stage.addChild(this.currentScene);
-            this.currentScene.setup();
+
         } else {
             $PE.log(`Scene "${sceneName}" not found`);
         }
@@ -37,7 +56,6 @@ export class SceneManager {
             this.changeScene(startScene);
         } else {
             $PE.log(`Default Scene not present!`);
-
         }
     }
 }

@@ -81,9 +81,9 @@ export class TimeManager {
      * @param frameNumber 
      * @param fn 
      */
-    runOnFrameNum(frameNumber: number, fn: () => any) {
+    runOnFrameNum(frameNumber: number, fn: (frameNumber: number, ...arg) => any) {
         if (frameNumber === this._frame) {
-            fn()
+            fn(frameNumber, ...arguments)
         }
     }
 
