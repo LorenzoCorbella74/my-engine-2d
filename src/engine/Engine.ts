@@ -59,17 +59,28 @@ export class Engine {
             backgroundColor: 0x0,
             resolution: devicePixelRatio
         });
+
+        document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
+
         this.storage = new StorageDB(config.storagePrefix);
         this.time = new TimeManager(this.app);
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this.app, this.scenes);
         this.logic = new GameLogic()
-        this.events = new EventManager(this)
-
-        document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
-
+        this.events = new EventManager(this);
+        this.input = new InputManager({
+            // DEFAULTS
+            ...{
+                'UP': 'w',
+                'DOWN': 's',
+                'RIGHT': 'd',
+                'LEFT': 'a',
+                'SPACE': ' ',
+            }, ...config.input
+        }, this.app);
         this.sounds = new SoundManager();
         this.loader = new LoaderHelper(massiveRequire(loaderData), this.sounds);
+
         // loader .... ON
         this.loader.preload().then((result) => {
             // loader .... OFF
@@ -100,16 +111,7 @@ export class Engine {
             })
         });
 
-        this.input = new InputManager({
-            // DEFAULTS
-            ...{
-                'UP': 'w',
-                'DOWN': 's',
-                'RIGHT': 'd',
-                'LEFT': 'a',
-                'SPACE': ' ',
-            }, ...config.input
-        });
+
     }
 
     // TODO: spostare nel time

@@ -2,7 +2,7 @@
 
 Super basic 2D game Engine based on:
 
-- [Pixijs v.7](https://pixijs.com/),
+- [Pixijs v.7.2](https://pixijs.com/),
 - [Pixi Sounds v.5](https://pixijs.io/sound/examples/index.html),
 - [ GSAP V3 + pixiPlugin](https://greensock.com/docs/v3/Plugins/PixiPlugin)
 - [Typescript](https://www.typescriptlang.org/)
@@ -140,4 +140,4 @@ It's possible to send events to gameObject or to gameObject groups with the `sen
 
 - [ ] Move from Webpack to Vite
 - [ ] Improve the scene management with cached scenes
-- [ ] Improve timers with an animation method
+- [ ] Game Graphic management

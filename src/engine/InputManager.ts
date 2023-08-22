@@ -1,8 +1,12 @@
+import { Application } from "pixi.js";
+
 export class InputManager {
     private keys: { [key: string]: boolean } = {};
     // private keyMapping: { [key: string]: string };
-    private mouseX = 0;
-    private mouseY = 0;
+    private mouse = {
+        x: 0,
+        y: 0
+    }
     private mouseWheel = 0;
     private mouseButton1 = false;
     private mouseButton2 = false;
@@ -10,8 +14,24 @@ export class InputManager {
     private mouseButton4 = false;
     private ctrlKey = false;
     private shiftKey = false;
+    app: Application;
 
-    constructor(private keyMapping : { [key: string]: string }) {
+    constructor(private keyMapping: { [key: string]: string }, app: Application) {
+        this.app = app;
+        // from 7.0 no more "app.renderer.plugins.interaction.mouse"
+        /* this.app.renderer.plugins.interaction.on('pointermove', (event) => {
+            this.mouse = {
+                x: event.data.global.x,
+                y: event.data.global.y
+            }
+        }); */
+
+        document.addEventListener('mousemove', e => {
+            this.mouse = {
+                x: e.clientX,
+                y: e.clientY
+            }
+        });
 
         document.addEventListener('keydown', e => {
             this.keys[e.key] = true;
@@ -31,10 +51,7 @@ export class InputManager {
             }
         });
 
-        document.addEventListener('mousemove', e => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-        });
+
 
         document.addEventListener('mousewheel', e => {
             // this.mouseWheel = e.deltaY ;
@@ -77,14 +94,17 @@ export class InputManager {
      */
     setKeyMapping(keyName: string, keyCode: string) {
         this.keyMapping[keyName] = keyCode;
-      }
+    }
 
+    getMouse() {
+        return this.mouse;
+    }
     getMouseX() {
-        return this.mouseX;
+        return this.mouse.x;
     }
 
     getMouseY() {
-        return this.mouseY;
+        return this.mouse.y;
     }
 
     getMouseWheel() {

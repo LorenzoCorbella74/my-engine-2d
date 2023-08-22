@@ -20,6 +20,7 @@ export class SecondScene extends Scene {
 
     gameSpeed = 1;
     rectangle: Graphics;
+    crosshair: Graphics;
 
     constructor() {
         super()
@@ -56,12 +57,31 @@ export class SecondScene extends Scene {
         // get the reference of the objecty in the gameObjects repository
         $PE.log('Test getObjectByName: ', $PE.getObjectByName('Player'));
         $PE.log('Test getGroup: ', $PE.getGroup('Enemy'));
+
+        // Creazione del mirino
+        this.crosshair = new Graphics();
+        this.crosshair.lineStyle(2, 0xFFFFFF, 1);
+        this.crosshair.moveTo(-15, 0);
+        this.crosshair.lineTo(15, 0);
+        this.crosshair.moveTo(0, -15);
+        this.crosshair.lineTo(0, 15);
+        this.crosshair.position.set($PE.app.screen.width / 2, $PE.app.screen.height / 2);
+        this.addChild(this.crosshair);
+
+        // Nascondere l'icona del mouse usando CSS
+        $PE.app.view.style.cursor = 'none';
     }
 
     update(delta: number) {
         // PixiEngine.log(PixiEngine.time.getFrame().toString())
         const dt = $PE.time.getDeltaTime()
         this.text.x = Math.sin($PE.time.getElapsedTime()) * window.innerWidth / 8;
+
+        // rotate player to target
+        const mousePosition = $PE.input.getMouse();
+        this.crosshair.position.set(mousePosition.x, mousePosition.y);
+        const angle = Math.atan2(mousePosition.y - this.player.entity.y, mousePosition.x - this.player.entity.x);
+        this.player.entity.rotation = angle;
 
         // updating game speed
         /* if ($PE.input.isMouseButton2Down()) {
