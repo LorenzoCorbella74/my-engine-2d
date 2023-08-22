@@ -18,12 +18,12 @@ export class GameLogic {
     }
 
     update() {
-        let hasWon = true;
+        let hasWon = false;
         let hasLost = false;
 
         for (const obj of this.winConditions) {
-            if (!obj.isSatisfied()) {
-                hasWon = false;
+            if (obj.isSatisfied()) {
+                hasWon = true;
                 break;
             }
         }
@@ -34,7 +34,7 @@ export class GameLogic {
         }
 
         for (const obj of this.loseConditions) {
-            if (obj.isSatisfied()) {
+            if (!obj.isSatisfied()) {
                 hasLost = true;
                 break;
             }

@@ -15,6 +15,11 @@ export class Player extends GameObject {
     }
 
     update(dt) {
+
+
+
+
+
         // PLayer movement
         if ($PE.input.isKeyDown('UP')) {
             this.entity.y -= this.speed * dt;

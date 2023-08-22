@@ -5,18 +5,20 @@ import { PixiPlugin } from "gsap/PixiPlugin";
 import { LoaderHelper } from "./LoaderHelper";
 
 // Managers
-import { SoundManager } from './SoundManager';
 import { massiveRequire } from './utils';
+import { SoundManager } from './SoundManager';
 import { TimeManager } from './TimeManager';
 import { StorageDB } from './StorageManager';
 import { SceneManager } from './SceneManager';
 import { InputManager } from './InputManager';
 import { GameConfig } from "../game/Config";
 import { Camera } from './Camera';
+import { GameLogic } from './GameLogic';
 
-import { GameObject } from "./GameObject";
+import { GameObjectRepo } from "./GameObjectRepo";
+import { EventManager } from "./EventManager";
 
-export const engineMessage = "[PIXI-ENGINE]: "
+export const ENGINE_MSG_PREFIX = "[PIXI-ENGINE]: "
 
 export class Engine {
     app: PIXI.Application<PIXI.ICanvas>;
@@ -29,10 +31,9 @@ export class Engine {
     public scenes: SceneManager;
     public input: InputManager;
     public camera: Camera
-
-    gameObjectsIdMap = new Map<string, GameObject>();
-    gameObjectsNameMap = new Map<string, GameObject>();
-    gameObjectsIdNameMap = new Map<string, string>();
+    public logic: GameLogic;
+    public repo: GameObjectRepo = new GameObjectRepo();
+    public events: EventManager;
 
     paused: boolean = false
 
@@ -48,7 +49,7 @@ export class Engine {
 
         this.config = config;
 
-        document.title = config.name || 'PIXI-ENGINE';
+        document.title = config.name || 'PIXI-ENGINE';  // name of the game
 
         this.app = new PIXI.Application({
             resizeTo: window,
@@ -62,6 +63,8 @@ export class Engine {
         this.time = new TimeManager(this.app);
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this.app, this.scenes);
+        this.logic = new GameLogic()
+        this.events = new EventManager(this)
 
         document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
 
@@ -70,7 +73,7 @@ export class Engine {
         // loader .... ON
         this.loader.preload().then((result) => {
             // loader .... OFF
-            this.log(engineMessage + 'Resources loaded, starting loop!!');
+            this.log(ENGINE_MSG_PREFIX + 'Resources loaded, starting loop!!');
             this.scenes.startDefaultScene();
             this.start();
         });
@@ -87,9 +90,13 @@ export class Engine {
             } */
             this.time.update()
 
-            this.scenes.currentScene.update(this.time.getDeltaTime());     // NOTE: delta è intorno a 1 !!!!!
+            this.scenes.currentScene.update(this.time.getDeltaTime(), delta);     // NOTE: delta è intorno a 1 !!!!!
+            this.events.processEvents()
             this.camera.update();
 
+            this.time.runOnFrameNum(1, () => {
+                this.logic.update()
+            })
         });
 
         this.input = new InputManager({
@@ -128,20 +135,20 @@ export class Engine {
     }
 
     log(message: string, ...other) {
-        console.log(engineMessage + message, ...other)
+        console.log(ENGINE_MSG_PREFIX + message, ...other)
     }
 
     /**
      * Get the pre-loaded assets (both img and .json)
      */
     getAsset(key: string) {
-        const what = this.loader.resources[key];
+        const resource = this.loader.resources[key];
         // IMGs
-        if (what instanceof Texture) {
+        if (resource instanceof Texture) {
             return new PIXI.Sprite(this.loader.resources[key]);
         }
         // JSON
-        return what
+        return resource
     }
 
     /**
@@ -150,10 +157,7 @@ export class Engine {
      * @returns the object
      */
     getObjectByName(name: string) {
-        if (this.gameObjectsNameMap.has(name)) {
-            return this.gameObjectsNameMap.get(name)
-        }
-        return null
+        return this.repo.getObjectByName(name)
     }
 
     /**
@@ -162,17 +166,12 @@ export class Engine {
      * @returns the object
      */
     getObjectById(id: string) {
-        if (this.gameObjectsIdMap.has(id)) {
-            return this.gameObjectsIdMap.get(id)
-        }
-        return null
+        return this.repo.getObjectById(id)
     }
 
-    getObjectByTag(tags: string[]) {
-        // TODO: implementare i tag
+    getGroup(name: string) {
+        return this.repo.getGroup(name)
     }
-
-
 }
 
 export const PixiEngine = new Engine();

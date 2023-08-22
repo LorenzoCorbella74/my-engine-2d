@@ -1,6 +1,6 @@
 // importing scenes
 import { FirstScene } from "./Scenes/FirstScene";
-import { SecondScene } from './Scenes/Second';
+import { SecondScene } from './Scenes/SecondScene';
 
 export type GameConfig = {
     name: string;
@@ -23,6 +23,8 @@ export const Config = {
         'N': 'n',       // ZOOM TO
         'M': 'm',       // CAMERA SHAKING
         'O': 'o',       // Change camera focus
+        'E': 'e',       // TEST send event
+        'R': 'r',       // TEST send event to group
     }
 };
 

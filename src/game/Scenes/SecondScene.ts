@@ -1,19 +1,22 @@
-import { Player } from './../entities/player';
-import { Enemy } from './../entities/enemy';
+import { Player } from '../entities/player';
+import { Enemy } from '../entities/enemy';
 
 import { Graphics, Text } from "pixi.js";
 import { PixiEngine as $PE } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
+import { EventType, GameEvent, GameEventForGroup } from '../../engine/EventManager';
 
 export class SecondScene extends Scene {
 
     text: Text
 
     player: GameObject;
-    enemy: GameObject;
-
     playerSpeed: number;
+
+    enemy1: GameObject;
+    enemy2: GameObject;
+
 
     gameSpeed = 1;
     rectangle: Graphics;
@@ -37,11 +40,12 @@ export class SecondScene extends Scene {
         this.text.y = window.innerHeight / 2;
         this.addChild(this.text)
 
-        this.player = new Player('Lorenzo', 'player')
-        this.enemy = new Enemy('Nemico', 'player')
+        this.player = new Player('Player', 'player')
         $PE.camera.focusOn(this.player, this)
 
-
+        this.enemy1 = new Enemy('Nemico1', 'player')
+        this.enemy2 = new Enemy('Nemico2', 'player')
+        this.enemy1.entity.x = 100
 
         // rettangolo
         this.rectangle = new Graphics();
@@ -50,7 +54,8 @@ export class SecondScene extends Scene {
         this.addChild(this.rectangle)
 
         // get the reference of the objecty in the gameObjects repository
-        $PE.log('Player', $PE.getObjectByName('Lorenzo'));
+        $PE.log('Test getObjectByName: ', $PE.getObjectByName('Player'));
+        $PE.log('Test getGroup: ', $PE.getGroup('Enemy'));
     }
 
     update(delta: number) {
@@ -87,9 +92,19 @@ export class SecondScene extends Scene {
 
         // test change camera target
         if ($PE.input.isKeyDown('O')) {
-            const target = $PE.camera.target.name === 'Lorenzo' ? this.enemy : this.player
+            const target = $PE.camera.target.name === 'Player' ? this.enemy1 : this.player
             $PE.camera.focusOn(target, this)
         }
+
+        // test event to single entity
+        if ($PE.input.isKeyDown('E')) {
+            $PE.events.sendEvent(new GameEvent(EventType.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
+        }
+        // test event to group of entity
+        if ($PE.input.isKeyDown('R')) {
+            $PE.events.sendEvent(new GameEventForGroup('Enemy', EventType.Pickup, this.player, { test: 'test GameEventForGroup' }))
+        }
+
 
         this.player.update(delta)
     }

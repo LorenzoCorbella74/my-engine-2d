@@ -9,7 +9,7 @@ export class Scene extends PIXI.Container {
 
     destroy() { }
 
-    update(deltaTime) {
-        // Utilizzare deltaTime per aggiornare gli elementi della scena
+    // Utilizzare dt per aggiornare gli elementi della scena
+    update(dt, delta) {
     }
 }

@@ -23,7 +23,7 @@ export class Camera {
     shakeAmplitude: number;
     shakeStartTime: number;
 
-    constructor(app: PIXI.Application, sceneManager: SceneManager) {
+    constructor(app: PIXI.Application, public sceneManager: SceneManager) {
         this.app = app;
         this.target = null; // L'elemento su cui la telecamera dovrebbe essere centrata
 

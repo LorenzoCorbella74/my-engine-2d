@@ -1,6 +1,8 @@
 
-import { GameObjectEntity, GameObject } from "../../engine/GameObject"
+import { GameEvent } from "../../engine/EventManager";
+import { GameObjectEntity, GameObject, GameObjectGroup } from "../../engine/GameObject"
 
+@GameObjectGroup('Enemy')
 @GameObjectEntity
 export class Enemy extends GameObject {
 

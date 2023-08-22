@@ -59,8 +59,8 @@ export class FirstScene extends Scene {
         $PE.storage.save('test-engine', { lore: 'is ok!' })
     }
 
-    update(delta: number) {
-        this.bunny.rotation += 0.01 * delta;
+    update(dt, delta: number) {
+        this.bunny.rotation += 0.01 * dt;
     }
 
     destroy() {

@@ -18,6 +18,11 @@ export const Config = {
 
 All the `.png` and `.jpeg` images, `.mp3` sounds and `.json` files included in the folder `assets` will be pre loaded before the game starts and available via the `getAsset("gameAssetName")` method.
 
+### GameObject
+
+Thanks to the `GameObjectEntity` and `GameObjectGroup` decorators it is possible to instanciate game entities with an unique id. The engine provide the methods to gather the relevant entities with the `getObjectByName`, `getObjectById` and `getGroup` methods.
+
+
 ### Sound manager
 
 A map of all the .mp3 resources is available after pre loading and sounds are managed via the following methods:
@@ -38,6 +43,10 @@ It's possible to focus the camera on a specific entity with the focusOn(element:
 ### Time Manager
 
 It's possible to set the game speed with the `setGameSpeed(speed: number)` and manage timers with the method `after(sec: number, callback: () => any, repeat?: number)`
+
+### Event Manager
+
+It's possible to send event to gameObject or to gameObjects group with the `sendEvent` method.
 
 ### Utils
 
