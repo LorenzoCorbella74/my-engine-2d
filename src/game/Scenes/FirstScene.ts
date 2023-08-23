@@ -2,6 +2,10 @@ import { Sprite } from "pixi.js";
 import { PixiEngine as $PE } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { gsap } from "gsap";
+import { InputKeyboardManager } from "../../engine/InputKeyboardManager";
+import { Game } from '../entities/game';
+
+
 
 export class FirstScene extends Scene {
 
@@ -10,11 +14,18 @@ export class FirstScene extends Scene {
     bunny2: any;
     json: any;
 
-    constructor() {
-        super()
+    timeline: any
+    game: Game;
+
+    constructor(inputMgr: InputKeyboardManager) {
+        super(inputMgr)
     }
 
     setup() {
+
+        this.game = new Game('Game', null)
+
+
         // 1 test 
         this.bg = $PE.getAsset("bg");
         this.bg.width = window.innerWidth;
@@ -54,10 +65,11 @@ export class FirstScene extends Scene {
 
 
         // Creazione di una timeline per l'animazione complessa
-        const tl = gsap.timeline({ repeat: -1, });
-        tl.pause()
+        this.timeline = gsap.timeline({ repeat: -1, });
+        this.timeline.pause()
+
         // Animazione di scaling, posizione e rotazione usando GSAP
-        tl.to(this.bunny2, {
+        this.timeline.to(this.bunny2, {
             x: $PE.app.view.width / 2,
             y: $PE.app.view.height / 2,
             rotation: Math.PI * 2,
@@ -76,7 +88,7 @@ export class FirstScene extends Scene {
         });
 
         // Animazione di fade-in e fade-out
-        tl.to(this.bunny2, {
+        this.timeline.to(this.bunny2, {
             alpha: 0,
             duration: 0.5,
             delay: 0.5,
@@ -89,6 +101,8 @@ export class FirstScene extends Scene {
                 console.log('Animazione DUE completata!', this);
             },
         });
+
+        const timeline = this.timeline
 
         // esempio GSAP
         this.bunny2.on("mousedown", function (e) {
@@ -109,7 +123,7 @@ export class FirstScene extends Scene {
 
 
             // Esegui l'animazione
-            tl.play();
+            timeline.play();
         })
 
 
@@ -142,6 +156,8 @@ export class FirstScene extends Scene {
     }
 
     destroy() {
+        // NOTE:  GSAP ANIMATION MUST BE STOPPED
+        this.timeline.kill()
         $PE.log(this.constructor.name + ' destroyed!')
     }
 

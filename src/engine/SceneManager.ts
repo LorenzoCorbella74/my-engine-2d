@@ -13,7 +13,7 @@ export class SceneManager {
     constructor(public app: PIXI.Application, public config: GameConfig) {
         this.currentScene = null;
         this.config.scenes.forEach(scene => {
-            this.scenes[scene.name] = new scene()
+            this.scenes[scene.name] = new scene($PE.input)
         });
     }
 

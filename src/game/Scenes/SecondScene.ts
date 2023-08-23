@@ -6,6 +6,7 @@ import { PixiEngine as $PE } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 import { EventType, GameEvent, GameEventForGroup } from '../../engine/EventManager';
+import { InputKeyboardManager } from '../../engine/InputKeyboardManager';
 
 export class SecondScene extends Scene {
 
@@ -20,10 +21,11 @@ export class SecondScene extends Scene {
 
     gameSpeed = 1;
     rectangle: Graphics;
+    rectangle2: Graphics;
     crosshair: Graphics;
 
-    constructor() {
-        super()
+    constructor(inputMgr: InputKeyboardManager) {
+        super(inputMgr)
     }
 
     setup() {
@@ -54,6 +56,14 @@ export class SecondScene extends Scene {
         this.rectangle.drawRect(0, 0, 200, 100);
         this.addChild(this.rectangle)
 
+
+        // rettangolo
+        this.rectangle2 = new Graphics();
+        this.rectangle2.beginFill(0xff0000);
+        this.rectangle2.drawRect(1000, 0, 200, 100);
+        this.addChild(this.rectangle2)
+
+
         // get the reference of the objecty in the gameObjects repository
         $PE.log('Test getObjectByName: ', $PE.getObjectByName('Player'));
         $PE.log('Test getGroup: ', $PE.getGroup('Enemy'));
@@ -78,11 +88,20 @@ export class SecondScene extends Scene {
         this.text.x = Math.sin($PE.time.getElapsedTime()) * window.innerWidth / 8;
 
         // rotate player to target
-        const mousePosition = $PE.input.getMouse();
+        const mousePosition = $PE.mouse.getMouse();
         this.crosshair.position.set(mousePosition.x, mousePosition.y);
+        //console.log('Mouse: ', mousePosition.x, mousePosition.y)
         const angle = Math.atan2(mousePosition.y - this.player.entity.y, mousePosition.x - this.player.entity.x);
         this.player.entity.rotation = angle;
 
+        this.player.update(delta)
+    }
+
+    destroy() {
+
+    }
+
+    onInputChange(inputs: any): void {
         // updating game speed
         /* if ($PE.input.isMouseButton2Down()) {
             $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
@@ -101,7 +120,7 @@ export class SecondScene extends Scene {
         if ($PE.input.isKeyDown('X')) {
             $PE.camera.zoomOut();
         }
-        if ($PE.input.isKeyDown('N')) {
+        if ($PE.input.isKeyDownForOneShot('N')) {
             $PE.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
         }
 
@@ -111,26 +130,19 @@ export class SecondScene extends Scene {
         }
 
         // test change camera target
-        if ($PE.input.isKeyDown('O')) {
+        if ($PE.input.isKeyDownForOneShot('O')) {
             const target = $PE.camera.target.name === 'Player' ? this.enemy1 : this.player
             $PE.camera.focusOn(target, this)
         }
 
         // test event to single entity
-        if ($PE.input.isKeyDown('E')) {
+        if ($PE.input.isKeyDownForOneShot('E')) {
             $PE.events.sendEvent(new GameEvent(EventType.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
         }
         // test event to group of entity
-        if ($PE.input.isKeyDown('R')) {
+        if ($PE.input.isKeyDownForOneShot('R')) {
             $PE.events.sendEvent(new GameEventForGroup('Enemy', EventType.Pickup, this.player, { test: 'test GameEventForGroup' }))
         }
-
-
-        this.player.update(delta)
-    }
-
-    destroy() {
-
     }
 
 }

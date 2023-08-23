@@ -66,9 +66,13 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
   private _name: string;
   private _sprite: Sprite;
 
-  constructor(name: string, spriteName: string) {
+  constructor(name: string, spriteName?: string) {
     this._name = name;
-    this._sprite = PixiEngine.getAsset(spriteName);
+    // empty sprite if not specified
+    this._sprite = spriteName ? PixiEngine.getAsset(spriteName) : PixiEngine.getAsset('empty');
+    if (!spriteName) {
+      this.hide()
+    }
   }
 
   onEventHandler(event: GameEvent<BasePayload> | GameEventForGroup<BasePayload>) {

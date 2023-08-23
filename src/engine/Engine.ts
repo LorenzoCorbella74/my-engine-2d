@@ -10,7 +10,8 @@ import { SoundManager } from './SoundManager';
 import { TimeManager } from './TimeManager';
 import { StorageDB } from './StorageManager';
 import { SceneManager } from './SceneManager';
-import { InputManager } from './InputManager';
+import { InputKeyboardManager } from './InputKeyboardManager';
+import { InputMouseManager } from './InputMouseManager';
 import { GameConfig } from "../game/Config";
 import { Camera } from './Camera';
 import { GameLogic } from './GameLogic';
@@ -29,7 +30,8 @@ export class Engine {
     public storage: StorageDB;
     public time: TimeManager;
     public scenes: SceneManager;
-    public input: InputManager;
+    public input: InputKeyboardManager;
+    public mouse: InputMouseManager;
     public camera: Camera
     public logic: GameLogic;
     public repo: GameObjectRepo = new GameObjectRepo();
@@ -38,6 +40,13 @@ export class Engine {
     paused: boolean = false
 
     constructor() { }
+
+
+    // Funzione per gestire il ridimensionamento della finestra
+    handleResize() {
+        // Aggiorna le dimensioni dell'applicazione in base alle nuove dimensioni della finestra
+        this.app.renderer.resize(window.innerWidth, window.innerHeight);
+    }
 
     run(config: GameConfig) {
         gsap.registerPlugin(PixiPlugin);
@@ -62,13 +71,14 @@ export class Engine {
 
         document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
 
+        this.app.view.addEventListener('resize', this.handleResize.bind(this));
+
         this.storage = new StorageDB(config.storagePrefix);
+        this.sounds = new SoundManager();
         this.time = new TimeManager(this.app);
-        this.scenes = new SceneManager(this.app, this.config);
-        this.camera = new Camera(this.app, this.scenes);
         this.logic = new GameLogic()
         this.events = new EventManager(this);
-        this.input = new InputManager({
+        this.input = new InputKeyboardManager({
             // DEFAULTS
             ...{
                 'UP': 'w',
@@ -78,7 +88,9 @@ export class Engine {
                 'SPACE': ' ',
             }, ...config.input
         }, this.app);
-        this.sounds = new SoundManager();
+        this.mouse = new InputMouseManager(this.app);
+        this.scenes = new SceneManager(this.app, this.config);
+        this.camera = new Camera(this.app, this.scenes);
         this.loader = new LoaderHelper(massiveRequire(loaderData), this.sounds);
 
         // loader .... ON
@@ -87,6 +99,7 @@ export class Engine {
             this.log(ENGINE_MSG_PREFIX + 'Resources loaded, starting loop!!');
             this.scenes.startDefaultScene();
             this.start();
+            this.handleResize();
         });
 
         this.app.ticker.maxFPS = 60;

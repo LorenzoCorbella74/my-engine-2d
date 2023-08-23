@@ -1,8 +1,10 @@
 import * as PIXI from "pixi.js";
+import { InputKeyboardManager } from "./InputKeyboardManager";
 
 export class Scene extends PIXI.Container {
-    constructor() {
+    constructor(public input: InputKeyboardManager) {
         super();
+        this.input.registerScene(this)
     }
 
     setup() { }
@@ -10,6 +12,10 @@ export class Scene extends PIXI.Container {
     destroy() { }
 
     // Utilizzare dt per aggiornare gli elementi della scena
-    update(dt, delta) {
+    update(dt: number, delta: number) {
+    }
+
+    onInputChange(inputs) {
+        console.log(this.constructor.name, inputs)
     }
 }

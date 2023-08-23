@@ -11,6 +11,9 @@ export class Player extends GameObject {
 
         this.entity.x = window.innerWidth / 2;
         this.entity.y = window.innerHeight / 2 - 100;
+        this.entity.anchor.set(0.5);
+
+
         this.speed = 150; // 150 px/sec
     }
 
