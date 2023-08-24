@@ -6,6 +6,7 @@ Super basic 2D game Engine based on:
 - [Pixi Sounds v.5](https://pixijs.io/sound/examples/index.html),
 - [ GSAP V3 + pixiPlugin](https://greensock.com/docs/v3/Plugins/PixiPlugin)
 - [Typescript](https://www.typescriptlang.org/)
+- [Matter-js](https://github.com/liabru/matter-js/tree/master)
 - [Webpack](https://webpack.js.org/)
 
 The `src/engine` folder containes all the classes to set up in no time a game project, while in the `src/game` folder the developer must provide a list of game scenes and game entities to populate such scenes!.
