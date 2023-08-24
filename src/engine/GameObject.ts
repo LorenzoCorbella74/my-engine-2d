@@ -22,7 +22,7 @@ export function GameObjectEntity(target: any) {
     PixiEngine.repo.gameObjectsIdMap.set(instance.id, instance);
     PixiEngine.repo.gameObjectsNameMap.set(instance.name, instance);
     PixiEngine.repo.gameObjectsIdNameMap.set(instance.id, instance.name);
-    PixiEngine.scenes.currentScene.addChild(instance.entity);
+    PixiEngine.scenes.currentScene.addChild(instance.sprite);
     // ritorna l'istanza
     return instance;
   };
@@ -99,11 +99,11 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     this._name = value;
   }
 
-  get entity(): Sprite {
+  get sprite(): Sprite {
     return this._sprite;
   }
 
-  set entity(value: Sprite) {
+  set sprite(value: Sprite) {
     this._sprite = value;
   }
 
@@ -116,4 +116,8 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
   }
 
   update(deltaTime: number) { }
+
+  destroy() {
+    this._sprite.destroy()
+  }
 }

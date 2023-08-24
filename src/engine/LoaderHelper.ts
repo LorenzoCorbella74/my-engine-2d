@@ -1,10 +1,10 @@
-import { Assets } from 'pixi.js';
+import { Assets, Texture } from 'pixi.js';
 import { sound, SoundLibrary } from '@pixi/sound';
 import { SoundManager } from './SoundManager';
 
 export class LoaderHelper {
     loader: any;
-    resources: {};
+    resources: { [key: string]: Texture | any };
     sound: SoundLibrary;
     soundsManager: SoundManager;
 
@@ -19,7 +19,7 @@ export class LoaderHelper {
     * Precarica gli asset grafici (jpg, png) i suoni ed i file .json di configurazione
     */
     async preload() {
-        let assets:string[] = []
+        let assets: string[] = []
         let jsonData = {}
         for (const asset of this.loader) {
             let key = asset.key.substr(asset.key.lastIndexOf('/') + 1);
@@ -39,10 +39,11 @@ export class LoaderHelper {
         this.resources = await Assets.load(assets);
         // merge json data
         this.resources = { ...this.resources, ...jsonData };
-        return 'done';
+        return this.resources;
     }
 }
 
+// TODO: se sono dello stesso nome le risorse si incasina l'import -> prevedere un controllo sul tipo di file
 /*
     Per prevenire il problema dell'audio senza interazione:
     "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page."

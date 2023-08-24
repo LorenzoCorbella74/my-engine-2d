@@ -158,7 +158,10 @@ export class FirstScene extends Scene {
     destroy() {
         // NOTE:  GSAP ANIMATION MUST BE STOPPED
         this.timeline.kill()
-        $PE.log(this.constructor.name + ' destroyed!')
+
+        // si rimovono tutti i figli
+        const removedChild = this.removeChildren()
+        $PE.log(this.constructor.name + ' destroyed!: ', removedChild)
     }
 
 }

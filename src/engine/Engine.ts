@@ -18,6 +18,7 @@ import { GameLogic } from './GameLogic';
 
 import { GameObjectRepo } from "./GameObjectRepo";
 import { EventManager } from "./EventManager";
+import { PhysicManager } from './PhysicManager'
 
 export const ENGINE_MSG_PREFIX = "[PIXI-ENGINE]: "
 
@@ -36,6 +37,7 @@ export class Engine {
     public logic: GameLogic;
     public repo: GameObjectRepo = new GameObjectRepo();
     public events: EventManager;
+    public physics: PhysicManager
 
     paused: boolean = false
 
@@ -92,6 +94,7 @@ export class Engine {
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this.app, this.scenes);
         this.loader = new LoaderHelper(massiveRequire(loaderData), this.sounds);
+        this.physics = new PhysicManager(/* this */)
 
         // loader .... ON
         this.loader.preload().then((result) => {
@@ -113,6 +116,7 @@ export class Engine {
                 downloadImage(image, "img.png");
             } */
             this.time.update()
+            this.physics.update() // updating Matter-js 
 
             this.scenes.currentScene.update(this.time.getDeltaTime(), delta);     // NOTE: delta è intorno a 1 !!!!!
             this.events.processEvents()

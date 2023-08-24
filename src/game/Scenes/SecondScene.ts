@@ -8,6 +8,8 @@ import { GameObject } from '../../engine/GameObject';
 import { EventType, GameEvent, GameEventForGroup } from '../../engine/EventManager';
 import { InputKeyboardManager } from '../../engine/InputKeyboardManager';
 
+import * as Matter from 'matter-js';
+
 export class SecondScene extends Scene {
 
     text: Text
@@ -20,7 +22,7 @@ export class SecondScene extends Scene {
 
 
     gameSpeed = 1;
-    rectangle: Graphics;
+    obstacle: Graphics;
     rectangle2: Graphics;
     crosshair: Graphics;
 
@@ -43,18 +45,25 @@ export class SecondScene extends Scene {
         this.text.y = window.innerHeight / 2;
         this.addChild(this.text)
 
+        // test MATTER-JS
+        this.obstacle = new Graphics();
+        this.obstacle.beginFill(0xff0000);
+        this.obstacle.drawRect(0, 0, 200, 100);
+        this.addChild(this.obstacle)
+        // rigidBody
+        const obstacleRigidBody = Matter.Bodies.rectangle(100, 50, 200, 100, {
+            isStatic: true,
+            label: "Obstacle"
+        });
+        Matter.Composite.add($PE.physics.physicsEngine.world, obstacleRigidBody);
+
+
         this.player = new Player('Player', 'player')
         $PE.camera.focusOn(this.player, this)
 
         this.enemy1 = new Enemy('Nemico1', 'player')
         this.enemy2 = new Enemy('Nemico2', 'player')
-        this.enemy1.entity.x = 100
-
-        // rettangolo
-        this.rectangle = new Graphics();
-        this.rectangle.beginFill(0xff0000);
-        this.rectangle.drawRect(0, 0, 200, 100);
-        this.addChild(this.rectangle)
+        this.enemy1.sprite.x = 100
 
 
         // rettangolo
@@ -91,14 +100,14 @@ export class SecondScene extends Scene {
         const mousePosition = $PE.mouse.getMouse();
         this.crosshair.position.set(mousePosition.x, mousePosition.y);
         //console.log('Mouse: ', mousePosition.x, mousePosition.y)
-        const angle = Math.atan2(mousePosition.y - this.player.entity.y, mousePosition.x - this.player.entity.x);
-        this.player.entity.rotation = angle;
+        const angle = Math.atan2(mousePosition.y - this.player.sprite.y, mousePosition.x - this.player.sprite.x);
+        this.player.sprite.rotation = angle;
 
         this.player.update(delta)
     }
 
     destroy() {
-
+        // remove sprites and rigidBodies
     }
 
     onInputChange(inputs: any): void {

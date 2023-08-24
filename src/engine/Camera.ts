@@ -41,7 +41,7 @@ export class Camera {
         // se non passato focus al centro dello schermo
         if (!element) {
             element = {
-                entity: {
+                sprite: {
                     x: this.app.screen.width / 2,
                     y: this.app.screen.height / 2
                 }
@@ -79,15 +79,15 @@ export class Camera {
                 const offsetY = (Math.random() - 0.85) < 0 ? 0 : this.shakeAmplitude;
 
                 // updating player coordinates
-                this.target.entity.x = this.target.entity.x + offsetX;
-                this.target.entity.y = this.target.entity.y + offsetY;
+                this.target.sprite.x = this.target.sprite.x + offsetX;
+                this.target.sprite.y = this.target.sprite.y + offsetY;
             }
         } else {
             this.shakeDuration = 0;
         }
         // Aggiorna la posizione della telecamera in base al target
-        this.container.position.x = this.app.screen.width / 2 - (this.target.entity.x * this.zoomLevel);
-        this.container.position.y = this.app.screen.height / 2 - (this.target.entity.y * this.zoomLevel);
+        this.container.position.x = this.app.screen.width / 2 - (this.target.sprite.x * this.zoomLevel);
+        this.container.position.y = this.app.screen.height / 2 - (this.target.sprite.y * this.zoomLevel);
 
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel);
