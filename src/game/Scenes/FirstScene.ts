@@ -5,16 +5,15 @@ import { gsap } from "gsap";
 import { InputKeyboardManager } from "../../engine/InputKeyboardManager";
 import { Game } from '../entities/game';
 
-
-
 export class FirstScene extends Scene {
 
     bg: any;
     bunny: any;
     bunny2: any;
+    bunny3: any;
     json: any;
 
-    timeline: any
+    timeline: any // TODO
     game: Game;
 
     constructor(inputMgr: InputKeyboardManager) {
@@ -39,7 +38,7 @@ export class FirstScene extends Scene {
             $PE.toggle();
         });
 
-        // 2
+        // 2 Go to the second Scene
         this.bunny = $PE.getAsset("bunny") as Sprite;
         this.bunny.width = 64;
         this.bunny.height = 64;
@@ -51,6 +50,21 @@ export class FirstScene extends Scene {
         this.bunny.on("mousedown", function (e) {
             $PE.time.after(1, () => {
                 $PE.scenes.changeScene('SecondScene')
+            })
+        });
+
+        //  Go to the Matter Scene
+        this.bunny3 = $PE.getAsset("bunny") as Sprite;
+        this.bunny3.width = 64;
+        this.bunny3.height = 64;
+        this.bunny3.x = 300
+        this.bunny3.y = 100
+        this.bunny3.anchor.set(0.5);
+        this.bunny3.interactive = true;
+        this.addChild(this.bunny3);
+        this.bunny3.on("mousedown", function (e) {
+            $PE.time.after(1, () => {
+                $PE.scenes.changeScene('MatterScene')
             })
         });
 

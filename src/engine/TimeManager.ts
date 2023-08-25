@@ -1,4 +1,6 @@
 import { Application } from "pixi.js";
+import { gsap } from "gsap";
+
 
 type Timer = {
     duration: number;
@@ -74,6 +76,23 @@ export class TimeManager {
 
     getFrame(): number {
         return this._frame;
+    }
+
+    getGameSpeed(): number {
+        return this.gameSpeed;
+    }
+
+
+    aminateGameSpeed(amount: number) {
+        gsap.to(this, {  // this è bunny
+            gameSpeed: amount,
+            duration: 1,
+            easing: 'easeInOut',
+            onComplete: () => {
+                // Questa funzione verrà chiamata al termine dell'animazione
+                console.log('aminate GameSpeed completed!', this);
+            },
+        });
     }
 
     /**

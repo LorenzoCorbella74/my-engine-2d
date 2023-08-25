@@ -67,7 +67,7 @@ export class Engine {
             autoStart: false,
             /* antialias: true, */
             autoDensity: true,
-            backgroundColor: 0x0,
+            backgroundColor: /* 0x0 */0x2980b9,
             resolution: devicePixelRatio
         });
 

@@ -1,6 +1,7 @@
 // importing scenes
 import { FirstScene } from "./Scenes/FirstScene";
 import { SecondScene } from './Scenes/SecondScene';
+import { MatterScene } from './Scenes/MatterScene';
 
 export type GameConfig = {
     name: string;
@@ -11,7 +12,7 @@ export type GameConfig = {
 
 export const Config = {
     name: 'My Game',
-    scenes: [FirstScene, SecondScene],  // the first is the startScene
+    scenes: [FirstScene, SecondScene, MatterScene],  // the first is the startScene
     storagePrefix: 'app_',
     input: {
         'UP': 'w',
