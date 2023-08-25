@@ -102,7 +102,7 @@ export class MatterScene extends Scene {
             $PE.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
         }
 
-        // test zoomTo
+        /** TEST GAME SPEED*/
         if ($PE.input.isKeyDown('M')) {
             $PE.time.aminateGameSpeed(2)
         }

@@ -80,27 +80,28 @@ export class Engine {
         this.time = new TimeManager(this.app);
         this.logic = new GameLogic()
         this.events = new EventManager(this);
-        this.input = new InputKeyboardManager({
-            // DEFAULTS
-            ...{
-                'UP': 'w',
-                'DOWN': 's',
-                'RIGHT': 'd',
-                'LEFT': 'a',
-                'SPACE': ' ',
-            }, ...config.input
-        }, this.app);
         this.mouse = new InputMouseManager(this.app);
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this.app, this.scenes);
         this.loader = new LoaderHelper(massiveRequire(loaderData), this.sounds);
         this.physics = new PhysicManager(/* this */)
 
+
         // loader .... ON
         this.loader.preload().then((result) => {
             // loader .... OFF
             this.log(ENGINE_MSG_PREFIX + 'Resources loaded, starting loop!!');
             this.scenes.startDefaultScene();
+            this.input = new InputKeyboardManager({
+                // DEFAULTS
+                ...{
+                    'UP': 'w',
+                    'DOWN': 's',
+                    'RIGHT': 'd',
+                    'LEFT': 'a',
+                    'SPACE': ' ',
+                }, ...config.input
+            }, this.app);
             this.start();
             this.handleResize();
         });

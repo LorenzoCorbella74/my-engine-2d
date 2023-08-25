@@ -1,5 +1,6 @@
 import { Application } from "pixi.js";
 import { Scene } from "./Scene";
+import { PixiEngine as $PE } from "./Engine";
 
 export class InputKeyboardManager {
     private keys: { [key: string]: boolean } = {};
@@ -9,8 +10,6 @@ export class InputKeyboardManager {
     private ctrlKey = false;
     private shiftKey = false;
     app: Application;
-
-    currentScene: Scene;
 
     constructor(private keyMapping: { [key: string]: string }, app: Application) {
         this.app = app;
@@ -25,7 +24,7 @@ export class InputKeyboardManager {
             } else if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
                 this.shiftKey = true;
             }
-            this.currentScene.onInputChange(this.keys);
+            $PE.scenes.currentScene.onInputChange(this.keys);
         });
 
         document.addEventListener('keyup', e => {
@@ -38,11 +37,6 @@ export class InputKeyboardManager {
             }
         });
     }
-
-    registerScene(scene: Scene) {
-        this.currentScene = scene;
-    }
-
 
     isKeyDown(keyName: string) {
         return this.keys[this.keyMapping[keyName]] === true;

@@ -111,17 +111,6 @@ export class SecondScene extends Scene {
     }
 
     onInputChange(inputs: any): void {
-        // updating game speed
-        /* if ($PE.input.isMouseButton2Down()) {
-            $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
-            this.gameSpeed -= dt
-            $PE.time.setGameSpeed(this.gameSpeed)
-        }
-        if ($PE.input.isMouseButton3Down()) {
-             $PE.log('Mouse 1 pressed: Game speed',this.gameSpeed ) 
-            this.gameSpeed += dt
-            $PE.time.setGameSpeed(this.gameSpeed)
-        } */
 
         if ($PE.input.isKeyDown('Z')) {
             $PE.camera.zoomIn();

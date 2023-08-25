@@ -87,7 +87,7 @@ export class TimeManager {
         gsap.to(this, {  // this è bunny
             gameSpeed: amount,
             duration: 1,
-            easing: 'easeInOut',
+            ease: 'easeInOut',
             onComplete: () => {
                 // Questa funzione verrà chiamata al termine dell'animazione
                 console.log('aminate GameSpeed completed!', this);
