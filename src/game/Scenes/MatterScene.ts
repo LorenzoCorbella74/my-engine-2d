@@ -5,11 +5,16 @@ import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 import { GameGraphics } from '../../engine/GameGraphics'
 import * as Matter from 'matter-js';
+import { GraphicsWithPhisics } from '../../engine/PhysicManager';
+
+
+
 
 export class MatterScene extends Scene {
 
     player: GameObject;
-    obstacle: Graphics;
+    obstacle: GraphicsWithPhisics;
+    obstacle2: GraphicsWithPhisics;
     crossHair: Graphics;
 
 
@@ -23,16 +28,28 @@ export class MatterScene extends Scene {
 
     setup() {
         // test MATTER-JS
-        this.obstacle = new Graphics();
+        this.obstacle = new Graphics() as GraphicsWithPhisics;
         this.obstacle.beginFill(0xff0000);
         this.obstacle.drawRect(0, 0, 200, 100);
         this.addChild(this.obstacle)
         // rigidBody
-        const obstacleRigidBody = Matter.Bodies.rectangle(100, 50, 200, 100, {
+        this.obstacle.rigidBody = Matter.Bodies.rectangle(100, 50, 200, 100, {
             isStatic: true,
             label: "Obstacle"
         });
-        Matter.Composite.add(this.engine.physics.physicsEngine.world, obstacleRigidBody);
+        Matter.Composite.add(this.engine.physics.physicsEngine.world, this.obstacle.rigidBody);
+
+
+        this.obstacle2 = new Graphics() as GraphicsWithPhisics;
+        this.obstacle2.beginFill(0xff0000);
+        this.obstacle2.drawRect(200, 400, 200, 100);
+        this.addChild(this.obstacle2)
+        // rigidBody
+        this.obstacle2.rigidBody = Matter.Bodies.rectangle(300, 450, 200, 100, {
+            isStatic: true,
+            label: "Obstacle2"
+        });
+        Matter.Composite.add(this.engine.physics.physicsEngine.world, this.obstacle2.rigidBody);
 
         this.player = new Player('Player', 'player')
         this.player.sprite.x = window.innerWidth / 2;
@@ -50,7 +67,7 @@ export class MatterScene extends Scene {
 
     update(delta: number) {
         // PixiEngine.log(PixiEngine.time.getFrame().toString())
-        const dt = this.engine.time.getDeltaTime()
+        // const dt = this.engine.time.getDeltaTime()
 
         // rotate player to target
         const mousePosition = this.engine.mouse.getMouse();
@@ -60,6 +77,11 @@ export class MatterScene extends Scene {
         this.player.sprite.rotation = angle;
 
         this.player.update(delta)
+
+
+        this.engine.time.runOnFrameNum(1, () => {
+            this.engine.log('Player hasLineOfSight: ', this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
+        })
     }
 
     destroy() {

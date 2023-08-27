@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { Texture } from "pixi.js";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
-import { LoaderHelper } from "./LoaderHelper";
+import { Preloader } from "./LoaderHelper";
 
 // Managers
 import { massiveRequire } from './utils';
@@ -27,7 +27,7 @@ export class Engine {
     app: PIXI.Application<PIXI.ICanvas>;
     config: GameConfig;
 
-    private loader: LoaderHelper;
+    private loader: Preloader;
     public sounds: SoundManager;
     public storage: StorageDB;
     public time: TimeManager;
@@ -89,7 +89,7 @@ export class Engine {
         this.mouse = new InputMouseManager(this.app);
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this.app, this.scenes);
-        this.loader = new LoaderHelper(massiveRequire(loaderData), this.sounds);
+        this.loader = new Preloader(massiveRequire(loaderData), this.sounds);
         this.physics = new PhysicManager(/* this */)
         this.crosshair = new CrossHairManager();
 

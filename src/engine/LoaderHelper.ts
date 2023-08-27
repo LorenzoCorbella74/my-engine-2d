@@ -2,7 +2,7 @@ import { Assets, Texture } from 'pixi.js';
 import { sound, SoundLibrary } from '@pixi/sound';
 import { SoundManager } from './SoundManager';
 
-export class LoaderHelper {
+export class Preloader {
     loader: any;
     resources: { [key: string]: Texture | any };
     sound: SoundLibrary;

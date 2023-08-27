@@ -17,9 +17,9 @@ export class SecondScene extends Scene {
     enemy1: GameObject;
     enemy2: GameObject;
 
-    obstacle: Graphics;
-    rectangle2: Graphics;
-    crosshair: Graphics;
+
+
+    crossHair: Graphics;
 
     constructor() {
         super(PixiEngine)
@@ -43,10 +43,14 @@ export class SecondScene extends Scene {
 
 
         this.player = new Player('Player', 'player')
+        this.player.sprite.x = window.innerWidth / 2;
+        this.player.sprite.y = window.innerHeight / 2 - 100;
+        this.player.sprite.anchor.set(0.5);
+
         this.engine.camera.focusOn(this.player, this)
 
-        this.enemy1 = new Enemy('Nemico1', 'player')
-        this.enemy2 = new Enemy('Nemico2', 'player')
+        this.enemy1 = new Enemy('Nemico1', 'color1')
+        this.enemy2 = new Enemy('Nemico2', 'color2')
         this.enemy1.sprite.x = 100
 
 
@@ -54,18 +58,7 @@ export class SecondScene extends Scene {
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
         this.engine.log('Test getGroup: ', this.engine.getGroup('Enemy'));
 
-        // Creazione del mirino
-        this.crosshair = new Graphics();
-        this.crosshair.lineStyle(2, 0xFFFFFF, 1);
-        this.crosshair.moveTo(-15, 0);
-        this.crosshair.lineTo(15, 0);
-        this.crosshair.moveTo(0, -15);
-        this.crosshair.lineTo(0, 15);
-        this.crosshair.position.set(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2);
-        this.addChild(this.crosshair);
-
-        // Nascondere l'icona del mouse usando CSS
-        this.engine.app.view.style.cursor = 'none';
+        this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
     }
 
     update(delta: number) {
@@ -74,18 +67,19 @@ export class SecondScene extends Scene {
         this.text.x = Math.sin(this.engine.time.getElapsedTime()) * window.innerWidth / 8;
 
         // rotate player to target
-        const mousePosition = this.engine.mouse.getMouse();
-        this.crosshair.position.set(mousePosition.x, mousePosition.y);
-        //console.log('Mouse: ', mousePosition.x, mousePosition.y)
-        const angle = Math.atan2(mousePosition.y - this.player.sprite.y, mousePosition.x - this.player.sprite.x);
-        this.player.sprite.rotation = angle;
+        const { x, y } = this.engine.mouse.getMouse();
+        this.crossHair.position.set(x, y);
 
         this.player.update(delta)
+        this.enemy1.update(delta)
+        this.enemy2.update(delta)
     }
 
     destroy() {
         // remove sprites
         this.player.destroy()
+        this.enemy1.destroy()
+        this.enemy2.destroy()
     }
 
     onInputChange(inputs: any): void {

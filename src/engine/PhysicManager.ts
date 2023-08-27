@@ -1,24 +1,30 @@
-import * as Matter from 'matter-js';
+import { Body, Bodies, World, Query, Engine, Events, Composite } from 'matter-js';
 import { PixiEngine } from './Engine'
 import { EventType, GameEvent } from './EventManager';
+import { GameObject } from './GameObject';
+import { Graphics } from 'pixi.js';
+
+
+export type GraphicsWithPhisics = Graphics & {
+    rigidBody: Body
+}
 
 export class PhysicManager {
-
 
     physicsEngine: Matter.Engine = null
 
     constructor(/* public engine: Engine */) {
         /*  this.engine = engine; */
-        this.physicsEngine = Matter.Engine.create()
+        this.physicsEngine = Engine.create()
 
         this.physicsEngine.gravity.y = 0;
-        Matter.Events.on(this.physicsEngine, 'collisionStart', (event) => this.onCollisionStart(event))
-        Matter.Events.on(this.physicsEngine, 'collisionEnd', (event) => this.onCollisionEnd(event))
-        Matter.Events.on(this.physicsEngine, 'collisionActive', (event) => this.onCollisionStart(event))
+        Events.on(this.physicsEngine, 'collisionStart', (event) => this.onCollisionStart(event))
+        Events.on(this.physicsEngine, 'collisionEnd', (event) => this.onCollisionEnd(event))
+        Events.on(this.physicsEngine, 'collisionActive', (event) => this.onCollisionStart(event))
     }
 
     update() {
-        Matter.Engine.update(this.physicsEngine, 1000 / 60)
+        Engine.update(this.physicsEngine, 1000 / 60)
     }
 
     onCollisionStart(event: Matter.IEventCollision<Matter.Engine>) {
@@ -44,6 +50,19 @@ export class PhysicManager {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
         console.log(`${bodyA.label} ends collision with ${bodyB.label}.`, bodyA, bodyB)
+    }
+
+    // Funzione per verificare la visibilità tra due GameObject
+    hasLineOfSight(fromObj: GameObject | GraphicsWithPhisics, toObj: GameObject | GraphicsWithPhisics): boolean {
+        if (fromObj.rigidBody && toObj.rigidBody) {
+            const collisions = Query.ray(
+                Composite.allBodies(PixiEngine.physics.physicsEngine.world),    // TODO: non esiste
+                fromObj.rigidBody.position,
+                toObj.rigidBody.position
+            );
+            return collisions.length === 0;
+        }
+        return false;
     }
 
 }

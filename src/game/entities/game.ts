@@ -1,8 +1,8 @@
 
 import { GameObject } from "../../engine/GameObject"
-import { GameObjectEntity } from '../../engine/decorators';
+import { GameNode } from '../../engine/decorators';
 
-@GameObjectEntity
+@GameNode()
 export class Game extends GameObject {
 
     debug: boolean = false

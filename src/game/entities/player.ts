@@ -1,9 +1,9 @@
 import { Body, Bodies, World } from 'matter-js';
 
 import { GameObject } from "../../engine/GameObject"
-import { GameObjectEntity } from '../../engine/decorators';
+import { GameNode } from '../../engine/decorators';
 
-@GameObjectEntity
+@GameNode({ rigidBody: { shape: 'rectangle', isStatic: false } })
 export class Player extends GameObject {
 
     private speed: number;
@@ -17,7 +17,7 @@ export class Player extends GameObject {
     constructor(name, spriteName) {
         super(name, spriteName);
 
-        this.buildRigidBody();
+        // this.buildRigidBody();
 
         this.speed = 150; // px/sec
     }
@@ -67,6 +67,7 @@ export class Player extends GameObject {
 
     destroy(): void {
         this.sprite.destroy()
+        // this.removeRididBody()
         World.remove(this.engine.physics.physicsEngine.world, this.rigidBody);
     }
 }

@@ -60,7 +60,7 @@ export class EventManager {
                     }
                 } else {
                     // single entity
-                    const receiver = this.engine.repo.getObjectById(event.receiver.id);
+                    const receiver = this.engine.repo.getObjectById(event.receiver?.id);
                     if (receiver) {
                         receiver.onEventHandler(event);
                     }
