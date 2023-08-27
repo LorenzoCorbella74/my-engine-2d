@@ -13,17 +13,23 @@ export class SceneManager {
     constructor(public app: PIXI.Application, public config: GameConfig) {
         this.currentScene = null;
         this.config.scenes.forEach(scene => {
-            this.scenes[scene.name] = new scene($PE.input)
+            this.scenes[scene.name] = new scene($PE)
         });
     }
 
     setupNewScene(sceneName: string) {
+
+
+
+
         this.currentScene = this.scenes[sceneName];
         this.app.stage.addChild(this.currentScene);
         this.currentScene.setup();
+
+        // SCENE ANIMATION
         this.currentScene.alpha = 0;
         gsap.to(this.currentScene, {
-            alpha: 1, // Valore di opacità finale
+            alpha: 1,
             duration: 0.25
         })
     }
@@ -43,7 +49,6 @@ export class SceneManager {
             } else {
                 this.setupNewScene(sceneName);
             }
-
         } else {
             $PE.log(`Scene "${sceneName}" not found`);
         }

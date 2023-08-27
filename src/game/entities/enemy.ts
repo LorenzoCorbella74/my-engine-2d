@@ -1,6 +1,7 @@
 
 import { GameEvent } from "../../engine/EventManager";
-import { GameObjectEntity, GameObject, GameObjectGroup } from "../../engine/GameObject"
+import { GameObject } from "../../engine/GameObject"
+import { GameObjectEntity, GameObjectGroup } from '../../engine/decorators';
 
 @GameObjectGroup('Enemy')
 @GameObjectEntity

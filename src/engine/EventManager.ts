@@ -1,4 +1,4 @@
-import { Engine } from './Engine';
+import { PixiEngine } from './Engine';
 import { GameObject } from './GameObject'
 
 // Definizione dei tipi di evento
@@ -38,7 +38,7 @@ export type BasePayload = {
 export class EventManager {
 
     private eventQueue: (GameEvent<BasePayload> | GameEventForGroup<BasePayload>)[] = [];
-    constructor(public engine: Engine) {
+    constructor(public engine: typeof PixiEngine) {
 
     }
 

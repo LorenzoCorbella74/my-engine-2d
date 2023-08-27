@@ -1,7 +1,7 @@
 import { Engine, PixiEngine } from "./engine/Engine";
 import { Config } from "./game/Config";
 
-import  "./index.css";
+import "./index.css";
 
 declare global {
     interface Window {
@@ -11,5 +11,3 @@ declare global {
 
 PixiEngine.run(Config);
 
-// debug
-window.$PE = PixiEngine

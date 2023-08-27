@@ -2,13 +2,10 @@ import { Player } from '../entities/player';
 import { Enemy } from '../entities/enemy';
 
 import { Graphics, Text } from "pixi.js";
-import { PixiEngine as $PE } from "../../engine/Engine";
+import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 import { EventType, GameEvent, GameEventForGroup } from '../../engine/EventManager';
-import { InputKeyboardManager } from '../../engine/InputKeyboardManager';
-
-import * as Matter from 'matter-js';
 
 export class SecondScene extends Scene {
 
@@ -20,14 +17,12 @@ export class SecondScene extends Scene {
     enemy1: GameObject;
     enemy2: GameObject;
 
-
-    gameSpeed = 1;
     obstacle: Graphics;
     rectangle2: Graphics;
     crosshair: Graphics;
 
-    constructor(inputMgr: InputKeyboardManager) {
-        super(inputMgr)
+    constructor() {
+        super(PixiEngine)
     }
 
     setup() {
@@ -45,37 +40,19 @@ export class SecondScene extends Scene {
         this.text.y = window.innerHeight / 2;
         this.addChild(this.text)
 
-        // test MATTER-JS
-        this.obstacle = new Graphics();
-        this.obstacle.beginFill(0xff0000);
-        this.obstacle.drawRect(0, 0, 200, 100);
-        this.addChild(this.obstacle)
-        // rigidBody
-        const obstacleRigidBody = Matter.Bodies.rectangle(100, 50, 200, 100, {
-            isStatic: true,
-            label: "Obstacle"
-        });
-        Matter.Composite.add($PE.physics.physicsEngine.world, obstacleRigidBody);
 
 
         this.player = new Player('Player', 'player')
-        $PE.camera.focusOn(this.player, this)
+        this.engine.camera.focusOn(this.player, this)
 
         this.enemy1 = new Enemy('Nemico1', 'player')
         this.enemy2 = new Enemy('Nemico2', 'player')
         this.enemy1.sprite.x = 100
 
 
-        // rettangolo
-        this.rectangle2 = new Graphics();
-        this.rectangle2.beginFill(0xff0000);
-        this.rectangle2.drawRect(1000, 0, 200, 100);
-        this.addChild(this.rectangle2)
-
-
         // get the reference of the objecty in the gameObjects repository
-        $PE.log('Test getObjectByName: ', $PE.getObjectByName('Player'));
-        $PE.log('Test getGroup: ', $PE.getGroup('Enemy'));
+        this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
+        this.engine.log('Test getGroup: ', this.engine.getGroup('Enemy'));
 
         // Creazione del mirino
         this.crosshair = new Graphics();
@@ -84,20 +61,20 @@ export class SecondScene extends Scene {
         this.crosshair.lineTo(15, 0);
         this.crosshair.moveTo(0, -15);
         this.crosshair.lineTo(0, 15);
-        this.crosshair.position.set($PE.app.screen.width / 2, $PE.app.screen.height / 2);
+        this.crosshair.position.set(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2);
         this.addChild(this.crosshair);
 
         // Nascondere l'icona del mouse usando CSS
-        $PE.app.view.style.cursor = 'none';
+        this.engine.app.view.style.cursor = 'none';
     }
 
     update(delta: number) {
         // PixiEngine.log(PixiEngine.time.getFrame().toString())
-        const dt = $PE.time.getDeltaTime()
-        this.text.x = Math.sin($PE.time.getElapsedTime()) * window.innerWidth / 8;
+        const dt = this.engine.time.getDeltaTime()
+        this.text.x = Math.sin(this.engine.time.getElapsedTime()) * window.innerWidth / 8;
 
         // rotate player to target
-        const mousePosition = $PE.mouse.getMouse();
+        const mousePosition = this.engine.mouse.getMouse();
         this.crosshair.position.set(mousePosition.x, mousePosition.y);
         //console.log('Mouse: ', mousePosition.x, mousePosition.y)
         const angle = Math.atan2(mousePosition.y - this.player.sprite.y, mousePosition.x - this.player.sprite.x);
@@ -107,39 +84,40 @@ export class SecondScene extends Scene {
     }
 
     destroy() {
-        // remove sprites and rigidBodies
+        // remove sprites
+        this.player.destroy()
     }
 
     onInputChange(inputs: any): void {
 
-        if ($PE.input.isKeyDown('Z')) {
-            $PE.camera.zoomIn();
+        if (this.engine.input.isKeyDown('Z')) {
+            this.engine.camera.zoomIn();
         }
-        if ($PE.input.isKeyDown('X')) {
-            $PE.camera.zoomOut();
+        if (this.engine.input.isKeyDown('X')) {
+            this.engine.camera.zoomOut();
         }
-        if ($PE.input.isKeyDownForOneShot('N')) {
-            $PE.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
+        if (this.engine.input.isKeyDownForOneShot('N')) {
+            this.engine.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
         }
 
         // test zoomTo
-        if ($PE.input.isKeyDown('M')) {
-            $PE.camera.zoomTo($PE.camera.zoomLevel > 1 ? $PE.camera.zoomLevel - 0.5 : $PE.camera.zoomLevel + 0.5, 2000); // Zoom in di 0.2 e durata di 1000 ms
+        if (this.engine.input.isKeyDown('M')) {
+            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? this.engine.camera.zoomLevel - 0.5 : this.engine.camera.zoomLevel + 0.5, 2000); // Zoom in di 0.2 e durata di 1000 ms
         }
 
         // test change camera target
-        if ($PE.input.isKeyDownForOneShot('O')) {
-            const target = $PE.camera.target.name === 'Player' ? this.enemy1 : this.player
-            $PE.camera.focusOn(target, this)
+        if (this.engine.input.isKeyDownForOneShot('O')) {
+            const target = this.engine.camera.target.name === 'Player' ? this.enemy1 : this.player
+            this.engine.camera.focusOn(target, this)
         }
 
         // test event to single entity
-        if ($PE.input.isKeyDownForOneShot('E')) {
-            $PE.events.sendEvent(new GameEvent(EventType.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
+        if (this.engine.input.isKeyDownForOneShot('E')) {
+            this.engine.events.sendEvent(new GameEvent(EventType.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
         }
         // test event to group of entity
-        if ($PE.input.isKeyDownForOneShot('R')) {
-            $PE.events.sendEvent(new GameEventForGroup('Enemy', EventType.Pickup, this.player, { test: 'test GameEventForGroup' }))
+        if (this.engine.input.isKeyDownForOneShot('R')) {
+            this.engine.events.sendEvent(new GameEventForGroup('Enemy', EventType.Pickup, this.player, { test: 'test GameEventForGroup' }))
         }
     }
 

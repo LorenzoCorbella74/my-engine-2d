@@ -1,14 +1,14 @@
 import * as PIXI from "pixi.js";
-import { InputKeyboardManager } from "./InputKeyboardManager";
+import { Engine } from "./Engine";
 
 export class Scene extends PIXI.Container {
-    constructor(public input: InputKeyboardManager) {
+    constructor(public engine: Engine) {
         super();
     }
 
     setup() { }
 
-    destroy() { }
+    // destroy() { }
 
     // Utilizzare dt per aggiornare gli elementi della scena
     update(dt: number, delta: number) {
@@ -16,5 +16,10 @@ export class Scene extends PIXI.Container {
 
     onInputChange(inputs) {
         console.log(this.constructor.name, inputs)
+    }
+
+    onResize(width: number, height: number) {
+        console.log(this.constructor.name + '  resizing...', width, height)
+        // ogni oggetto dovrebbe essere scalato in caso di ridimensionamento della finestra
     }
 }

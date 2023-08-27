@@ -19,6 +19,7 @@ import { GameLogic } from './GameLogic';
 import { GameObjectRepo } from "./GameObjectRepo";
 import { EventManager } from "./EventManager";
 import { PhysicManager } from './PhysicManager'
+import { CrossHairManager } from './CrossHairManager'
 
 export const ENGINE_MSG_PREFIX = "[PIXI-ENGINE]: "
 
@@ -38,6 +39,7 @@ export class Engine {
     public repo: GameObjectRepo = new GameObjectRepo();
     public events: EventManager;
     public physics: PhysicManager
+    public crosshair: CrossHairManager
 
     paused: boolean = false
 
@@ -65,7 +67,7 @@ export class Engine {
         this.app = new PIXI.Application({
             resizeTo: window,
             autoStart: false,
-            /* antialias: true, */
+            antialias: true,
             autoDensity: true,
             backgroundColor: /* 0x0 */0x2980b9,
             resolution: devicePixelRatio
@@ -73,7 +75,11 @@ export class Engine {
 
         document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
 
-        this.app.view.addEventListener('resize', this.handleResize.bind(this));
+        // @ts-expect-error PIXI Inspector
+        window.__PIXI_APP__ = this.app;
+
+        // debug
+        window.$PE = PixiEngine
 
         this.storage = new StorageDB(config.storagePrefix);
         this.sounds = new SoundManager();
@@ -85,6 +91,13 @@ export class Engine {
         this.camera = new Camera(this.app, this.scenes);
         this.loader = new LoaderHelper(massiveRequire(loaderData), this.sounds);
         this.physics = new PhysicManager(/* this */)
+        this.crosshair = new CrossHairManager();
+
+        this.app.view.addEventListener('resize', (ev: UIEvent) => {
+            const target = ev.target as Window;
+
+            this.scenes.currentScene?.onResize?.(target.innerWidth, target.innerHeight);
+        });
 
 
         // loader .... ON

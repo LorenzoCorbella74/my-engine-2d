@@ -4,70 +4,16 @@ import { Sprite } from "pixi.js";
 import { IGameConditionEntity } from './GameLogic'
 import { GameEvent, GameEventForGroup, IGameObjectEventHandler, BasePayload } from './EventManager'
 
-
-/**
- * GameObjectEntity decorator.
- * @description put the instance with a generated id in the objects repository
- */
-export function GameObjectEntity(target: any) {
-  const original = target;
-
-  // si decora la classe originale
-  const newConstructor: any = function (...args: any[]) {
-    // si istanzia la classe decorata
-    const instance = new original(...args);
-
-    instance.id = Math.random().toString(36).substring(2, 15); // `${Date.now()}${Math.random()*1000000}`;
-    // si registra nel objects repository
-    PixiEngine.repo.gameObjectsIdMap.set(instance.id, instance);
-    PixiEngine.repo.gameObjectsNameMap.set(instance.name, instance);
-    PixiEngine.repo.gameObjectsIdNameMap.set(instance.id, instance.name);
-    PixiEngine.scenes.currentScene.addChild(instance.sprite);
-    // ritorna l'istanza
-    return instance;
-  };
-
-  newConstructor.prototype = original.prototype;
-  return newConstructor;
-}
-
-/**
- * GameObjectGroup decorator.
- * @description put the instance inside an object group repository
- */
-export function GameObjectGroup(groupName: string) {
-
-  return function (target: any) {
-    const original = target;
-
-    // si decora la classe originale
-    const newConstructor: any = function (...args: any[]) {
-      // si istanzia la classe decorata
-      const instance = new original(...args);
-
-      // si registra nel objects repository
-      if (!PixiEngine.repo.gameObjectsGroups[groupName]) {
-        PixiEngine.repo.gameObjectsGroups[groupName] = [];
-      }
-      PixiEngine.repo.gameObjectsGroups[groupName].push(instance);
-
-      // ritorna l'istanza
-      return instance;
-    };
-
-    newConstructor.prototype = original.prototype;
-    return newConstructor;
-  }
-}
-
 export class GameObject implements IGameConditionEntity, IGameObjectEventHandler {
 
   private _id: string;
   private _name: string;
   private _sprite: Sprite;
+  engine: typeof PixiEngine;
 
   constructor(name: string, spriteName?: string) {
     this._name = name;
+    this.engine = PixiEngine
     // empty sprite if not specified
     this._sprite = spriteName ? PixiEngine.getAsset(spriteName) : PixiEngine.getAsset('empty');
     if (!spriteName) {

@@ -1,9 +1,9 @@
 import { Sprite } from "pixi.js";
-import { PixiEngine as $PE } from "../../engine/Engine";
+import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
-import { gsap } from "gsap";
-import { InputKeyboardManager } from "../../engine/InputKeyboardManager";
 import { Game } from '../entities/game';
+
+import { createTimelineAnimation } from './animations/timeline'
 
 export class FirstScene extends Scene {
 
@@ -11,13 +11,12 @@ export class FirstScene extends Scene {
     bunny: any;
     bunny2: any;
     bunny3: any;
-    json: any;
 
-    timeline: any // TODO
+    timeline: GSAPTimeline
     game: Game;
 
-    constructor(inputMgr: InputKeyboardManager) {
-        super(inputMgr)
+    constructor() {
+        super(PixiEngine)
     }
 
     setup() {
@@ -26,20 +25,20 @@ export class FirstScene extends Scene {
 
 
         // 1 test 
-        this.bg = $PE.getAsset("bg");
+        this.bg = this.engine.getAsset("bg");
         this.bg.width = window.innerWidth;
         this.bg.height = window.innerHeight;
         this.bg.interactive = true;
         this.addChild(this.bg);
 
-        $PE.camera.focusOn(null, this)
+        this.engine.camera.focusOn(null, this)
 
         this.bg.on("mousedown", function (e) {
-            $PE.toggle();
+            this.engine.toggle();
         });
 
         // 2 Go to the second Scene
-        this.bunny = $PE.getAsset("bunny") as Sprite;
+        this.bunny = this.engine.getAsset("bunny") as Sprite;
         this.bunny.width = 64;
         this.bunny.height = 64;
         this.bunny.x = 100
@@ -47,14 +46,14 @@ export class FirstScene extends Scene {
         this.bunny.anchor.set(0.5);
         this.bunny.interactive = true;
         this.addChild(this.bunny);
-        this.bunny.on("mousedown", function (e) {
-            $PE.time.after(1, () => {
-                $PE.scenes.changeScene('SecondScene')
+        this.bunny.on("mousedown", (e) => {
+            this.engine.time.after(1, () => {
+                this.engine.scenes.changeScene('SecondScene')
             })
         });
 
         //  Go to the Matter Scene
-        this.bunny3 = $PE.getAsset("bunny") as Sprite;
+        this.bunny3 = this.engine.getAsset("bunny") as Sprite;
         this.bunny3.width = 64;
         this.bunny3.height = 64;
         this.bunny3.x = 300
@@ -62,13 +61,13 @@ export class FirstScene extends Scene {
         this.bunny3.anchor.set(0.5);
         this.bunny3.interactive = true;
         this.addChild(this.bunny3);
-        this.bunny3.on("mousedown", function (e) {
-            $PE.time.after(1, () => {
-                $PE.scenes.changeScene('MatterScene')
+        this.bunny3.on("mousedown", (e) => {
+            this.engine.time.after(1, () => {
+                this.engine.scenes.changeScene('MatterScene')
             })
         });
 
-        this.bunny2 = $PE.getAsset("bunny") as Sprite;
+        this.bunny2 = this.engine.getAsset("bunny") as Sprite;
         this.bunny2.width = 128;
         this.bunny2.height = 128;
         this.bunny2.x = 200
@@ -79,61 +78,12 @@ export class FirstScene extends Scene {
 
 
         // Creazione di una timeline per l'animazione complessa
-        this.timeline = gsap.timeline({ repeat: -1, });
-        this.timeline.pause()
-
-        // Animazione di scaling, posizione e rotazione usando GSAP
-        this.timeline.to(this.bunny2, {
-            x: $PE.app.view.width / 2,
-            y: $PE.app.view.height / 2,
-            rotation: Math.PI * 2,
-            // scaleX: 4,
-            // scaleY: 4,
-            pixi: { scaleX: 1.25, scaleY: 1.25 },
-            duration: 2,
-            ease: 'power1.inOut',
-            onUpdate: () => {
-                console.log('Updating!');
-            },
-            onComplete: () => {
-                // Questa funzione verrà chiamata al termine dell'animazione
-                console.log('Animazione UNO completata!', this.bunny2);
-            },
-        });
-
-        // Animazione di fade-in e fade-out
-        this.timeline.to(this.bunny2, {
-            alpha: 0,
-            duration: 0.5,
-            delay: 0.5,
-            pixi: { scale: 1 },
-            onComplete: () => {
-                this.alpha = 1; // Reset dell'opacità
-                // this.scale.set(1); // Reset del scaling
-                this.rotation = 0; // Reset della rotazione
-                this.position.set($PE.app.view.width / 2, $PE.app.view.height / 2); // Reset della posizione 
-                console.log('Animazione DUE completata!', this);
-            },
-        });
-
-        const timeline = this.timeline
+        const timeline = createTimelineAnimation(this.bunny2);
+        this.timeline = timeline;
+        timeline.pause()
 
         // esempio GSAP
         this.bunny2.on("mousedown", function (e) {
-            /* gsap.to(this, {  // this è bunny
-                x: $PE.app.view.width / 2,   // Posizione finale x
-                y: this.y,   // Posizione finale y
-                alpha: 0, // Valore di opacità finale
-                duration: 2,         // in  secondi
-                rotation: Math.PI * 2,
-                // scale: 2, FA SCOPPIARE TUTTO !!!!
-                // repeat: -1, yoyo: true,
-                // ease: 'power1.inOut',
-                onComplete: () => {
-                    // Questa funzione verrà chiamata al termine dell'animazione
-                    console.log('Animazione completata!', this);
-                },
-            }); */
 
 
             // Esegui l'animazione
@@ -142,31 +92,18 @@ export class FirstScene extends Scene {
 
 
 
-
-        // Test timer
-        /* this.bunny.on("mousedown", function (e) {
-            $PE.time.after(5,()=> {
-                $PE.log('Testing timer with repeat')
-            })
-        }); */
-        // test changeScene
-
-
         // 3 JSON
-        this.json = $PE.getAsset("test");
-        console.log(this.json);
+        console.log(this.engine.getAsset("test"));
 
         // 4. SOUNDS (mp3)
-        $PE.sounds.playSound("mp3_test");
+        this.engine.sounds.playSound("mp3_test");
 
         // test Stortage
-        $PE.storage.save('test-engine', { lore: 'is ok!' })
+        this.engine.storage.save('test-engine', { lore: 'is ok!' })
     }
 
     update(dt, delta: number) {
         this.bunny.rotation += dt;
-
-
     }
 
     destroy() {
@@ -175,7 +112,8 @@ export class FirstScene extends Scene {
 
         // si rimovono tutti i figli
         const removedChild = this.removeChildren()
-        $PE.log(this.constructor.name + ' destroyed!: ', removedChild)
+        this.engine.log(this.constructor.name + ' destroyed!: ', removedChild)
     }
 
 }
+

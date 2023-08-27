@@ -1,5 +1,6 @@
 import * as Matter from 'matter-js';
-/* import { Engine } from './Engine' */
+import { PixiEngine } from './Engine'
+import { EventType, GameEvent } from './EventManager';
 
 export class PhysicManager {
 
@@ -23,20 +24,26 @@ export class PhysicManager {
     onCollisionStart(event: Matter.IEventCollision<Matter.Engine>) {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
-        // console.log(`${bodyA.label} ${bodyA.id} hits ${bodyB.label} ${bodyA.id}`)
-        console.log(bodyA, bodyB)
+        console.log(`${bodyA.label} starts collision with ${bodyB.label}.`, bodyA, bodyB)
+        const colisionEvent = new GameEvent(
+            EventType.Collision,
+            PixiEngine.getObjectByName(bodyA.label),
+            PixiEngine.getObjectByName(bodyB.label),
+            null
+        );
+        PixiEngine.events.sendEvent(colisionEvent);
     }
+
     onCollisionActive(event: Matter.IEventCollision<Matter.Engine>) {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
-        console.log(`${bodyA.label} ${bodyA.id} hits ${bodyB.label} ${bodyA.id}`)
-        console.log(bodyA, bodyB)
+        console.log(`${bodyA.label} has an active collision with ${bodyB.label}.`, bodyA, bodyB)
     }
+
     onCollisionEnd(event: Matter.IEventCollision<Matter.Engine>) {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
-        // console.log(`${bodyA.label} ${bodyA.id} hits ${bodyB.label} ${bodyA.id}`)
-        console.log(bodyA, bodyB)
+        console.log(`${bodyA.label} ends collision with ${bodyB.label}.`, bodyA, bodyB)
     }
 
 }
