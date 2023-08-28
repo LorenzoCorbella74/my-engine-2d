@@ -18,7 +18,7 @@ export class Preloader {
     /**
     * Precarica gli asset grafici (jpg, png) i suoni ed i file .json di configurazione
     */
-    async preload() {
+    async getAssets() {
         let assets: string[] = []
         let jsonData = {}
         for (const asset of this.loader) {

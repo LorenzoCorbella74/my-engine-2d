@@ -4,7 +4,7 @@ import { Scene } from './Scene';
 
 export class CrossHairManager {
 
-    crosshair: Graphics;
+    crosshair: Graphics;    // TODO: trasformare in Sprite
 
     constructor() { }
 

@@ -1,4 +1,4 @@
-import { Body, Bodies, World } from 'matter-js';
+import { Body } from 'matter-js';
 
 import { GameObject } from "../../engine/GameObject"
 import { GameNode } from '../../engine/decorators';
@@ -6,7 +6,7 @@ import { GameNode } from '../../engine/decorators';
 @GameNode({ rigidBody: { shape: 'rectangle', isStatic: false } })
 export class Player extends GameObject {
 
-    private speed: number;
+    private speed: number = 150; // px/sec
 
     // velocity
     dx: number = 0;
@@ -16,26 +16,6 @@ export class Player extends GameObject {
 
     constructor(name, spriteName) {
         super(name, spriteName);
-
-        // this.buildRigidBody();
-
-        this.speed = 150; // px/sec
-    }
-
-    private buildRigidBody() {
-        const playerOptions: Matter.IBodyDefinition = {
-            /*  density: 100, 
-            frictionAir: 0,*/
-            friction: 0,
-            /*  inverseInertia: 0,
-             inertia: 0,
-             frictionStatic: 0,
-             restitution: 0, */
-            label: this.name
-        };
-        const { x, y, width, height } = this.sprite
-        this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, playerOptions);
-        World.add(this.engine.physics.physicsEngine.world, this.rigidBody);
     }
 
     update(dt) {
@@ -62,12 +42,6 @@ export class Player extends GameObject {
 
         this.sprite.x = this.rigidBody.position.x
         this.sprite.y = this.rigidBody.position.y
-        // this.sprite.rotation = this.rigidBody.angle
-    }
-
-    destroy(): void {
-        this.sprite.destroy()
-        // this.removeRididBody()
-        World.remove(this.engine.physics.physicsEngine.world, this.rigidBody);
+        // this.sprite.rotation = this.rigidBody.angle -> è in funzione del mouse!!!
     }
 }

@@ -56,7 +56,7 @@ export function GameNode(options?: DecoratorOptions) {
 
                 // Aggiungi il corpo Matter.js al mondo
                 if (instance.rigidBody) {
-                    Composite.add(PixiEngine.physics.physicsEngine.world, instance.rigidBody);
+                    World.add(PixiEngine.physics.physicsEngine.world, instance.rigidBody);
                     instance.removeRigidBody = () => {
                         World.remove(PixiEngine.physics.physicsEngine.world, instance.rigidBody);
                     }

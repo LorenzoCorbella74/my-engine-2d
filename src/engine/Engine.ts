@@ -101,7 +101,7 @@ export class Engine {
 
 
         // loader .... ON
-        this.loader.preload().then((result) => {
+        this.loader.getAssets().then((result) => {
             // loader .... OFF
             this.log(ENGINE_MSG_PREFIX + 'Resources loaded, starting loop!!');
             this.scenes.startDefaultScene();

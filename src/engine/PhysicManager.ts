@@ -6,6 +6,7 @@ import { Graphics } from 'pixi.js';
 
 
 export type GraphicsWithPhisics = Graphics & {
+
     rigidBody: Body
 }
 
@@ -55,11 +56,12 @@ export class PhysicManager {
     // Funzione per verificare la visibilità tra due GameObject
     hasLineOfSight(fromObj: GameObject | GraphicsWithPhisics, toObj: GameObject | GraphicsWithPhisics): boolean {
         if (fromObj.rigidBody && toObj.rigidBody) {
-            const collisions = Query.ray(
-                Composite.allBodies(PixiEngine.physics.physicsEngine.world),    // TODO: non esiste
+            let collisions = Query.ray(
+                Composite.allBodies(PixiEngine.physics.physicsEngine.world),
                 fromObj.rigidBody.position,
                 toObj.rigidBody.position
             );
+            collisions = collisions.filter(collision => ![fromObj.rigidBody.label, toObj.rigidBody.label].includes(collision.bodyA.label));
             return collisions.length === 0;
         }
         return false;

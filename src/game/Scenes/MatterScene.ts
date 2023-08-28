@@ -7,9 +7,6 @@ import { GameGraphics } from '../../engine/GameGraphics'
 import * as Matter from 'matter-js';
 import { GraphicsWithPhisics } from '../../engine/PhysicManager';
 
-
-
-
 export class MatterScene extends Scene {
 
     player: GameObject;
@@ -37,7 +34,7 @@ export class MatterScene extends Scene {
             isStatic: true,
             label: "Obstacle"
         });
-        Matter.Composite.add(this.engine.physics.physicsEngine.world, this.obstacle.rigidBody);
+        Matter.World.add(this.engine.physics.physicsEngine.world, this.obstacle.rigidBody);
 
 
         this.obstacle2 = new Graphics() as GraphicsWithPhisics;
@@ -49,7 +46,7 @@ export class MatterScene extends Scene {
             isStatic: true,
             label: "Obstacle2"
         });
-        Matter.Composite.add(this.engine.physics.physicsEngine.world, this.obstacle2.rigidBody);
+        Matter.World.add(this.engine.physics.physicsEngine.world, this.obstacle2.rigidBody);
 
         this.player = new Player('Player', 'player')
         this.player.sprite.x = window.innerWidth / 2;
@@ -75,6 +72,7 @@ export class MatterScene extends Scene {
         //console.log('Mouse: ', mousePosition.x, mousePosition.y)
         const angle = Math.atan2(mousePosition.y - this.player.sprite.y, mousePosition.x - this.player.sprite.x);
         this.player.sprite.rotation = angle;
+        this.player.rigidBody.angle = this.player.sprite.rotation
 
         this.player.update(delta)
 
