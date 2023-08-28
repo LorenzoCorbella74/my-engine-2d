@@ -1,9 +1,19 @@
 
 import { GameObject } from "../../engine/GameObject"
-import { GameNode } from '../../engine/decorators';
+import { GROUP, GameNode } from '../../engine/decorators';
 
 
-@GameNode({ groupName: 'Enemy', rigidBody: { shape: 'rectangle', isStatic: false } })
+@GameNode({
+    groupName: 'Enemy',
+    rigidBody: {
+        shape: 'rectangle',
+        isStatic: false,
+        collisionFilter: {
+            category: GROUP.ENEMY,
+            mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.WALL
+        }
+    }
+})
 export class Enemy extends GameObject {
 
     constructor(name, spriteName) {

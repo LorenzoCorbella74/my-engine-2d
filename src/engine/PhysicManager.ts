@@ -4,6 +4,9 @@ import { EventType, GameEvent } from './EventManager';
 import { GameObject } from './GameObject';
 import { Graphics } from 'pixi.js';
 
+import { GROUP } from './decorators';
+
+
 
 export type GraphicsWithPhisics = Graphics & {
 
@@ -26,6 +29,17 @@ export class PhysicManager {
 
     update() {
         Engine.update(this.physicsEngine, 1000 / 60)
+    }
+
+    // Funzione per rimuovere temporaneamente un corpo dal mondo
+    disableCollisions(body: Body,) {
+        // Imposta il gruppo su zero per disabilitare temporaneamente le collisioni
+        body.collisionFilter.category = GROUP.DEFAULT;
+    }
+
+    // Funzione per riabilitare le collisioni di un corpo
+    enableCollisions(body: Body, groups: number) {
+        body.collisionFilter.category = groups;
     }
 
     onCollisionStart(event: Matter.IEventCollision<Matter.Engine>) {

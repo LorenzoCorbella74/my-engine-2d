@@ -6,6 +6,7 @@ import { GameObject } from '../../engine/GameObject';
 import { GameGraphics } from '../../engine/GameGraphics'
 import * as Matter from 'matter-js';
 import { GraphicsWithPhisics } from '../../engine/PhysicManager';
+import { GROUP } from '../../engine/decorators';
 
 export class MatterScene extends Scene {
 
@@ -32,7 +33,11 @@ export class MatterScene extends Scene {
         // rigidBody
         this.obstacle.rigidBody = Matter.Bodies.rectangle(100, 50, 200, 100, {
             isStatic: true,
-            label: "Obstacle"
+            label: "Obstacle",
+            collisionFilter: {
+                category: GROUP.WALL,
+                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.ENEMY
+            }
         });
         Matter.World.add(this.engine.physics.physicsEngine.world, this.obstacle.rigidBody);
 
@@ -44,7 +49,11 @@ export class MatterScene extends Scene {
         // rigidBody
         this.obstacle2.rigidBody = Matter.Bodies.rectangle(300, 450, 200, 100, {
             isStatic: true,
-            label: "Obstacle2"
+            label: "Obstacle2",
+            collisionFilter: {
+                category: GROUP.WALL,
+                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.ENEMY
+            }
         });
         Matter.World.add(this.engine.physics.physicsEngine.world, this.obstacle2.rigidBody);
 
@@ -98,6 +107,14 @@ export class MatterScene extends Scene {
         }
         if (this.engine.input.isKeyDownForOneShot('R')) {
             this.engine.time.setGameSpeed(this.engine.time.getGameSpeed() * 2)
+        }
+        // TEST enable/disable COLLISION
+        if (this.engine.input.isKeyDownForOneShot('Z')) {
+            this.engine.physics.disableCollisions(this.player.rigidBody)
+        }
+        if (this.engine.input.isKeyDownForOneShot('X')) {
+            const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM;
+            this.engine.physics.enableCollisions(this.player.rigidBody, categoriesToCollideWith)
         }
     }
 }

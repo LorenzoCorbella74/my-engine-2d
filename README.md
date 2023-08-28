@@ -36,59 +36,40 @@ All the `.png` and `.jpeg` images, `.mp3` sounds and `.json` files included in t
 
 ### GameObject
 
-Thanks to the `GameObjectEntity` and `GameObjectGroup` decorators it is possible to instanciate game entities with an unique id and add them automatically to the current scene. In the update method the engine provide the game speed delta time.
+Thanks to the `GameNode` decorator it is possible to instanciate game entities with an unique id, setup phisics properties and add them automatically to the current scene. Without the rigidBody property in the parameters of the decorator the object has no phisics properties (no collisions).
+In the update method the engine provide the game speed delta time.
 
 ```typescript
 import { PixiEngine as $PE } from "../../engine/Engine";
-import { GameObjectEntity, GameObject } from "../../engine/GameObject"
+import { @GameNode, GameObject } from "../../engine/GameObject"
 
-@GameObjectEntity
+@GameNode({
+    rigidBody: {
+        shape: 'rectangle',
+        isStatic: false,
+        collisionFilter: {
+            category: GROUP.PLAYER,
+            mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
+        }
+    }
+})
 export class Player extends GameObject {
 
-    private speed: number;
+    private speed: number = 150; // 150 px/sec;
 
     constructor(name, spriteName) {
         super(name, spriteName);
-        this.entity.x = window.innerWidth / 2;
-        this.entity.y = window.innerHeight / 2 - 100;
-        this.speed = 150; // 150 px/sec
+        this.sprite.x = window.innerWidth / 2;
+        this.sprite.y = window.innerHeight / 2 - 100;
     }
 
     update(dt) {
-        if ($PE.input.isKeyDown('UP')) {
-            this.entity.y -= this.speed * dt;
-        }
         .....
     }
 }
 ```
 
 The engine provide methods to gather the relevant entities with the `getObjectByName`, `getObjectById` and `getGroup` methods.
-
-```typescript
-import { PixiEngine as $PE } from "../../engine/Engine";
-import { GameObjectEntity, GameObject } from "../../engine/GameObject"
-
-@GameObjectEntity
-export class Player extends GameObject {
-
-    private speed: number;
-
-    constructor(name, spriteName) {
-        super(name, spriteName);
-        this.entity.x = window.innerWidth / 2;
-        this.entity.y = window.innerHeight / 2 - 100;
-        this.speed = 150; // 150 px/sec
-    }
-
-    update(dt) {
-        if ($PE.input.isKeyDown('UP')) {
-            this.entity.y -= this.speed * dt;
-        }
-        .....
-    }
-}
-```
 
 ### Sound Manager
 
@@ -139,6 +120,7 @@ It's possible to send events to gameObject or to gameObject groups with the `sen
 
 # TODO
 
+- [x] Game Graphic management
+- [ ] Text management
 - [ ] Move from Webpack to Vite
 - [ ] Improve the scene management with cached scenes
-- [ ] Game Graphic management
