@@ -38,6 +38,7 @@ export class Camera {
     }
 
     focusOn(element: GameObject, currentScene: Scene) {
+        this.app.stage.removeChild(this.container);
         // se non passato focus al centro dello schermo
         if (!element) {
             element = {

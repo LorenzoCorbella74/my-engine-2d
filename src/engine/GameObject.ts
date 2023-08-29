@@ -1,6 +1,32 @@
 import { PixiEngine } from './Engine';
 import { Sprite } from "pixi.js";
-import { Body } from 'matter-js';
+
+import { Body, Bodies, World, Composite } from 'matter-js';
+
+export const GROUP = {
+  DEFAULT: 0x0001,
+  PLAYER: 0x0002,
+  ENEMY: 0x0004,
+  PROJECTILE: 0x0008,
+  WALL: 0x0010,
+  ITEM: 0x0020,
+  NPC: 0x0040
+} as const
+
+type GroupsType = keyof typeof GROUP;
+type GroupsValue = typeof GROUP[keyof typeof GROUP];
+
+// Opzioni per il decoratore
+type RigidBodyOptions = {
+  shape: 'rectangle' | 'circle' | 'polygon';
+  isStatic: boolean;
+  friction?: number;
+  collisionFilter: {
+    category?: GroupsValue,
+    mask?: number  // Esempio maschera di collisione
+  }
+  position?: { x: number, y: number }
+}
 
 
 type MyRigidBody = Body | null
@@ -31,15 +57,35 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     }
   }
 
-  // TODO: https://stackoverflow.com/questions/32683832/javascript-matter-js-disable-collision-for-one-body
-  switchPhysics(mode: 'ON' | 'OFF') {
-    switch (mode) {
-      case 'ON': this.rigidBody.collisionFilter.group = 0
-      case 'ON': this.rigidBody.collisionFilter.group = -1
-      default:
-        break;
+  createRigidBody(options?: RigidBodyOptions) {
+
+    // si registra nel objects repository
+    const { shape, isStatic } = options;
+    const { x, y } = options.position || this._sprite;
+    const { width, height } = this._sprite;
+
+    // Crea il corpo Matter.js in base alle opzioni
+    if (shape === 'rectangle') {
+      this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, { isStatic, friction: options.friction || 0, label: this.name });
+    } else if (shape === 'circle') {
+      this.rigidBody = Bodies.circle(x + width / 2, y + height / 2, width, { isStatic, friction: options.friction || 0, label: this.name }); // TODO
+    } else if (shape === 'polygon') {
+      // TODO: poligono personalizzato
     }
+
+    this.rigidBody.collisionFilter = {
+      category: options?.collisionFilter?.category || GROUP.DEFAULT,
+      mask: options?.collisionFilter?.mask || GROUP.DEFAULT
+    }
+
+    // Aggiungi il corpo Matter.js al mondo
+    World.add(PixiEngine.physics.physicsEngine.world, this.rigidBody);
+    this.removeRigidBody = () => {
+      World.remove(PixiEngine.physics.physicsEngine.world, this.rigidBody);
+    }
+
   }
+
 
   onEventHandler(event: GameEvent<BasePayload> | GameEventForGroup<BasePayload>) {
     // Implementa la logica per gestire l'evento specifico per questo oggetto
@@ -82,7 +128,12 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     this._sprite.visible = true;
   }
 
-  update(deltaTime: number) { }
+  update(deltaTime: number) {
+    if (this.rigidBody) {
+      this.sprite.x = this.rigidBody?.position?.x
+      this.sprite.y = this.rigidBody?.position?.y
+    }
+  }
 
   destroy() {
     this._sprite.destroy()

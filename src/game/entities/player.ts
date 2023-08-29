@@ -1,18 +1,9 @@
 import { Body } from 'matter-js';
 
 import { GameObject } from "../../engine/GameObject"
-import { GROUP, GameNode } from '../../engine/decorators';
+import { GameNode } from '../../engine/decorators';
 
-@GameNode({
-    rigidBody: {
-        shape: 'rectangle',
-        isStatic: false,
-        collisionFilter: {
-            category: GROUP.PLAYER,
-            mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
-        }
-    }
-})
+@GameNode()
 export class Player extends GameObject {
 
     private speed: number = 150; // px/sec

@@ -1,12 +1,8 @@
 import { Body, Bodies, World, Query, Engine, Events, Composite } from 'matter-js';
 import { PixiEngine } from './Engine'
 import { EventType, GameEvent } from './EventManager';
-import { GameObject } from './GameObject';
+import { GROUP, GameObject } from './GameObject';
 import { Graphics } from 'pixi.js';
-
-import { GROUP } from './decorators';
-
-
 
 export type GraphicsWithPhisics = Graphics & {
 

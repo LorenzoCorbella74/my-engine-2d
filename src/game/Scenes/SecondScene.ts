@@ -4,20 +4,19 @@ import { Enemy } from '../entities/enemy';
 import { Graphics, Text } from "pixi.js";
 import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
-import { GameObject } from '../../engine/GameObject';
+import { GROUP, GameObject } from '../../engine/GameObject';
 import { EventType, GameEvent, GameEventForGroup } from '../../engine/EventManager';
 
 export class SecondScene extends Scene {
 
     text: Text
+    textCoord: Text
 
     player: GameObject;
     playerSpeed: number;
 
     enemy1: GameObject;
     enemy2: GameObject;
-
-
 
     crossHair: Graphics;
 
@@ -28,8 +27,8 @@ export class SecondScene extends Scene {
     setup() {
         // for text see https://codesandbox.io/s/8q7hs?file=/src/Scene.js:218-312
         this.text = new Text("Hello, I move with the elapsedTime \n😀", {
-            fontSize: 24,
-            lineHeight: 28,
+            fontSize: 18,
+            lineHeight: 24,
             letterSpacing: 0,
             fill: 0xffffff,
             align: "center"
@@ -40,19 +39,68 @@ export class SecondScene extends Scene {
         this.text.y = window.innerHeight / 2;
         this.addChild(this.text)
 
+        this.textCoord = new Text("Coord:", {
+            fontSize: 12,
+            lineHeight: 20,
+            letterSpacing: 0,
+            fill: 0xffffff,
+            align: "center"
+        });
+        this.textCoord.anchor.set(0.5);
+        this.textCoord.resolution = 8;
+        this.addChild(this.textCoord)
 
-
+        // PLAYER
         this.player = new Player('Player', 'player')
         this.player.sprite.x = window.innerWidth / 2;
         this.player.sprite.y = window.innerHeight / 2 - 100;
         this.player.sprite.anchor.set(0.5);
+        this.player.createRigidBody({
+            shape: 'rectangle',
+            isStatic: false,
+            collisionFilter: {
+                category: GROUP.PLAYER,
+                mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
+            },
+            position: {
+                x: this.player.sprite.x,
+                y: this.player.sprite.y
+            }
+        })
 
         this.engine.camera.focusOn(this.player, this)
 
+        // ENEMY 1
         this.enemy1 = new Enemy('Nemico1', 'color1')
-        this.enemy2 = new Enemy('Nemico2', 'color2')
-        this.enemy1.sprite.x = 100
+        this.enemy1.sprite.x = 200;
+        this.enemy1.sprite.y = 200;
+        this.enemy1.createRigidBody({
+            shape: 'rectangle',
+            isStatic: false,
+            collisionFilter: {
+                category: GROUP.ENEMY,
+                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.WALL
+            },
+            position: {
+                x: 200,
+                y: 200
+            }
+        })
 
+        // ENEMY 2
+        this.enemy2 = new Enemy('Nemico2', 'color2')
+        this.enemy2.createRigidBody({
+            shape: 'rectangle',
+            isStatic: false,
+            collisionFilter: {
+                category: GROUP.ENEMY,
+                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.WALL
+            },
+            position: {
+                x: 500,
+                y: 500
+            }
+        })
 
         // get the reference of the objecty in the gameObjects repository
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
@@ -71,6 +119,13 @@ export class SecondScene extends Scene {
         this.crossHair.position.set(x, y);
 
         this.player.update(delta)
+
+        // UI
+        const { x: xp, y: yp } = this.player.rigidBody.position
+        this.textCoord.x = Math.ceil(xp)
+        this.textCoord.y = Math.ceil(yp) - 16
+        this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y}`
+
         this.enemy1.update(delta)
         this.enemy2.update(delta)
     }

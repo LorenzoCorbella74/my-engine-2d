@@ -69,14 +69,13 @@ export class Engine {
             autoStart: false,
             antialias: true,
             autoDensity: true,
-            backgroundColor: /* 0x0 */0x2980b9,
+            backgroundColor: /* 0x0 */0x31383E,
             resolution: devicePixelRatio
         });
 
         document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
 
-        // @ts-expect-error PIXI Inspector
-        window.__PIXI_APP__ = this.app;
+        globalThis.__PIXI_APP__ = this.app;
 
         // debug
         window.$PE = PixiEngine
@@ -183,6 +182,10 @@ export class Engine {
         }
         // JSON
         return resource
+    }
+
+    getTexture(key: string) {
+        return this.loader.resources[key]
     }
 
     /**

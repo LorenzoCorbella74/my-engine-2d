@@ -1,12 +1,11 @@
 import { Player } from '../entities/player';
-import { Graphics } from "pixi.js";
+import { Graphics, TilingSprite } from "pixi.js";
 import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
-import { GameObject } from '../../engine/GameObject';
+import { GROUP, GameObject } from '../../engine/GameObject';
 import { GameGraphics } from '../../engine/GameGraphics'
 import * as Matter from 'matter-js';
 import { GraphicsWithPhisics } from '../../engine/PhysicManager';
-import { GROUP } from '../../engine/decorators';
 
 export class MatterScene extends Scene {
 
@@ -15,52 +14,48 @@ export class MatterScene extends Scene {
     obstacle2: GraphicsWithPhisics;
     crossHair: Graphics;
 
-
     rectangle: Graphics;
     circle: Graphics;
     line: Graphics;
+
+    tilingSprite: TilingSprite;
 
     constructor() {
         super(PixiEngine)
     }
 
     setup() {
+        // background tile
+        const texture = PixiEngine.getTexture('tile')
+        this.tilingSprite = new TilingSprite(
+            texture,
+            PixiEngine.app.screen.width,
+            PixiEngine.app.screen.height,
+        );
+        this.tilingSprite.tileScale.x = 0.05 /* texture.width / PixiEngine.app.screen.width */
+        this.tilingSprite.tileScale.y = 0.05 /* texture.height / PixiEngine.app.screen.width */
+        this.addChild(this.tilingSprite);
+
         // test MATTER-JS
-        this.obstacle = new Graphics() as GraphicsWithPhisics;
-        this.obstacle.beginFill(0xff0000);
-        this.obstacle.drawRect(0, 0, 200, 100);
-        this.addChild(this.obstacle)
-        // rigidBody
-        this.obstacle.rigidBody = Matter.Bodies.rectangle(100, 50, 200, 100, {
-            isStatic: true,
-            label: "Obstacle",
-            collisionFilter: {
-                category: GROUP.WALL,
-                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.ENEMY
-            }
-        });
-        Matter.World.add(this.engine.physics.physicsEngine.world, this.obstacle.rigidBody);
-
-
-        this.obstacle2 = new Graphics() as GraphicsWithPhisics;
-        this.obstacle2.beginFill(0xff0000);
-        this.obstacle2.drawRect(200, 400, 200, 100);
-        this.addChild(this.obstacle2)
-        // rigidBody
-        this.obstacle2.rigidBody = Matter.Bodies.rectangle(300, 450, 200, 100, {
-            isStatic: true,
-            label: "Obstacle2",
-            collisionFilter: {
-                category: GROUP.WALL,
-                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.ENEMY
-            }
-        });
-        Matter.World.add(this.engine.physics.physicsEngine.world, this.obstacle2.rigidBody);
+        this.obstacle = this.createObstacle('Obstacle', 100, 50, 200, 100);
+        this.obstacle2 = this.createObstacle('Obstacle2', 300, 450, 200, 100);
 
         this.player = new Player('Player', 'player')
         this.player.sprite.x = window.innerWidth / 2;
         this.player.sprite.y = window.innerHeight / 2 - 100;
         this.player.sprite.anchor.set(0.5);
+        this.player.createRigidBody({
+            shape: 'rectangle',
+            isStatic: false,
+            collisionFilter: {
+                category: GROUP.PLAYER,
+                mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
+            },
+            position: {
+                x: this.player.sprite.x,
+                y: this.player.sprite.y
+            }
+        })
         this.engine.camera.focusOn(this.player, this)
 
         // test GameGraphics
@@ -69,6 +64,24 @@ export class MatterScene extends Scene {
         this.circle = new GameGraphics(this).drawCircle(500, 500, 100)
 
         this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
+    }
+
+    private createObstacle(name: string, x, y, width, height): GraphicsWithPhisics {
+        let obstacle = new Graphics() as GraphicsWithPhisics;
+        obstacle.beginFill(0xff0000);
+        obstacle.drawRect(x, y, width, height);
+        this.addChild(obstacle);
+        // rigidBody
+        obstacle.rigidBody = Matter.Bodies.rectangle(x + width / 2, y + height / 2, width, height, {
+            isStatic: true,
+            label: name,
+            collisionFilter: {
+                category: GROUP.WALL,
+                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.ENEMY
+            }
+        });
+        Matter.World.add(this.engine.physics.physicsEngine.world, obstacle.rigidBody);
+        return obstacle
     }
 
     update(delta: number) {
@@ -85,6 +98,8 @@ export class MatterScene extends Scene {
 
         this.player.update(delta)
 
+        /*  this.tilingSprite.tilePosition.x = 0
+         this.tilingSprite.tilePosition.y = 0 */
 
         this.engine.time.runOnFrameNum(1, () => {
             this.engine.log('Player hasLineOfSight: ', this.engine.physics.hasLineOfSight(this.player, this.obstacle2))

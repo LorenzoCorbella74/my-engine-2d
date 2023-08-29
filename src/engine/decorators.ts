@@ -1,35 +1,9 @@
 import { PixiEngine } from './Engine';
-import { Body, Bodies, World, Composite } from 'matter-js';
-
-export const GROUP = {
-    DEFAULT: 0x0001,
-    PLAYER: 0x0002,
-    ENEMY: 0x0004,
-    PROJECTILE: 0x0008,
-    WALL: 0x0010,
-    ITEM: 0x0020,
-    NPC: 0x0040
-} as const
-
-type GroupsType = keyof typeof GROUP;
-type GroupsValue = typeof GROUP[keyof typeof GROUP];
 
 type DecoratorOptions = {
     id?: string;
     groupName?: string;
-    rigidBody?: RigidBodyOptions;
-
 } | null
-
-// Opzioni per il decoratore
-type RigidBodyOptions = {
-    shape: 'rectangle' | 'circle' | 'polygon';
-    isStatic: boolean;
-    collisionFilter: {
-        category: GroupsValue,
-        mask: number  // Esempio maschera di collisione
-    }
-}
 
 // Decoratore Matter.js per GameObject
 export function GameNode(options?: DecoratorOptions) {
@@ -55,34 +29,6 @@ export function GameNode(options?: DecoratorOptions) {
                     PixiEngine.repo.gameObjectsGroups[options.groupName] = [];
                 }
                 PixiEngine.repo.gameObjectsGroups[options.groupName].push(instance);
-            }
-
-            if (options?.rigidBody) {
-                // si registra nel objects repository
-                const { shape, isStatic } = options.rigidBody;
-                const { x = 0, y = 0, width, height } = instance._sprite;
-
-                // Crea il corpo Matter.js in base alle opzioni
-                if (shape === 'rectangle') {
-                    instance.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, { isStatic, friction: 0, label: instance.name });
-                } else if (shape === 'circle') {
-                    instance.rigidBody = Bodies.circle(x + width / 2, y + height / 2, width, { isStatic, friction: 0, label: instance.name }); // TODO
-                } else if (shape === 'polygon') {
-                    // Crea un poligono personalizzato in base alle tue esigenze
-                }
-
-                instance.rigidBody.collisionFilter = {
-                    category: options?.rigidBody?.collisionFilter?.category || GROUP.DEFAULT,
-                    mask: options?.rigidBody?.collisionFilter?.mask || GROUP.DEFAULT
-                }
-
-                // Aggiungi il corpo Matter.js al mondo
-                if (instance.rigidBody) {
-                    World.add(PixiEngine.physics.physicsEngine.world, instance.rigidBody);
-                    instance.removeRigidBody = () => {
-                        World.remove(PixiEngine.physics.physicsEngine.world, instance.rigidBody);
-                    }
-                }
             }
 
             // ritorna l'istanza
