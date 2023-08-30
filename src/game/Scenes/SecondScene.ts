@@ -72,8 +72,7 @@ export class SecondScene extends Scene {
 
         // ENEMY 1
         this.enemy1 = new Enemy('Nemico1', 'color1')
-        this.enemy1.sprite.x = 200;
-        this.enemy1.sprite.y = 200;
+        this.enemy1.sprite.anchor.set(0.5)
         this.enemy1.createRigidBody({
             shape: 'rectangle',
             isStatic: false,

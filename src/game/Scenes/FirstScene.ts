@@ -47,9 +47,7 @@ export class FirstScene extends Scene {
         this.bunny.interactive = true;
         this.addChild(this.bunny);
         this.bunny.on("mousedown", (e) => {
-            this.engine.time.after(1, () => {
-                this.engine.scenes.changeScene('SecondScene')
-            })
+            this.engine.scenes.changeScene('SecondScene')
         });
 
         //  Go to the Matter Scene

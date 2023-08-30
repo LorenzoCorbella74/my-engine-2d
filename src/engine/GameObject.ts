@@ -63,19 +63,22 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     const { shape, isStatic } = options;
     const { x, y } = options.position || this._sprite;
     const { width, height } = this._sprite;
-
+    const config = {
+      isStatic,
+      friction: options.friction || 0,
+      label: this.name,
+      collisionFilter: {
+        category: options?.collisionFilter?.category || GROUP.DEFAULT,
+        mask: options?.collisionFilter?.mask || GROUP.DEFAULT
+      }
+    }
     // Crea il corpo Matter.js in base alle opzioni
     if (shape === 'rectangle') {
-      this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, { isStatic, friction: options.friction || 0, label: this.name });
+      this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, config);
     } else if (shape === 'circle') {
-      this.rigidBody = Bodies.circle(x + width / 2, y + height / 2, width, { isStatic, friction: options.friction || 0, label: this.name }); // TODO
+      this.rigidBody = Bodies.circle(x + width / 2, y + height / 2, width, config); // TODO
     } else if (shape === 'polygon') {
       // TODO: poligono personalizzato
-    }
-
-    this.rigidBody.collisionFilter = {
-      category: options?.collisionFilter?.category || GROUP.DEFAULT,
-      mask: options?.collisionFilter?.mask || GROUP.DEFAULT
     }
 
     // Aggiungi il corpo Matter.js al mondo

@@ -11,8 +11,8 @@ export class Enemy extends GameObject {
         super(name, spriteName);
 
         // set sprite dimension
-        this.sprite.width = 32
-        this.sprite.height = 32
+        this.sprite.width = 32; // il doppio del file...
+        this.sprite.height = 32; // il doppio del file...
     }
 
     update(dt) {

@@ -101,8 +101,8 @@ export class MatterScene extends Scene {
         /*  this.tilingSprite.tilePosition.x = 0
          this.tilingSprite.tilePosition.y = 0 */
 
-        this.engine.time.runOnFrameNum(1, () => {
-            this.engine.log('Player hasLineOfSight: ', this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
+        this.engine.time.runOnFrameNum([1, 30], (frameNumber: number) => {
+            this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
         })
     }
 

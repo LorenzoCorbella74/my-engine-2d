@@ -1,4 +1,4 @@
-import { Body, Bodies, World, Query, Engine, Events, Composite } from 'matter-js';
+import { Body, Query, Engine, Events, Composite, Render } from 'matter-js';
 import { PixiEngine } from './Engine'
 import { EventType, GameEvent } from './EventManager';
 import { GROUP, GameObject } from './GameObject';
@@ -11,16 +11,42 @@ export type GraphicsWithPhisics = Graphics & {
 
 export class PhysicManager {
 
-    physicsEngine: Matter.Engine = null
+    physicsEngine: Engine = null
+    render: Render;
 
-    constructor(/* public engine: Engine */) {
-        /*  this.engine = engine; */
+    constructor() {
+
         this.physicsEngine = Engine.create()
 
+        this.render = Render.create({
+            element: document.querySelector('#phisic-debugger'),
+            engine: this.physicsEngine,
+            options: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                wireframes: true,
+                background: 'transparent',
+                wireframeBackground: 'transparent'
+            }
+        });
+
+        Render.run(this.render);
+
         this.physicsEngine.gravity.y = 0;
+
         Events.on(this.physicsEngine, 'collisionStart', (event) => this.onCollisionStart(event))
         Events.on(this.physicsEngine, 'collisionEnd', (event) => this.onCollisionEnd(event))
         Events.on(this.physicsEngine, 'collisionActive', (event) => this.onCollisionStart(event))
+    }
+
+    showPhisicsCanvas() {
+        document.getElementById("physicsDebugger").style.display = "block";
+        document.getElementById("physicsDebugger").style.zIndex = '100';
+    }
+
+    hidePhisicsCanvas() {
+        document.getElementById("physicsDebugger").style.display = "none";
+        document.getElementById("physicsDebugger").style.zIndex = '-1';
     }
 
     update() {

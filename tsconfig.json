@@ -1,21 +1,17 @@
 {
-    "compilerOptions": {
-        "outDir": "./dist/",
-        "declaration": true,
-        "declarationDir": "./dist/",
-        "sourceMap": true,
-        "noImplicitAny": false,
-        "experimentalDecorators": true,
-        "module": "commonjs",
-        "target": "es6",
-        "allowJs": false,
-        "types": [
-            "node",
-            "webpack-env"
-        ]
-    },
-    "files": [
-        "src/index.ts"
-    ],
-    "compileOnSave": false
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "declaration": true,
+    "declarationDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "target": "es6",
+    "allowJs": false,
+    "types": ["node", "webpack-env"]
+  },
+  "files": ["src/index.ts"],
+  "compileOnSave": false
 }

@@ -135,7 +135,7 @@ export class Engine {
             this.events.processEvents()
             this.camera.update();
 
-            this.time.runOnFrameNum(1, (frame) => {
+            this.time.runOnFrameNum([1], (frame) => {
                 // console.log('frame', frame, this)   // this è l'engine
                 this.logic.update()
             })
