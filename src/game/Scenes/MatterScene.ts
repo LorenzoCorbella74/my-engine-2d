@@ -14,17 +14,13 @@ export class MatterScene extends Scene {
     obstacle2: GraphicsWithPhisics;
     crossHair: Graphics;
 
-    rectangle: Graphics;
-    circle: Graphics;
-    line: Graphics;
-
     tilingSprite: TilingSprite;
 
     constructor() {
         super(PixiEngine)
     }
 
-    setup() {
+    init() {
         // background tile
         const texture = PixiEngine.getTexture('tile')
         this.tilingSprite = new TilingSprite(
@@ -57,11 +53,6 @@ export class MatterScene extends Scene {
             }
         })
         this.engine.camera.focusOn(this.player, this)
-
-        // test GameGraphics
-        this.rectangle = new GameGraphics(this).drawRectangle(500, 0, 100, 100)
-        this.line = new GameGraphics(this).drawLine(800, 0, 0, 600)
-        this.circle = new GameGraphics(this).drawCircle(500, 500, 100)
 
         this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
     }
@@ -114,7 +105,10 @@ export class MatterScene extends Scene {
     onInputChange(inputs: any): void {
         /** TEST GAME SPEED*/
         if (this.engine.input.isKeyDown('M')) {
-            this.engine.time.aminateGameSpeed(2)
+            // this.engine.time.aminateGameSpeed(2)
+            this.engine.time.aminateOneObjectProperty(this.engine.time, 'gameSpeed', 2, 3, () => {
+                this.engine.log('GameSpeed animation completed!')
+            })
         }
         /* TEST GAME SPPED CHANGE */
         if (this.engine.input.isKeyDownForOneShot('E')) {

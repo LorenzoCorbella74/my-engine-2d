@@ -3,11 +3,21 @@ import { gsap } from "gsap";
 
 
 type Timer = {
-    duration: number;
-    cacheDuration: number;
-    callback: () => any;
+    delay: number;
+    cacheDelay: number;
+    callback: (remaining: number | null) => any;
     repeat?: number; // if 
 }
+
+type FunctionToBeCalledContinuously = {
+    duration: number;
+    callback: (dt: number) => void;
+    callBackEnd?: () => any;
+}
+
+/*
+    TAKEN from https://hump.readthedocs.io/en/latest/timer.html
+*/
 
 export class TimeManager {
     private elapsed: number;        // il trempo totale [in secondi]
@@ -16,7 +26,8 @@ export class TimeManager {
 
     private gameSpeed = 1;
 
-    private timers: Timer[] = []     // timers
+    private timers: Timer[] = []                                // timers
+    private functions: FunctionToBeCalledContinuously[] = []    // Function To Be Called Continuously
 
     constructor(public app: Application) {
         this.elapsed = 0;
@@ -27,25 +38,34 @@ export class TimeManager {
     update() {
         this.elapsed += this.dt;        // quanto è trascorso
         this._frame++;
-
         // conteggio frame
         if (this._frame > this.app.ticker.maxFPS) {
             this._frame = 1;
         }
-
         // timers
         for (var i = this.timers.length - 1; i >= 0; i--) {
             let timer = this.timers[i];
-            timer.duration -= this.getDeltaTime();
-            if (timer.duration < 0 && timer.repeat) {
+            timer.delay -= this.getDeltaTime();
+            if (timer.delay < 0 && timer.repeat) {
                 timer.repeat--;
-                timer.duration = timer.cacheDuration;
-                timer.callback();
-            } else if (timer.duration < 0) {
+                timer.delay = timer.cacheDelay;
+                timer.callback(timer.repeat ? timer.repeat : null);
+            } else if (timer.delay < 0) {
                 if (!timer.repeat || timer.repeat !== 0) {
-                    timer.callback();
+                    timer.callback(null);
                 }
                 this.timers.splice(i, 1);
+            }
+        }
+        // Function To Be Called Continuously
+        for (var i = this.functions.length - 1; i >= 0; i--) {
+            let fn = this.functions[i];
+            fn.duration -= this.getDeltaTime();
+            if (fn.duration < 0) {
+                fn.callBackEnd && fn.callBackEnd();
+                this.functions.splice(i, 1);
+            } else {
+                fn.callback(this.dt);
             }
         }
     }
@@ -56,8 +76,19 @@ export class TimeManager {
      * @param callback 
      * @param repeat 
      */
-    after(sec: number, callback: () => any) {
-        return this.timers.push({ duration: sec, callback, cacheDuration: sec })
+    after(delay: number, callback: () => any) {
+        let newTimer = { delay, callback, cacheDelay: delay }
+        this.timers.push(newTimer)
+        return newTimer;
+    }
+
+    /**
+     * Get the time passed and the remaining time (for Countdown with after())
+     * @param timer 
+     * @returns 
+     */
+    getCountDown(timer: Timer) {
+        return { passed: timer.cacheDelay - timer.delay, remaining: timer.delay }
     }
 
     /**
@@ -66,16 +97,44 @@ export class TimeManager {
      * @param callback 
      * @param repeat 
      */
-    every(delay: number, callback: () => any, repeat: number) {
-        return this.timers.push({ duration: delay, callback, cacheDuration: delay, repeat })
+    every(delay: number, callback: (remaining) => void, repeat: number = Infinity) {
+        let newTimer = { delay, callback, cacheDelay: delay, repeat }
+        this.timers.push(newTimer)
+        return newTimer
+    }
+
+    /**
+     * Execute a function that can be paused without causing the rest of the program to be suspended
+     * @param fn 
+     * @returns 
+     */
+    script(fn: (wait) => any) {
+        return this.timers.push({ delay: -1, callback: () => fn(this.wait), cacheDelay: 0 })
+    }
+
+    /**
+     * Run func(dt) for the next delay seconds. The function is called every time 
+     * update(dt) is called. Optionally run after() once delay seconds have passed
+     * @param duration 
+     * @param callback 
+     * @param callBackEnd 
+     * @returns 
+     */
+    during(duration: number, callback: () => any, callBackEnd: () => any) {
+        return this.functions.push({ duration, callback, callBackEnd })
     }
 
     /**
      * Prevent a timer from being executed in the future.
      * @param timer 
      */
-    cancel(timer: Timer) {
-        this.timers.splice(this.timers.indexOf(timer), 1);
+    cancel(istance: Timer | FunctionToBeCalledContinuously) {
+        if ('delay' in istance) {
+            this.timers.splice(this.timers.indexOf(istance), 1);
+        }
+        if ('duration' in istance) {
+            this.timers.splice(this.functions.indexOf(istance), 1);
+        }
     }
 
     /**
@@ -83,6 +142,7 @@ export class TimeManager {
      */
     clear() {
         this.timers = [];
+        this.functions = [];
     }
 
     setGameSpeed(speed: number) {
@@ -98,7 +158,7 @@ export class TimeManager {
         return this.dt * this.gameSpeed;
     }
 
-    getFrame(): number {
+    getCurrentFrame(): number {
         return this._frame;
     }
 
@@ -106,6 +166,9 @@ export class TimeManager {
         return this.gameSpeed;
     }
 
+    private wait(delayInSec: number) {
+        return new Promise(resolve => setTimeout(resolve, delayInSec * 1000));
+    }
 
     aminateGameSpeed(amount: number) {
         gsap.to(this, {
@@ -116,6 +179,21 @@ export class TimeManager {
                 // Questa funzione verrà chiamata al termine dell'animazione
                 console.log('GameSpeed animation completed!', this);
             },
+        });
+    }
+
+    aminateOneObjectProperty<T>(
+        context: T,
+        property: string,
+        amount: number,
+        duration: number = 1,
+        onComplete: () => void = () => { }
+    ) {
+        gsap.to(context as gsap.TweenTarget, {
+            [property]: amount,
+            duration,
+            ease: 'easeInOut',
+            onComplete: onComplete,
         });
     }
 

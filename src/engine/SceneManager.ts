@@ -18,13 +18,9 @@ export class SceneManager {
     }
 
     setupNewScene(sceneName: string) {
-
-
-
-
         this.currentScene = this.scenes[sceneName];
         this.app.stage.addChild(this.currentScene);
-        this.currentScene.setup();
+        this.currentScene.init();
 
         // SCENE ANIMATION
         this.currentScene.alpha = 0;
@@ -41,6 +37,7 @@ export class SceneManager {
                     alpha: 0, // Valore di opacità finale
                     duration: 0.5,         // in  secondi,
                     onComplete: () => {
+                        this.currentScene.onExit();
                         this.currentScene.destroy();
                         this.app.stage.removeChild(this.currentScene);
                         this.setupNewScene(sceneName);

@@ -24,7 +24,7 @@ export class SecondScene extends Scene {
         super(PixiEngine)
     }
 
-    setup() {
+    init() {
         // for text see https://codesandbox.io/s/8q7hs?file=/src/Scene.js:218-312
         this.text = new Text("Hello, I move with the elapsedTime \n😀", {
             fontSize: 18,

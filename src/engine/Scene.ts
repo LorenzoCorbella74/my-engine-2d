@@ -6,7 +6,7 @@ export class Scene extends PIXI.Container {
         super();
     }
 
-    setup() { }
+    init() { }
 
     // destroy() { }
 
@@ -16,6 +16,11 @@ export class Scene extends PIXI.Container {
 
     onInputChange(inputs) {
         console.log(this.constructor.name, inputs)
+    }
+
+    onExit() {
+        super.destroy()
+        console.log(this.constructor.name, ' exit')
     }
 
     onResize(width: number, height: number) {

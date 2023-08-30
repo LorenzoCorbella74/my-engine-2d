@@ -36,7 +36,6 @@ export class Camera {
         this.shakeAmplitude = 0;
         this.shakeStartTime = 0;
     }
-
     focusOn(element: GameObject, currentScene: Scene) {
         this.app.stage.removeChild(this.container);
         // se non passato focus al centro dello schermo

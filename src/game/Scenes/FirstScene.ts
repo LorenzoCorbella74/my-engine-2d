@@ -19,7 +19,7 @@ export class FirstScene extends Scene {
         super(PixiEngine)
     }
 
-    setup() {
+    init() {
 
         this.game = new Game('Game', null)
 
@@ -33,7 +33,7 @@ export class FirstScene extends Scene {
 
         this.engine.camera.focusOn(null, this)
 
-        this.bg.on("mousedown", function (e) {
+        this.bg.on("mousedown", (e) => {
             this.engine.toggle();
         });
 
@@ -104,6 +104,11 @@ export class FirstScene extends Scene {
         this.bunny.rotation += dt;
     }
 
+    onExit(): void {
+
+        this.engine.sounds.stopSound("mp3_test");
+    }
+
     destroy() {
         // NOTE:  GSAP ANIMATION MUST BE STOPPED
         this.timeline.kill()
@@ -111,6 +116,8 @@ export class FirstScene extends Scene {
         // si rimovono tutti i figli
         const removedChild = this.removeChildren()
         this.engine.log(this.constructor.name + ' destroyed!: ', removedChild)
+
+        // super.destroy() // si rimuove gli elementi della scena
     }
 
 }

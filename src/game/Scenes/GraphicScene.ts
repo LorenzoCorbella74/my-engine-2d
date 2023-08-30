@@ -14,7 +14,7 @@ export class GraphicScene extends Scene {
         super(PixiEngine)
     }
 
-    setup() {
+    init() {
         // test GameGraphics
         this.rectangle = new GameGraphics(this).drawRectangle(500, 0, 100, 100)
         this.rectangle.interactive = true
@@ -23,8 +23,8 @@ export class GraphicScene extends Scene {
 
         // test timer.every
         this.rectangle.on('pointerdown', () => {
-            timer = this.engine.time.every(1, () => {
-                this.engine.log('Recurrent Fn has been called after 1 seconds')
+            timer = this.engine.time.every(1, (remaining) => {
+                this.engine.log(`Recurrent Fn has been called after 1 seconds: ${remaining}`)
             }, 10)
         })
         this.line = new GameGraphics(this).drawLine(800, 0, 0, 600)
@@ -53,6 +53,27 @@ export class GraphicScene extends Scene {
         if (this.engine.input.isKeyDown('M')) {
             this.engine.time.after(1, () => {
                 this.engine.log('Fn has been called after 1 seconds')
+            })
+        }
+        // test time.script
+        if (this.engine.input.isKeyDown('E')) {
+            this.engine.time.script(async (wait) => {
+                this.engine.log('Fn has been called after 0 seconds')
+                await wait(1)
+                this.engine.log('Fn has been called after 1 seconds')
+                await wait(2)
+                this.engine.log('Fn has been called after 2 seconds')
+                await wait(3)
+                this.engine.log('Fn has been called after 3 seconds')
+            })
+        }
+
+        // test time.during
+        if (this.engine.input.isKeyDown('R')) {
+            this.engine.time.during(1, () => {
+                this.engine.log('Fn has been called for 1 seconds')
+            }, () => {
+                this.engine.log('Test time.during completes succesfully')
             })
         }
     }
