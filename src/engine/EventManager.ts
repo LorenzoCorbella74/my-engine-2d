@@ -5,7 +5,8 @@ import { GameObject } from './GameObject'
 export enum EventType {
     Collision = 'Collision',
     Pickup = 'Pickup',
-    CustomEvent = 'CustomEvent'
+    CustomEvent = 'CustomEvent',
+    UpdateForUI = 'UpdateForUI',
 }
 
 export interface IGameObjectEventHandler { onEventHandler: (event: GameEvent<any>) => void }
@@ -38,9 +39,8 @@ export type BasePayload = {
 export class EventManager {
 
     private eventQueue: (GameEvent<BasePayload> | GameEventForGroup<BasePayload>)[] = [];
-    constructor(public engine: typeof PixiEngine) {
 
-    }
+    constructor(public engine: typeof PixiEngine) { }
 
     sendEvent(event: GameEvent<BasePayload> | GameEventForGroup<BasePayload>) {
         this.eventQueue.push(event);

@@ -1,11 +1,11 @@
 import { Body, Query, Engine, Events, Composite, Render } from 'matter-js';
 import { PixiEngine } from './Engine'
 import { EventType, GameEvent } from './EventManager';
-import { GROUP, GameObject } from './GameObject';
+import { GameObject } from './GameObject';
 import { Graphics } from 'pixi.js';
+import { GROUP, RigidBodyComponent } from './components/rigidBody';
 
 export type GraphicsWithPhisics = Graphics & {
-
     rigidBody: Body
 }
 
@@ -90,14 +90,16 @@ export class PhysicManager {
     }
 
     // Funzione per verificare la visibilità tra due GameObject
-    hasLineOfSight(fromObj: GameObject | GraphicsWithPhisics, toObj: GameObject | GraphicsWithPhisics): boolean {
-        if (fromObj.rigidBody && toObj.rigidBody) {
+    hasLineOfSight(fromObj: GameObject /* | GraphicsWithPhisics */, toObj: GameObject /* | GraphicsWithPhisics */): boolean {
+        const from = fromObj.getComponents<RigidBodyComponent>('RigidBody')[0];
+        const to = fromObj.getComponents<RigidBodyComponent>('RigidBody')[0];
+        if (from.rigidBody && to.rigidBody) {
             let collisions = Query.ray(
                 Composite.allBodies(PixiEngine.physics.physicsEngine.world),
-                fromObj.rigidBody.position,
-                toObj.rigidBody.position
+                from.rigidBody.position,
+                to.rigidBody.position
             );
-            collisions = collisions.filter(collision => ![fromObj.rigidBody.label, toObj.rigidBody.label].includes(collision.bodyA.label));
+            collisions = collisions.filter(collision => ![from.rigidBody.label, to.rigidBody.label].includes(collision.bodyA.label));
             return collisions.length === 0;
         }
         return false;

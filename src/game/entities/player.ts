@@ -1,7 +1,10 @@
 import { Body } from 'matter-js';
 
-import { GameObject } from "../../engine/GameObject"
+import { GameObject } from '../../engine/GameObject';
 import { GameNode } from '../../engine/decorators';
+import { SpriteComponent } from '../../engine/components/sprite';
+import { HealthComponent } from '../../engine/components/health';
+import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
 
 @GameNode()
 export class Player extends GameObject {
@@ -12,10 +15,22 @@ export class Player extends GameObject {
     dx: number = 0;
     dy: number = 0;
 
-    rigidBody: Matter.Body
-
     constructor(name, spriteName) {
         super(name, spriteName);
+        this.addComponent(new SpriteComponent(this, spriteName));
+        this.addComponent(new HealthComponent(this, 100));
+        this.addComponent(new RigidBodyComponent(this, {
+            shape: 'rectangle',
+            isStatic: false,
+            collisionFilter: {
+                category: GROUP.PLAYER,
+                mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
+            },
+            position: {
+                x: this.getComponents<SpriteComponent>('Sprite')[0].sprite.x,
+                y: this.getComponents<SpriteComponent>('Sprite')[0].sprite.y
+            }
+        }))
     }
 
     update(dt) {
@@ -36,12 +51,11 @@ export class Player extends GameObject {
         }
 
         // velocity
-        Body.setVelocity(this.rigidBody, { x: this.dx, y: this.dy })
+        Body.setVelocity(this.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, { x: this.dx, y: this.dy })
         // of translate
         // Body.translate(this.rigidBody, { x: this.dx, y: this.dy })
 
-        this.sprite.x = this.rigidBody.position.x
-        this.sprite.y = this.rigidBody.position.y
-        // this.sprite.rotation = this.rigidBody.angle -> è in funzione del mouse!!!
+        // TODO: si aggiornano i componenti
+        super.update(dt)
     }
 }

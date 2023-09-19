@@ -4,6 +4,9 @@ import { GameObject } from './GameObject'
 import { SceneManager } from "./SceneManager";
 import { Scene } from "./Scene";
 
+import { SpriteComponent } from "./components/sprite";
+import { Component } from "./Component";
+
 export class Camera {
 
     app: PIXI.Application<PIXI.ICanvas>;
@@ -36,16 +39,13 @@ export class Camera {
         this.shakeAmplitude = 0;
         this.shakeStartTime = 0;
     }
+
     focusOn(element: GameObject, currentScene: Scene) {
         this.app.stage.removeChild(this.container);
         // se non passato focus al centro dello schermo
         if (!element) {
-            element = {
-                sprite: {
-                    x: this.app.screen.width / 2,
-                    y: this.app.screen.height / 2
-                }
-            } as GameObject
+            element = new GameObject('camera');
+            element.addComponent(new SpriteComponent(element, null, this.app.screen.width / 2, this.app.screen.height / 2))
         }
         this.container = currentScene;
         this.target = element;
@@ -79,15 +79,17 @@ export class Camera {
                 const offsetY = (Math.random() - 0.85) < 0 ? 0 : this.shakeAmplitude;
 
                 // updating player coordinates
-                this.target.sprite.x = this.target.sprite.x + offsetX;
-                this.target.sprite.y = this.target.sprite.y + offsetY;
+                // TODO
+                const target = (this.target?.getComponents('Sprite')[0] as SpriteComponent)
+                target.setPosition(target.sprite.x + offsetX, target.sprite.y + offsetY)
             }
         } else {
             this.shakeDuration = 0;
         }
         // Aggiorna la posizione della telecamera in base al target
-        this.container.position.x = this.app.screen.width / 2 - (this.target.sprite.x * this.zoomLevel);
-        this.container.position.y = this.app.screen.height / 2 - (this.target.sprite.y * this.zoomLevel);
+        const target = this.target.getComponents<SpriteComponent>('Sprite')[0]
+        this.container.position.x = this.app.screen.width / 2 - (target.sprite.x * this.zoomLevel);
+        this.container.position.y = this.app.screen.height / 2 - (target.sprite.y * this.zoomLevel);
 
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel);
@@ -121,5 +123,29 @@ export class Camera {
         this.zoomStartTime = performance.now();
         this.isZooming = true;
     }
+
+    // TODO
+    /* isGameObjectVisibleInCamera(
+        gameObjectX: number,
+        gameObjectY: number,
+        gameObjectWidth: number,
+        gameObjectHeight: number
+    ): boolean {
+        // Calcola le coordinate del bordo destro e inferiore del GameObject
+        const gameObjectRight = gameObjectX + gameObjectWidth;
+        const gameObjectBottom = gameObjectY + gameObjectHeight;
+        // Controlla se il GameObject è completamente fuori a sinistra, a destra, sopra o sotto la telecamera
+        if (
+            gameObjectX > cameraX + cameraWidth ||
+            gameObjectRight < cameraX ||
+            gameObjectY > cameraY + cameraHeight ||
+            gameObjectBottom < cameraY
+        ) {
+            // Il GameObject non è visibile nella telecamera
+            return false;
+        }
+        // Se non è completamente fuori dalla telecamera, allora è visibile
+        return true;
+    } */
 
 }

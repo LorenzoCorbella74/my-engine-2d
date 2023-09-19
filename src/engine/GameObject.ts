@@ -1,35 +1,5 @@
 import { PixiEngine } from './Engine';
-import { Sprite } from "pixi.js";
-
-import { Body, Bodies, World, Composite } from 'matter-js';
-
-export const GROUP = {
-  DEFAULT: 0x0001,
-  PLAYER: 0x0002,
-  ENEMY: 0x0004,
-  PROJECTILE: 0x0008,
-  WALL: 0x0010,
-  ITEM: 0x0020,
-  NPC: 0x0040
-} as const
-
-type GroupsType = keyof typeof GROUP;
-type GroupsValue = typeof GROUP[keyof typeof GROUP];
-
-// Opzioni per il decoratore
-type RigidBodyOptions = {
-  shape: 'rectangle' | 'circle' | 'polygon';
-  isStatic: boolean;
-  friction?: number;
-  collisionFilter: {
-    category?: GroupsValue,
-    mask?: number  // Esempio maschera di collisione
-  }
-  position?: { x: number, y: number }
-}
-
-
-type MyRigidBody = Body | null
+import { Component } from './Component';
 
 import { IGameConditionEntity } from './GameLogic'
 import { GameEvent, GameEventForGroup, IGameObjectEventHandler, BasePayload } from './EventManager'
@@ -38,57 +8,14 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
 
   private _id: string;
   private _name: string;
-  private _sprite: Sprite;
-
-  // phisics body if present ...
-  public rigidBody: MyRigidBody = null;
-  public removeRigidBody: MyRigidBody extends Body ? () => void : null;
-
+  private components: { [key: string]: Component[] } = {};
 
   engine: typeof PixiEngine;
 
   constructor(name: string, spriteName?: string) {
     this._name = name;
     this.engine = PixiEngine
-    // empty sprite if not specified
-    this._sprite = spriteName ? PixiEngine.getAsset(spriteName) : PixiEngine.getAsset('empty');
-    if (!spriteName) {
-      this.hide()
-    }
   }
-
-  createRigidBody(options?: RigidBodyOptions) {
-
-    // si registra nel objects repository
-    const { shape, isStatic } = options;
-    const { x, y } = options.position || this._sprite;
-    const { width, height } = this._sprite;
-    const config = {
-      isStatic,
-      friction: options.friction || 0,
-      label: this.name,
-      collisionFilter: {
-        category: options?.collisionFilter?.category || GROUP.DEFAULT,
-        mask: options?.collisionFilter?.mask || GROUP.DEFAULT
-      }
-    }
-    // Crea il corpo Matter.js in base alle opzioni
-    if (shape === 'rectangle') {
-      this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, config);
-    } else if (shape === 'circle') {
-      this.rigidBody = Bodies.circle(x + width / 2, y + height / 2, width, config); // TODO
-    } else if (shape === 'polygon') {
-      // TODO: poligono personalizzato
-    }
-
-    // Aggiungi il corpo Matter.js al mondo
-    World.add(PixiEngine.physics.physicsEngine.world, this.rigidBody);
-    this.removeRigidBody = () => {
-      World.remove(PixiEngine.physics.physicsEngine.world, this.rigidBody);
-    }
-
-  }
-
 
   onEventHandler(event: GameEvent<BasePayload> | GameEventForGroup<BasePayload>) {
     // Implementa la logica per gestire l'evento specifico per questo oggetto
@@ -97,6 +24,7 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
   }
 
 
+  // check for game logic
   isSatisfied: () => boolean;
 
   get id(): string {
@@ -115,33 +43,81 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     this._name = value;
   }
 
-  get sprite(): Sprite {
-    return this._sprite;
-  }
-
-  set sprite(value: Sprite) {
-    this._sprite = value;
-  }
-
-  hide() {
-    this._sprite.visible = false;
-  }
-
-  show() {
-    this._sprite.visible = true;
-  }
-
   update(deltaTime: number) {
-    if (this.rigidBody) {
-      this.sprite.x = this.rigidBody?.position?.x
-      this.sprite.y = this.rigidBody?.position?.y
+    for (const key in this.components) {
+      if (Object.prototype.hasOwnProperty.call(this.components, key)) {
+        const component = this.components[key];
+        component[0].update(deltaTime);
+      }
     }
   }
 
   destroy() {
-    this._sprite.destroy()
-    if (this.rigidBody) {
-      this.removeRigidBody()
+    // TODO
+    /*  this._sprite.destroy()
+     if (this.rigidBody) {
+       this.removeRigidBody()
+     } */
+  }
+
+
+  addComponent(component: Component) {
+    const componentName = component.name;
+
+    if (!this.components[componentName]) {
+      this.components[componentName] = [];
     }
+    this.components[componentName].push(component);
+    // Verifica le dipendenze e abilita i componenti necessari se non sono già abilitati.
+    for (const dependency of component.dependencies) {
+      if (!this.isComponentEnabled(dependency)) {
+        this.setComponentEnabled(dependency, true);
+      }
+    }
+  }
+
+  // Rimuoviamo un componente dall'entità.
+  removeComponent(component: Component) {
+    const componentName = component.name;
+    if (this.components[componentName]) {
+      const index = this.components[componentName].indexOf(component);
+      if (index !== -1) {
+        this.components[componentName].splice(index, 1);
+      }
+    }
+  }
+
+  // Ottieni tutti i componenti di un tipo specifico associati a questa entità.
+  getComponents<T extends Component>(componentName: string): T[] {
+    return (this.components[componentName] as T[] || []).filter((component) => component.enabled);
+  }
+
+  // Abilita o disabilita i componenti specificati nel parametro componentsState.
+  setComponentsEnabled(componentsState: { [componentName: string]: boolean }) {
+    for (const componentName in componentsState) {
+      if (componentsState.hasOwnProperty(componentName)) {
+        const enabled = componentsState[componentName];
+        this.setComponentEnabled(componentName, enabled);
+      }
+    }
+  }
+
+  // Abilita o disabilita un componente specifico.
+  setComponentEnabled(componentName: string, enabled: boolean) {
+    const components = this.components[componentName] as Component[];
+    if (components) {
+      for (const component of components) {
+        component.enabled = enabled;
+      }
+    }
+  }
+
+  // Verifica se un componente specifico è abilitato.
+  isComponentEnabled(componentName: string): boolean {
+    const components = this.components[componentName] as Component[];
+    if (components) {
+      return components.some((component) => component.enabled);
+    }
+    return false;
   }
 }

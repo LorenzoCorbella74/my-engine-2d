@@ -2,10 +2,12 @@ import { Player } from '../entities/player';
 import { Graphics, TilingSprite } from "pixi.js";
 import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
-import { GROUP, GameObject } from '../../engine/GameObject';
-import { GameGraphics } from '../../engine/GameGraphics'
+import { GameObject } from '../../engine/GameObject';
+
 import * as Matter from 'matter-js';
 import { GraphicsWithPhisics } from '../../engine/PhysicManager';
+import { SpriteComponent } from '../../engine/components/sprite';
+import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
 
 export class MatterScene extends Scene {
 
@@ -37,21 +39,10 @@ export class MatterScene extends Scene {
         this.obstacle2 = this.createObstacle('Obstacle2', 300, 450, 200, 100);
 
         this.player = new Player('Player', 'player')
-        this.player.sprite.x = window.innerWidth / 2;
-        this.player.sprite.y = window.innerHeight / 2 - 100;
-        this.player.sprite.anchor.set(0.5);
-        this.player.createRigidBody({
-            shape: 'rectangle',
-            isStatic: false,
-            collisionFilter: {
-                category: GROUP.PLAYER,
-                mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
-            },
-            position: {
-                x: this.player.sprite.x,
-                y: this.player.sprite.y
-            }
-        })
+        const player = this.player.getComponents<SpriteComponent>('Sprite')[0]
+        player.setPosition(window.innerWidth / 2, window.innerHeight / 2 - 100)
+        player.setAnchor(0.5)
+
         this.engine.camera.focusOn(this.player, this)
 
         this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
@@ -83,9 +74,11 @@ export class MatterScene extends Scene {
         const mousePosition = this.engine.mouse.getMouse();
         this.crossHair.position.set(mousePosition.x, mousePosition.y);
         //console.log('Mouse: ', mousePosition.x, mousePosition.y)
-        const angle = Math.atan2(mousePosition.y - this.player.sprite.y, mousePosition.x - this.player.sprite.x);
-        this.player.sprite.rotation = angle;
-        this.player.rigidBody.angle = this.player.sprite.rotation
+        const player = this.player.getComponents<SpriteComponent>('Sprite')[0]
+        const playerRigidBody = this.player.getComponents<RigidBodyComponent>('RigidBody')[0]
+        const angle = Math.atan2(mousePosition.y - player.sprite.y, mousePosition.x - player.sprite.x);
+        player.setRotation(angle)
+        playerRigidBody.setRotation(angle)
 
         this.player.update(delta)
 
@@ -93,7 +86,7 @@ export class MatterScene extends Scene {
          this.tilingSprite.tilePosition.y = 0 */
 
         this.engine.time.runOnFrameNum([1, 30], (frameNumber: number) => {
-            this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
+            // this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
         })
     }
 
@@ -119,11 +112,11 @@ export class MatterScene extends Scene {
         }
         // TEST enable/disable COLLISION
         if (this.engine.input.isKeyDownForOneShot('Z')) {
-            this.engine.physics.disableCollisions(this.player.rigidBody)
+            this.engine.physics.disableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody)
         }
         if (this.engine.input.isKeyDownForOneShot('X')) {
             const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM;
-            this.engine.physics.enableCollisions(this.player.rigidBody, categoriesToCollideWith)
+            this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
         }
     }
 }

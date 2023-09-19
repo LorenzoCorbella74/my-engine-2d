@@ -4,8 +4,10 @@ import { Enemy } from '../entities/enemy';
 import { Graphics, Text } from "pixi.js";
 import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
-import { GROUP, GameObject } from '../../engine/GameObject';
+import { GameObject } from '../../engine/GameObject';
 import { EventType, GameEvent, GameEventForGroup } from '../../engine/EventManager';
+import { SpriteComponent } from '../../engine/components/sprite';
+import { RigidBodyComponent } from '../../engine/components/rigidBody';
 
 export class SecondScene extends Scene {
 
@@ -52,54 +54,21 @@ export class SecondScene extends Scene {
 
         // PLAYER
         this.player = new Player('Player', 'player')
-        this.player.sprite.x = window.innerWidth / 2;
-        this.player.sprite.y = window.innerHeight / 2 - 100;
-        this.player.sprite.anchor.set(0.5);
-        this.player.createRigidBody({
-            shape: 'rectangle',
-            isStatic: false,
-            collisionFilter: {
-                category: GROUP.PLAYER,
-                mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
-            },
-            position: {
-                x: this.player.sprite.x,
-                y: this.player.sprite.y
-            }
-        })
+        const player = this.player.getComponents<SpriteComponent>('Sprite')[0]
+        player.setPosition(window.innerWidth / 2, window.innerHeight / 2 - 100)
+
 
         this.engine.camera.focusOn(this.player, this)
 
         // ENEMY 1
         this.enemy1 = new Enemy('Nemico1', 'color1')
-        this.enemy1.sprite.anchor.set(0.5)
-        this.enemy1.createRigidBody({
-            shape: 'rectangle',
-            isStatic: false,
-            collisionFilter: {
-                category: GROUP.ENEMY,
-                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.WALL
-            },
-            position: {
-                x: 200,
-                y: 200
-            }
-        })
+        const enemy1 = this.enemy1.getComponents<SpriteComponent>('Sprite')[0];
+        enemy1.setPosition(200, 200);
 
         // ENEMY 2
         this.enemy2 = new Enemy('Nemico2', 'color2')
-        this.enemy2.createRigidBody({
-            shape: 'rectangle',
-            isStatic: false,
-            collisionFilter: {
-                category: GROUP.ENEMY,
-                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.WALL
-            },
-            position: {
-                x: 500,
-                y: 500
-            }
-        })
+        const enemy2 = this.enemy1.getComponents<SpriteComponent>('Sprite')[0];
+        enemy2.setPosition(500, 500);
 
         // get the reference of the objecty in the gameObjects repository
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
@@ -120,7 +89,7 @@ export class SecondScene extends Scene {
         this.player.update(delta)
 
         // UI
-        const { x: xp, y: yp } = this.player.rigidBody.position
+        const { x: xp, y: yp } = this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody.position
         this.textCoord.x = Math.ceil(xp)
         this.textCoord.y = Math.ceil(yp) - 16
         this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y}`
