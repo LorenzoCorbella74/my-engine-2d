@@ -34,6 +34,7 @@ export class Enemy extends GameObject {
     }
 
     update(dt) {
+        // si aggiornano i componenti
         super.update(dt)
     }
 }

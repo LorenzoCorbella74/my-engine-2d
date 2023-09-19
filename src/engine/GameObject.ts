@@ -23,7 +23,6 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     console.log(`GameObject ${this.name} received event:`, event);
   }
 
-
   // check for game logic
   isSatisfied: () => boolean;
 
@@ -31,16 +30,8 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     return this._id;
   }
 
-  set id(id: string) {
-    this._id = id
-  }
-
   get name(): string {
     return this._name;
-  }
-
-  set name(value: string) {
-    this._name = value;
   }
 
   update(deltaTime: number) {

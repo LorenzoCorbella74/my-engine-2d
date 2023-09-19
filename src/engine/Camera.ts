@@ -5,7 +5,6 @@ import { SceneManager } from "./SceneManager";
 import { Scene } from "./Scene";
 
 import { SpriteComponent } from "./components/sprite";
-import { Component } from "./Component";
 
 export class Camera {
 
@@ -44,7 +43,7 @@ export class Camera {
         this.app.stage.removeChild(this.container);
         // se non passato focus al centro dello schermo
         if (!element) {
-            element = new GameObject('camera');
+            element = new GameObject('cameraDefault');
             element.addComponent(new SpriteComponent(element, null, this.app.screen.width / 2, this.app.screen.height / 2))
         }
         this.container = currentScene;

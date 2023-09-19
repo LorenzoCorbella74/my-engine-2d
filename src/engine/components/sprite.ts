@@ -62,4 +62,8 @@ export class SpriteComponent extends Component {
         this.sprite.visible = true;
     }
 
+    destroy() {
+        this.sprite.destroy();
+    }
+
 }
