@@ -75,6 +75,7 @@ export class PhysicManager {
             null
         );
         PixiEngine.events.sendEvent(colisionEvent);
+
     }
 
     onCollisionActive(event: Matter.IEventCollision<Matter.Engine>) {

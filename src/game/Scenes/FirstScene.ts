@@ -1,4 +1,4 @@
-import { Sprite } from "pixi.js";
+import { BlurFilter, Sprite } from "pixi.js";
 import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { Game } from '../entities/game';
@@ -22,6 +22,11 @@ export class FirstScene extends Scene {
     init() {
 
         this.game = new Game('Game', null)
+
+        const blurFilter = new BlurFilter();
+        blurFilter.blur = 10;
+
+        this.engine.filters.addFilter(this.engine.scenes.currentScene, blurFilter);
 
 
         // 1 test 
@@ -60,7 +65,8 @@ export class FirstScene extends Scene {
         this.bunny3.interactive = true;
         this.addChild(this.bunny3);
         this.bunny3.on("mousedown", (e) => {
-            this.engine.time.after(1, () => {
+            this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2)
+            this.engine.time.after(5, () => {
                 this.engine.scenes.changeScene('MatterScene')
             })
         });
@@ -80,9 +86,10 @@ export class FirstScene extends Scene {
         this.timeline = timeline;
         timeline.pause()
 
-        // esempio GSAP
-        this.bunny2.on("mousedown", function (e) {
 
+
+
+        this.bunny2.on("mousedown", (e) => {
 
             // Esegui l'animazione
             timeline.play();

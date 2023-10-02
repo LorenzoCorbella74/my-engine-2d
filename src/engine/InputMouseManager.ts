@@ -17,21 +17,22 @@ export class InputMouseManager {
     constructor(app: Application) {
         this.app = app;
         // from 7.0 no more "app.renderer.plugins.interaction.mouse"
-        /* this.app.renderer.plugins.interaction.on('pointermove', (event) => {
+        this.app.stage.eventMode = 'static';
+        this.app.stage.hitArea = app.screen;
+        this.app.stage.on('mousemove', (event) => { // o pointermove
             this.mouse = {
-                x: event.data.global.x,
-                y: event.data.global.y
-            }
-        }); */
-
-        // Aggiungi l'evento di ridimensionamento della finestra
-
-        document.addEventListener('mousemove', e => {
-            this.mouse = {
-                x: e.clientX,
-                y: e.clientY
+                x: event.global.x,
+                y: event.global.y
             }
         });
+
+        // Aggiungi l'evento di ridimensionamento della finestra
+        /*  document.addEventListener('mousemove', e => {
+             this.mouse = {
+                 x: e.clientX,
+                 y: e.clientY
+             }
+         }); */
 
         document.addEventListener('mousewheel', e => {
             // this.mouseWheel = e.deltaY ;

@@ -20,6 +20,7 @@ import { GameObjectRepo } from "./GameObjectRepo";
 import { EventManager } from "./EventManager";
 import { PhysicManager } from './PhysicManager'
 import { CrossHairManager } from './CrossHairManager'
+import { FiltersManager } from './FiltersManager'
 
 export const ENGINE_MSG_PREFIX = "[PIXI-ENGINE]: "
 
@@ -40,6 +41,7 @@ export class Engine {
     public events: EventManager;
     public physics: PhysicManager
     public crosshair: CrossHairManager
+    public filters: FiltersManager;
 
     paused: boolean = false
 
@@ -91,6 +93,7 @@ export class Engine {
         this.loader = new Preloader(massiveRequire(loaderData), this.sounds);
         this.physics = new PhysicManager(/* this */)
         this.crosshair = new CrossHairManager();
+        this.filters = new FiltersManager();
 
         this.app.view.addEventListener('resize', (ev: UIEvent) => {
             const target = ev.target as Window;
