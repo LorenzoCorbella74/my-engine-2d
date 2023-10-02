@@ -56,19 +56,16 @@ export class SecondScene extends Scene {
         this.player = new Player('Player', 'player')
         const player = this.player.getComponents<SpriteComponent>('Sprite')[0]
         player.setPosition(window.innerWidth / 2, window.innerHeight / 2 - 100)
-
+        player.setAnchor(0.5)
 
         this.engine.camera.focusOn(this.player, this)
 
         // ENEMY 1
         this.enemy1 = new Enemy('Nemico1', 'color1')
-        const enemy1 = this.enemy1.getComponents<SpriteComponent>('Sprite')[0];
-        enemy1.setPosition(200, 200);
+        const enemySprite = this.enemy1.getComponents<SpriteComponent>('Sprite')[0];
+        enemySprite.setPosition(200, 200);
 
-        // ENEMY 2
-        this.enemy2 = new Enemy('Nemico2', 'color2')
-        const enemy2 = this.enemy1.getComponents<SpriteComponent>('Sprite')[0];
-        enemy2.setPosition(500, 500);
+
 
         // get the reference of the objecty in the gameObjects repository
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
@@ -94,24 +91,23 @@ export class SecondScene extends Scene {
         this.textCoord.y = Math.ceil(yp) - 16
         this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y}`
 
+
         this.enemy1.update(delta)
-        this.enemy2.update(delta)
     }
 
     destroy() {
         // remove sprites
         this.player.destroy()
         this.enemy1.destroy()
-        this.enemy2.destroy()
     }
 
     onInputChange(inputs: any): void {
 
         if (this.engine.input.isKeyDown('Z')) {
-            this.engine.camera.zoomIn();
+            // TODO:
         }
         if (this.engine.input.isKeyDown('X')) {
-            this.engine.camera.zoomOut();
+            // TODO:
         }
         if (this.engine.input.isKeyDownForOneShot('N')) {
             this.engine.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
@@ -119,7 +115,7 @@ export class SecondScene extends Scene {
 
         // test zoomTo
         if (this.engine.input.isKeyDown('M')) {
-            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? this.engine.camera.zoomLevel - 0.5 : this.engine.camera.zoomLevel + 0.5, 2000); // Zoom in di 0.2 e durata di 1000 ms
+            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? this.engine.camera.zoomLevel - 0.5 : this.engine.camera.zoomLevel + 0.5, 2);
         }
 
         // test change camera target

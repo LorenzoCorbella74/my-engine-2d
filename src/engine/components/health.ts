@@ -1,12 +1,13 @@
 import { Component } from '../Component';
 import { GameObject } from '../GameObject';
+import { ComponentNames } from './component-names.enum';
 
 export class HealthComponent extends Component {
 
     public health: number;
 
     constructor(gameObject: GameObject, health: number) {
-        super(gameObject, 'Health');
+        super(gameObject, ComponentNames.Health);
         this.health = health;
     }
 

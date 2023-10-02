@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import gsap from 'gsap';
 
 import { GameObject } from './GameObject'
 import { SceneManager } from "./SceneManager";
@@ -14,11 +15,6 @@ export class Camera {
 
     // ZOOM
     zoomLevel: number;
-    zoomSpeed: number;
-    targetZoom: number;
-    isZooming: boolean;
-    zoomStartTime: number;
-    zoomDuration: number;
 
     // SHAKE EFFECT
     shakeDuration: number;
@@ -30,9 +26,6 @@ export class Camera {
         this.target = null; // L'elemento su cui la telecamera dovrebbe essere centrata
 
         this.zoomLevel = 1;
-        this.targetZoom = 1;
-        this.zoomSpeed = 0.05;
-        this.isZooming = false;
 
         this.shakeDuration = 0;
         this.shakeAmplitude = 0;
@@ -54,20 +47,6 @@ export class Camera {
     update() {
         if (!this.target) return
 
-        if (this.isZooming) {
-            const currentTime = performance.now();
-            const elapsedTime = currentTime - this.zoomStartTime;
-
-            if (elapsedTime < this.zoomDuration) {
-                const progress = elapsedTime / this.zoomDuration;
-                const zoomDiff = this.targetZoom - this.zoomLevel;
-                this.zoomLevel = this.zoomLevel + zoomDiff * progress;
-            } else {
-                this.zoomLevel = this.targetZoom;
-                this.isZooming = false;
-            }
-        }
-
         if (this.shakeDuration > 0) {
             const currentTime = performance.now();
             const elapsedTime = currentTime - this.shakeStartTime;
@@ -86,9 +65,9 @@ export class Camera {
             this.shakeDuration = 0;
         }
         // Aggiorna la posizione della telecamera in base al target
-        const target = this.target.getComponents<SpriteComponent>('Sprite')[0]
-        this.container.position.x = this.app.screen.width / 2 - (target.sprite.x * this.zoomLevel);
-        this.container.position.y = this.app.screen.height / 2 - (target.sprite.y * this.zoomLevel);
+        const spriteTarget = this.target.getComponents<SpriteComponent>('Sprite')[0]
+        this.container.position.x = this.app.screen.width / 2 - (spriteTarget.sprite.x * this.zoomLevel);
+        this.container.position.y = this.app.screen.height / 2 - (spriteTarget.sprite.y * this.zoomLevel);
 
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel);
@@ -100,27 +79,13 @@ export class Camera {
         this.shakeStartTime = performance.now();
     }
 
-    zoomIn() {
-        this.zoomLevel += this.zoomSpeed;
-        if (this.zoomLevel > 2) {
-            this.zoomLevel = 2;
-        }
-        console.log('Zoom Level: ', this.zoomLevel)
-    }
-
-    zoomOut() {
-        this.zoomLevel -= this.zoomSpeed;
-        if (this.zoomLevel < 0.5) {
-            this.zoomLevel = 0.5;
-        }
-        console.log('Zoom Level: ', this.zoomLevel)
-    }
-
+    /**
+     * 
+     * @param targetZoom level of zoom (ddefault 1)
+     * @param duration  duration in sec to reach the desired zoom
+     */
     zoomTo(targetZoom, duration) {
-        this.targetZoom = targetZoom;
-        this.zoomDuration = duration;
-        this.zoomStartTime = performance.now();
-        this.isZooming = true;
+        gsap.to(this, { zoomLevel: targetZoom, duration: duration })
     }
 
     // TODO

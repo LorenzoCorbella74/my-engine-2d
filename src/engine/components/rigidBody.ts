@@ -5,6 +5,8 @@ import { PixiEngine } from '../Engine';
 import { SpriteComponent } from './sprite';
 import { GameObject } from '../GameObject';
 
+import { ComponentNames } from './component-names.enum';
+
 export const GROUP = {
     DEFAULT: 0x0001,
     PLAYER: 0x0002,
@@ -23,6 +25,8 @@ type RigidBodyOptions = {
     shape: 'rectangle' | 'circle' | 'polygon';
     isStatic: boolean;
     friction?: number;
+    frictionAir?: number;
+    restitution?: number;
     collisionFilter: {
         category?: GroupsValue,
         mask?: number  // Esempio maschera di collisione
@@ -34,21 +38,28 @@ export class RigidBodyComponent extends Component {
 
     public rigidBody: Body;
 
-    constructor(gameObject: GameObject, options: RigidBodyOptions) {
-        super(gameObject, 'RigidBody');
+    constructor(gameObject: GameObject, public options: RigidBodyOptions) {
+        super(gameObject, ComponentNames.RigidBody);
         // si registra nel objects repository
+        this.createRigidBody(options);
+    }
+
+    private createRigidBody(options: RigidBodyOptions) {
         const { shape, isStatic } = options;
         const { x, y } = options.position || this.entity.getComponents<SpriteComponent>('Sprite')[0].sprite;
         const { width, height } = this.entity.getComponents<SpriteComponent>('Sprite')[0].sprite;
         const config = {
             isStatic,
-            friction: options.friction || 0,
+            friction: options.friction || 0.5,  // https://www.medianic.co.uk/getting-started-with-matter-js-the-body-module/
+            frictionAir: options.frictionAir || 0.10,
+            /* restitution: options.restitution || 0.09,
+            density: 0.001, */
             label: this.name,
             collisionFilter: {
                 category: options?.collisionFilter?.category || GROUP.DEFAULT,
                 mask: options?.collisionFilter?.mask || GROUP.DEFAULT
             }
-        }
+        };
         // Crea il corpo Matter.js in base alle opzioni
         if (shape === 'rectangle') {
             this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, config) as Body;
@@ -57,9 +68,13 @@ export class RigidBodyComponent extends Component {
         } else if (shape === 'polygon') {
             // TODO: poligono personalizzato
         }
-
         // Aggiungi il corpo Matter.js al mondo
         World.add(PixiEngine.physics.physicsEngine.world, this.rigidBody);
+    }
+
+    updateSize() {
+        this.removeRigidBody()
+        this.createRigidBody(this.options);
     }
 
     removeRigidBody() {

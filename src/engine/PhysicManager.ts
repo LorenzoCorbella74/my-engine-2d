@@ -2,7 +2,7 @@ import { Body, Query, Engine, Events, Composite, Render } from 'matter-js';
 import { PixiEngine } from './Engine'
 import { EventType, GameEvent } from './EventManager';
 import { GameObject } from './GameObject';
-import { Graphics } from 'pixi.js';
+import { Application, Graphics } from 'pixi.js';
 import { GROUP, RigidBodyComponent } from './components/rigidBody';
 
 export type GraphicsWithPhisics = Graphics & {
@@ -14,7 +14,7 @@ export class PhysicManager {
     physicsEngine: Engine = null
     render: Render;
 
-    constructor() {
+    constructor(public app: Application) {
 
         this.physicsEngine = Engine.create()
 
@@ -22,8 +22,8 @@ export class PhysicManager {
             element: document.querySelector('#phisic-debugger'),
             engine: this.physicsEngine,
             options: {
-                width: window.innerWidth,
-                height: window.innerHeight,
+                width: this.app.view.width,
+                height: this.app.view.height,
                 wireframes: true,
                 background: 'transparent',
                 wireframeBackground: 'transparent'
@@ -32,23 +32,29 @@ export class PhysicManager {
 
         Render.run(this.render);
 
-        this.physicsEngine.gravity.y = 0;
+        this.physicsEngine.gravity.y = 0; // default is 0 as TOP DOWN SHHOTER
 
         Events.on(this.physicsEngine, 'collisionStart', (event) => this.onCollisionStart(event))
         Events.on(this.physicsEngine, 'collisionEnd', (event) => this.onCollisionEnd(event))
         Events.on(this.physicsEngine, 'collisionActive', (event) => this.onCollisionStart(event))
     }
 
+    setGravity(y: number) {
+        this.physicsEngine.world.gravity.y = y
+    }
+
+    /* ---------------------- DEBUG ---------------------- */
     showPhisicsCanvas() {
-        document.getElementById("physicsDebugger").style.display = "block";
-        document.getElementById("physicsDebugger").style.zIndex = '100';
+        (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "block";
+        (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.zIndex = '100';
     }
 
     hidePhisicsCanvas() {
-        document.getElementById("physicsDebugger").style.display = "none";
-        document.getElementById("physicsDebugger").style.zIndex = '-1';
+        (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "none";
+        (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.zIndex = '-1';
     }
 
+    /* --------------------------------------------------- */
     update() {
         Engine.update(this.physicsEngine, 1000 / 60)
     }

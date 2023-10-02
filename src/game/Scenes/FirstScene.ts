@@ -3,7 +3,7 @@ import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { Game } from '../entities/game';
 
-import { createTimelineAnimation } from './animations/timeline'
+import { createTimelineAnimation } from './animations/timeline';
 
 export class FirstScene extends Scene {
 
@@ -23,11 +23,10 @@ export class FirstScene extends Scene {
 
         this.game = new Game('Game', null)
 
+        // si applica il filtro a tutta la scena
         const blurFilter = new BlurFilter();
         blurFilter.blur = 10;
-
         this.engine.filters.addFilter(this.engine.scenes.currentScene, blurFilter);
-
 
         // 1 test 
         this.bg = this.engine.getAsset("bg");
@@ -86,16 +85,10 @@ export class FirstScene extends Scene {
         this.timeline = timeline;
         timeline.pause()
 
-
-
-
+        // Esegui l'animazione
         this.bunny2.on("mousedown", (e) => {
-
-            // Esegui l'animazione
             timeline.play();
         })
-
-
 
         // 3 JSON
         console.log(this.engine.getAsset("test"));

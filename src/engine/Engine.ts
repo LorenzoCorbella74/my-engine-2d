@@ -67,6 +67,7 @@ export class Engine {
         document.title = config.name || 'PIXI-ENGINE';  // name of the game
 
         this.app = new PIXI.Application({
+            // backgroundAlpha: 0, // transparente
             resizeTo: window,
             autoStart: false,
             antialias: true,
@@ -91,7 +92,7 @@ export class Engine {
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this.app, this.scenes);
         this.loader = new Preloader(massiveRequire(loaderData), this.sounds);
-        this.physics = new PhysicManager(/* this */)
+        this.physics = new PhysicManager(this.app)
         this.crosshair = new CrossHairManager();
         this.filters = new FiltersManager();
 

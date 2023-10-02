@@ -3,16 +3,18 @@ import { Component } from '../Component';
 import { PixiEngine } from '../Engine';
 import { RigidBodyComponent } from './rigidBody';
 import { GameObject } from '../GameObject';
+import { ComponentNames } from './component-names.enum';
 
 export class SpriteComponent extends Component {
 
     public sprite: Sprite;
 
     constructor(gameObject: GameObject, spriteName: string, x = 0, y = 0) {
-        super(gameObject, 'Sprite');
+        super(gameObject, ComponentNames.Sprite);
         this.sprite = PixiEngine.getAsset(spriteName);
         // se ha uno sprite si mette nella scena
         if (this.sprite) {
+            console.log(`Sprite name for ${spriteName}: width ${this.sprite.width}px and height ${this.sprite.height}px`);
             PixiEngine.scenes.currentScene.addChild(this.sprite);
         } else {
             this.sprite = {
@@ -25,11 +27,17 @@ export class SpriteComponent extends Component {
         }
     }
 
+    /**
+     * Si aggiona lo sprite in base al rigidBody
+     * @param deltaTime 
+     */
     update(deltaTime: number) {
-        if (this.entity && this.entity.getComponents('RigidBody')) {
-            const { x, y } = this.entity?.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody.position;
+        if (this.entity && this.entity.getComponents(ComponentNames.RigidBody)) {
+            const rigidBody = this.entity?.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].rigidBody
+            const { x, y } = rigidBody.position;
             this.sprite.x = x
             this.sprite.y = y
+            this.setRotation(rigidBody.angle)
         }
     }
 
@@ -46,12 +54,12 @@ export class SpriteComponent extends Component {
         this.sprite.rotation = angle
     }
 
-    setWidth(val: number) {
-        this.sprite.width = val
-    }
-
-    setHeight(val: number) {
-        this.sprite.height = val
+    setWidthAndHeight(width: number, height: number) {
+        this.sprite.width = width;
+        this.sprite.height = height;
+        if (this.entity && this.entity.getComponents(ComponentNames.RigidBody)) {
+            this.entity?.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].updateSize();
+        }
     }
 
     hide() {

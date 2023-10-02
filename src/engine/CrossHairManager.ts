@@ -4,7 +4,7 @@ import { Scene } from './Scene';
 
 export class CrossHairManager {
 
-    crosshair: Graphics;    // TODO: trasformare in Sprite
+    crosshair: Graphics;    // TODO: trasformare in Sprite:  https://pixijs.com/examples/events/custom-mouse-icon?_highlight=mouse
 
     constructor() { }
 

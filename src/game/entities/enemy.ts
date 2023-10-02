@@ -26,10 +26,10 @@ export class Enemy extends GameObject {
             }
         }))
 
-        const sprite = this.getComponents<SpriteComponent>('Sprite')[0]
+        const enemySprite = this.getComponents<SpriteComponent>('Sprite')[0]
         // set sprite dimension
-        sprite.setWidth(32); // il doppio del file...
-        sprite.setHeight(32); // il doppio del file...
+        enemySprite.setWidthAndHeight(32, 32);
+        enemySprite.setAnchor(0.5)
 
     }
 

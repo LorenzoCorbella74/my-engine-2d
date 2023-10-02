@@ -19,7 +19,7 @@ export class InputMouseManager {
         // from 7.0 no more "app.renderer.plugins.interaction.mouse"
         this.app.stage.eventMode = 'static';
         this.app.stage.hitArea = app.screen;
-        this.app.stage.on('mousemove', (event) => { // o pointermove
+        this.app.stage.on('pointermove', (event) => { // o pointermove o mousemove
             this.mouse = {
                 x: event.global.x,
                 y: event.global.y
