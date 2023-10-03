@@ -73,11 +73,12 @@ export class Engine {
             autoStart: false,
             // antialias: true, riduce la performance
             autoDensity: true,
+            powerPreference: "high-performance",
             backgroundColor: /* 0x0 */0x31383E,
             resolution: devicePixelRatio
         });
 
-        document.body.appendChild(this.app.view as any); // TODO: Argument of type 'ICanvas' is not assignable to parameter of type 'Node'.
+        document.body.appendChild(this.app.view as HTMLCanvasElement);
 
         globalThis.__PIXI_APP__ = this.app;
 
@@ -126,13 +127,7 @@ export class Engine {
         this.app.ticker.maxFPS = 60;
         this.app.ticker.minFPS = 30;
         this.app.ticker.add((delta) => {
-            /*             
-            time += delta;
-            if (time > 200 && !image) {
-                image = app.renderer.plugins.extract.image(sprite).src;
-                console.log(image);
-                downloadImage(image, "img.png");
-            } */
+
             this.time.update()
             this.physics.update() // updating Matter-js 
 

@@ -17,32 +17,47 @@ export class SceneManager {
         });
     }
 
-    setupNewScene(sceneName: string) {
+    setupNewScene(sceneName: string, animate: boolean = true) {
         this.currentScene = this.scenes[sceneName];
         this.app.stage.addChild(this.currentScene);
         this.currentScene.init();
 
-        // SCENE ANIMATION
-        this.currentScene.alpha = 0;
-        gsap.to(this.currentScene, {
-            alpha: 1,
-            duration: 0.25
-        })
+        if (animate) {
+            this.currentScene.alpha = 0;
+            gsap.to(this.currentScene, {
+                alpha: 1,
+                duration: 1 // TODO: CONSTANT
+            })
+        }
     }
 
-    changeScene(sceneName: string) {
+    private removeOldScene(sceneName: string, destroyScene: boolean = true) {
+        this.app.stage.removeChild(this.currentScene);
+        if (this.currentScene.onExit) {
+            this.currentScene.onExit();
+        }
+        if (destroyScene) {
+            delete this.scenes[sceneName];
+            this.currentScene.destroy({ children: true });
+        }
+    }
+
+    changeScene(sceneName: string, destroyScene: boolean = true, animate: boolean = true) {
         if (sceneName in this.scenes) {
             if (this.currentScene) {
-                gsap.to(this.currentScene, {
-                    alpha: 0, // Valore di opacità finale
-                    duration: 0.5,         // in  secondi,
-                    onComplete: () => {
-                        this.currentScene.onExit();
-                        this.currentScene.destroy();
-                        this.app.stage.removeChild(this.currentScene);
-                        this.setupNewScene(sceneName);
-                    }
-                })
+                if (animate) {
+                    gsap.to(this.currentScene, {
+                        alpha: 0, // Valore di opacità finale
+                        duration: 0.5,         // in  secondi, ODO: CONSTANT
+                        onComplete: () => {
+                            this.removeOldScene(this.currentScene.constructor.name, destroyScene);
+                            this.setupNewScene(sceneName);
+                        }
+                    })
+                } else {
+                    this.removeOldScene(this.currentScene.constructor.name, destroyScene);
+                    this.setupNewScene(sceneName);
+                }
             } else {
                 this.setupNewScene(sceneName);
             }

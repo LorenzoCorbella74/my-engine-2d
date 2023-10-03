@@ -40,7 +40,7 @@ export class PhysicManager {
     }
 
     setGravity(y: number) {
-        this.physicsEngine.world.gravity.y = y
+        this.physicsEngine.gravity.y = y
     }
 
     /* ---------------------- DEBUG ---------------------- */
@@ -56,7 +56,7 @@ export class PhysicManager {
 
     /* --------------------------------------------------- */
     update() {
-        Engine.update(this.physicsEngine, 1000 / 60)
+        Engine.update(this.physicsEngine, 1000 / 60)    // TODO: al posto di 60 this.app.ticker.maxFPS ???
     }
 
     // Funzione per rimuovere temporaneamente un corpo dal mondo
