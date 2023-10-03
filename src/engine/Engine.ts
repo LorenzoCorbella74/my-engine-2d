@@ -43,7 +43,8 @@ export class Engine {
     public crosshair: CrossHairManager
     public filters: FiltersManager;
 
-    paused: boolean = false
+    paused: boolean = false;
+    debug: boolean = false;
 
     constructor() { }
 
@@ -70,7 +71,7 @@ export class Engine {
             // backgroundAlpha: 0, // transparente
             resizeTo: window,
             autoStart: false,
-            antialias: true,
+            // antialias: true, riduce la performance
             autoDensity: true,
             backgroundColor: /* 0x0 */0x31383E,
             resolution: devicePixelRatio

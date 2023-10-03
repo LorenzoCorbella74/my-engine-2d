@@ -38,11 +38,13 @@ export class MatterScene extends Scene {
         this.obstacle = this.createObstacle('Obstacle', 100, 50, 200, 100);
         this.obstacle2 = this.createObstacle('Obstacle2', 300, 450, 200, 100);
 
+        // si definisce il player
         this.player = new Player('Player', 'player')
-        const player = this.player.getComponents<SpriteComponent>('Sprite')[0]
-        player.setPosition(window.innerWidth / 2, window.innerHeight / 2 - 100)
-        player.setAnchor(0.5)
+        this.player.x = window.innerWidth / 2;
+        this.player.y = window.innerHeight / 2 - 100
 
+
+        // focus della camera sul player
         this.engine.camera.focusOn(this.player, this)
 
         this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
@@ -74,10 +76,10 @@ export class MatterScene extends Scene {
         const mousePosition = this.engine.mouse.getMouse();
         this.crossHair.position.set(mousePosition.x, mousePosition.y);
         //console.log('Mouse: ', mousePosition.x, mousePosition.y)
-        const player = this.player.getComponents<SpriteComponent>('Sprite')[0]
+
         const playerRigidBody = this.player.getComponents<RigidBodyComponent>('RigidBody')[0]
-        const angle = Math.atan2(mousePosition.y - player.sprite.y, mousePosition.x - player.sprite.x);
-        player.setRotation(angle)
+        const angle = Math.atan2(mousePosition.y - this.player.y, mousePosition.x - this.player.x);
+        this.player.rotation = angle;
         playerRigidBody.setRotation(angle)
 
         this.player.update(delta)
@@ -104,17 +106,17 @@ export class MatterScene extends Scene {
             })
         }
         /* TEST GAME SPPED CHANGE */
-        if (this.engine.input.isKeyDownForOneShot('E')) {
+        if (this.engine.input.isKeyDown('E')) {
             this.engine.time.setGameSpeed(this.engine.time.getGameSpeed() / 2)
         }
-        if (this.engine.input.isKeyDownForOneShot('R')) {
+        if (this.engine.input.isKeyDown('R')) {
             this.engine.time.setGameSpeed(this.engine.time.getGameSpeed() * 2)
         }
         // TEST enable/disable COLLISION
-        if (this.engine.input.isKeyDownForOneShot('Z')) {
+        if (this.engine.input.isKeyDown('Z')) {
             this.engine.physics.disableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody)
         }
-        if (this.engine.input.isKeyDownForOneShot('X')) {
+        if (this.engine.input.isKeyDown('X')) {
             const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM;
             this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
         }

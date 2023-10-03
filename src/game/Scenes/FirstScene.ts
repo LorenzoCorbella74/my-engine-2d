@@ -21,7 +21,7 @@ export class FirstScene extends Scene {
 
     init() {
 
-        this.game = new Game('Game', null)
+        this.game = new Game('Game')
 
         // si applica il filtro a tutta la scena
         const blurFilter = new BlurFilter();
@@ -65,7 +65,7 @@ export class FirstScene extends Scene {
         this.addChild(this.bunny3);
         this.bunny3.on("mousedown", (e) => {
             this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2)
-            this.engine.time.after(5, () => {
+            this.engine.time.after(3, () => {
                 this.engine.scenes.changeScene('MatterScene')
             })
         });
@@ -78,7 +78,6 @@ export class FirstScene extends Scene {
         this.bunny2.anchor.set(0.5);
         this.bunny2.interactive = true;
         this.addChild(this.bunny2);
-
 
         // Creazione di una timeline per l'animazione complessa
         const timeline = createTimelineAnimation(this.bunny2);

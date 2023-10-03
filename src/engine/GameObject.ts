@@ -3,8 +3,11 @@ import { Component } from './Component';
 
 import { IGameConditionEntity } from './GameLogic'
 import { GameEvent, GameEventForGroup, IGameObjectEventHandler, BasePayload } from './EventManager'
+import { Container } from 'pixi.js';
+import { ComponentNames } from './components/component-names.enum';
+import { RigidBodyComponent } from './components/rigidBody';
 
-export class GameObject implements IGameConditionEntity, IGameObjectEventHandler {
+export class GameObject extends Container implements IGameConditionEntity, IGameObjectEventHandler {
 
   private _id: string;
   private _name: string;
@@ -12,7 +15,8 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
 
   engine: typeof PixiEngine;
 
-  constructor(name: string, spriteName?: string) {
+  constructor(name: string) {
+    super()
     this._name = name;
     this.engine = PixiEngine
   }
@@ -38,6 +42,10 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     return this._name;
   }
 
+  /**
+   * Update all the components.
+   * @param deltaTime 
+   */
   update(deltaTime: number) {
     for (const key in this.components) {
       if (Object.prototype.hasOwnProperty.call(this.components, key)) {
@@ -45,14 +53,18 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
         component[0].update(deltaTime);
       }
     }
+
+    if (this.hasComponent(ComponentNames.RigidBody)) {
+      const rigidBody = this.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].rigidBody
+      const { x, y } = rigidBody.position;
+      this.x = x
+      this.y = y
+      this.rotation = rigidBody.angle;
+    }
   }
 
   destroy() {
-    // TODO
-    /*  this._sprite.destroy()
-     if (this.rigidBody) {
-       this.removeRigidBody()
-     } */
+    this.destroy()
   }
 
 
@@ -82,7 +94,22 @@ export class GameObject implements IGameConditionEntity, IGameObjectEventHandler
     }
   }
 
-  // Ottieni tutti i componenti di un tipo specifico associati a questa entità.
+  hasComponent(componentName: string): boolean {
+    return componentName in this.components;
+  }
+
+  hasRequiredComponents(dependencies: string[]): boolean {
+    for (const dependency of dependencies) {
+      if (!this.hasComponent(dependency)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Ottieni tutti i componenti ENABLED di un tipo specifico associati a questa entità.
+   *  */
   getComponents<T extends Component>(componentName: string): T[] {
     return (this.components[componentName] as T[] || []).filter((component) => component.enabled);
   }

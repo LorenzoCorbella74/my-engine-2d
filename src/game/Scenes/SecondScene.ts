@@ -18,7 +18,6 @@ export class SecondScene extends Scene {
     playerSpeed: number;
 
     enemy1: GameObject;
-    enemy2: GameObject;
 
     crossHair: Graphics;
 
@@ -55,17 +54,16 @@ export class SecondScene extends Scene {
         // PLAYER
         this.player = new Player('Player', 'player')
         const player = this.player.getComponents<SpriteComponent>('Sprite')[0]
-        player.setPosition(window.innerWidth / 2, window.innerHeight / 2 - 100)
-        player.setAnchor(0.5)
-
+        this.player.x = window.innerWidth / 2
+        this.player.y = window.innerHeight / 2 - 100
+        // Focus on PLayer
         this.engine.camera.focusOn(this.player, this)
 
         // ENEMY 1
         this.enemy1 = new Enemy('Nemico1', 'color1')
         const enemySprite = this.enemy1.getComponents<SpriteComponent>('Sprite')[0];
-        enemySprite.setPosition(200, 200);
-
-
+        this.enemy1.x = 200
+        this.enemy1.y = 200
 
         // get the reference of the objecty in the gameObjects repository
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
@@ -91,7 +89,6 @@ export class SecondScene extends Scene {
         this.textCoord.y = Math.ceil(yp) - 16
         this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y}`
 
-
         this.enemy1.update(delta)
     }
 
@@ -109,7 +106,7 @@ export class SecondScene extends Scene {
         if (this.engine.input.isKeyDown('X')) {
             // TODO:
         }
-        if (this.engine.input.isKeyDownForOneShot('N')) {
+        if (this.engine.input.isKeyDown('N')) {
             this.engine.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
         }
 
@@ -119,17 +116,17 @@ export class SecondScene extends Scene {
         }
 
         // test change camera target
-        if (this.engine.input.isKeyDownForOneShot('O')) {
+        if (this.engine.input.isKeyDown('O')) {
             const target = this.engine.camera.target.name === 'Player' ? this.enemy1 : this.player
             this.engine.camera.focusOn(target, this)
         }
 
         // test event to single entity
-        if (this.engine.input.isKeyDownForOneShot('E')) {
+        if (this.engine.input.isKeyDown('E')) {
             this.engine.events.sendEvent(new GameEvent(EventType.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
         }
         // test event to group of entity
-        if (this.engine.input.isKeyDownForOneShot('R')) {
+        if (this.engine.input.isKeyDown('R')) {
             this.engine.events.sendEvent(new GameEventForGroup('Enemy', EventType.Pickup, this.player, { test: 'test GameEventForGroup' }))
         }
     }

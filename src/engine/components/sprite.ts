@@ -15,7 +15,8 @@ export class SpriteComponent extends Component {
         // se ha uno sprite si mette nella scena
         if (this.sprite) {
             console.log(`Sprite name for ${spriteName}: width ${this.sprite.width}px and height ${this.sprite.height}px`);
-            PixiEngine.scenes.currentScene.addChild(this.sprite);
+            this.sprite.anchor.set(0.5);
+            this.entity.addChild(this.sprite);
         } else {
             this.sprite = {
                 x: x,
@@ -32,13 +33,13 @@ export class SpriteComponent extends Component {
      * @param deltaTime 
      */
     update(deltaTime: number) {
-        if (this.entity && this.entity.getComponents(ComponentNames.RigidBody)) {
+        /* if (this.entity && this.entity.getComponents(ComponentNames.RigidBody)) {
             const rigidBody = this.entity?.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].rigidBody
             const { x, y } = rigidBody.position;
             this.sprite.x = x
             this.sprite.y = y
             this.setRotation(rigidBody.angle)
-        }
+        } */
     }
 
     setPosition(x: number, y: number) {

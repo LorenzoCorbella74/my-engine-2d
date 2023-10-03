@@ -24,9 +24,8 @@ export function GameNode(options?: DecoratorOptions) {
             PixiEngine.repo.gameObjectsIdMap.set(instance.id, instance);
             PixiEngine.repo.gameObjectsNameMap.set(instance.name, instance);
             PixiEngine.repo.gameObjectsIdNameMap.set(instance.id, instance.name);
-            /* if (instance.spriteName) {
-                PixiEngine.scenes.currentScene.addChild(instance.sprite);
-            } */
+            // si mette nella scena corrente
+            PixiEngine.scenes.currentScene.addChild(instance);
 
             if (options?.groupName) {
                 // si registra nel objects repository

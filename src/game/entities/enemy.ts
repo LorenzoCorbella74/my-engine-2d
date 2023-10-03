@@ -10,7 +10,7 @@ import { GameNode } from '../../engine/decorators';
 export class Enemy extends GameObject {
 
     constructor(name, spriteName) {
-        super(name, spriteName);
+        super(name);
 
         this.addComponent(new SpriteComponent(this, spriteName));
         this.addComponent(new RigidBodyComponent(this, {

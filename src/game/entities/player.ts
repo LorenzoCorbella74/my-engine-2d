@@ -16,7 +16,7 @@ export class Player extends GameObject {
     dy: number = 0;
 
     constructor(name, spriteName) {
-        super(name, spriteName);
+        super(name);
         this.addComponent(new SpriteComponent(this, spriteName));
         this.addComponent(new HealthComponent(this, 100));
         this.addComponent(new RigidBodyComponent(this, {
@@ -52,8 +52,6 @@ export class Player extends GameObject {
 
         // velocity
         Body.setVelocity(this.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, { x: this.dx, y: this.dy })
-        // of translate
-        // Body.translate(this.rigidBody, { x: this.dx, y: this.dy })
 
         // TODO: si aggiornano i componenti
         super.update(dt)

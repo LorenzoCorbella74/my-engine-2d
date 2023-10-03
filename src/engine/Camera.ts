@@ -5,7 +5,6 @@ import { GameObject } from './GameObject'
 import { SceneManager } from "./SceneManager";
 import { Scene } from "./Scene";
 
-import { SpriteComponent } from "./components/sprite";
 
 export class Camera {
 
@@ -23,7 +22,7 @@ export class Camera {
 
     constructor(app: PIXI.Application, public sceneManager: SceneManager) {
         this.app = app;
-        this.target = null; // L'elemento su cui la telecamera dovrebbe essere centrata
+        this.target = null; // The FOCUS of the camera
 
         this.zoomLevel = 1;
 
@@ -37,7 +36,8 @@ export class Camera {
         // se non passato focus al centro dello schermo
         if (!element) {
             element = new GameObject('cameraDefault');
-            element.addComponent(new SpriteComponent(element, null, this.app.screen.width / 2, this.app.screen.height / 2))
+            element.x = this.app.screen.width / 2,
+                element.y = this.app.screen.height / 2
         }
         this.container = currentScene;
         this.target = element;
@@ -57,17 +57,16 @@ export class Camera {
                 const offsetY = (Math.random() - 0.85) < 0 ? 0 : this.shakeAmplitude;
 
                 // updating player coordinates
-                // TODO
-                const target = (this.target?.getComponents('Sprite')[0] as SpriteComponent)
-                target.setPosition(target.sprite.x + offsetX, target.sprite.y + offsetY)
+                this.target.x = this.target.x + offsetX;
+                this.target.y = this.target.y + offsetY;
             }
         } else {
             this.shakeDuration = 0;
         }
         // Aggiorna la posizione della telecamera in base al target
-        const spriteTarget = this.target.getComponents<SpriteComponent>('Sprite')[0]
-        this.container.position.x = this.app.screen.width / 2 - (spriteTarget.sprite.x * this.zoomLevel);
-        this.container.position.y = this.app.screen.height / 2 - (spriteTarget.sprite.y * this.zoomLevel);
+
+        this.container.position.x = this.app.screen.width / 2 - (this.target.x * this.zoomLevel);
+        this.container.position.y = this.app.screen.height / 2 - (this.target.y * this.zoomLevel);
 
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel);

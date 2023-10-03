@@ -1,9 +1,10 @@
 import { Component } from '../Component';
 
-import { Body, Bodies, World, Composite } from 'matter-js';
+import { Body, Bodies, World } from 'matter-js';
 import { PixiEngine } from '../Engine';
 import { SpriteComponent } from './sprite';
 import { GameObject } from '../GameObject';
+
 
 import { ComponentNames } from './component-names.enum';
 
@@ -36,12 +37,15 @@ type RigidBodyOptions = {
 
 export class RigidBodyComponent extends Component {
 
+    dependencies: string[] = ['Sprite'];
+
     public rigidBody: Body;
 
     constructor(gameObject: GameObject, public options: RigidBodyOptions) {
         super(gameObject, ComponentNames.RigidBody);
-        // si registra nel objects repository
+
         this.createRigidBody(options);
+
     }
 
     private createRigidBody(options: RigidBodyOptions) {
