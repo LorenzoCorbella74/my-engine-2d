@@ -83,8 +83,13 @@ export class Camera {
      * @param targetZoom level of zoom (ddefault 1)
      * @param duration  duration in sec to reach the desired zoom
      */
-    zoomTo(targetZoom: number, duration: number, callback: () => void = () => { }) {
-        gsap.to(this, { zoomLevel: targetZoom, duration: duration, ...callback ? { onComplete: callback } : null });
+    zoomTo(targetZoom: number, duration: number, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
+        gsap.to(this, {
+            zoomLevel: targetZoom,
+            duration: duration,
+            ease: ease,
+            ...callback ? { onComplete: callback } : null
+        });
     }
 
     // TODO

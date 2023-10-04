@@ -9,14 +9,14 @@ import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
 import { RigidBodyComponent } from '../../engine/components/rigidBody';
 import { EventType } from '../../engine/models/events';
 
+import { Power2 } from 'gsap'
+
 export class SecondScene extends Scene {
 
     text!: Text
     textCoord!: Text
 
     player!: GameObject;
-    playerSpeed!: number;
-
     enemy1!: GameObject;
 
     crossHair!: Graphics;
@@ -26,14 +26,12 @@ export class SecondScene extends Scene {
     }
 
     async init() {
+        await this.engine.loader.loadAssetsGroup('group2')
+
+        // testing second load...
+        const textFormat = this.engine.getAsset('text-format');
         // for text see https://codesandbox.io/s/8q7hs?file=/src/Scene.js:218-312
-        this.text = new Text("Hello, I move with the elapsedTime \n😀", {
-            fontSize: 18,
-            lineHeight: 24,
-            letterSpacing: 0,
-            fill: 0xffffff,
-            align: "center"
-        });
+        this.text = new Text("Hello, I move with the elapsedTime \n😀", textFormat);
         this.text.anchor.set(0.5);
         this.text.resolution = 8;
         this.text.x = window.innerWidth / 2;
@@ -53,7 +51,7 @@ export class SecondScene extends Scene {
 
         // PLAYER
         this.player = new Player('Player', 'player')
-        this.player.setPosition(300, 100);
+        this.player.setPosition(300, 100); // update player container position
         // Focus on PLayer
         this.engine.camera.focusOn(this.player, this)
 
@@ -66,24 +64,16 @@ export class SecondScene extends Scene {
         this.engine.log('Test getGroup: ', this.engine.getGroup('Enemy'));
 
         this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
-
-
-        await this.engine.loader.loadAssetsGroup('group2')
-
-        // testing second load...
-        this.engine.log('group2: ', this.engine.getAsset('test-group2'));
     }
 
     update(delta: number) {
         // PixiEngine.log(PixiEngine.time.getFrame().toString())
-        const dt = this.engine.time.getDeltaTime()
+        // const dt = this.engine.time.getDeltaTime()
         this.text.x = Math.sin(this.engine.time.getElapsedTime()) * window.innerWidth / 8;
 
         // rotate player to target
         const { x, y } = this.engine.mouse.getMouse();
         this.crossHair.position.set(x, y);
-
-        this.player.update(delta)
 
         // UI
         const { x: xp, y: yp } = this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody.position
@@ -91,6 +81,10 @@ export class SecondScene extends Scene {
         this.textCoord.y = Math.ceil(yp) - 32
         this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y + 32}`
 
+        // DEBUG
+        this.textCoord.visible = this.engine.debug
+
+        this.player.update(delta)
         this.enemy1.update(delta)
     }
 
@@ -103,7 +97,7 @@ export class SecondScene extends Scene {
     onInputChange(inputs: any): void {
 
         if (this.engine.input.isKeyDown('Z')) {
-            // TODO:
+            this.engine.togleDebug()
         }
         if (this.engine.input.isKeyDown('X')) {
             // TODO:
@@ -114,7 +108,9 @@ export class SecondScene extends Scene {
 
         // test zoomTo
         if (this.engine.input.isKeyDown('M')) {
-            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? this.engine.camera.zoomLevel - 0.5 : this.engine.camera.zoomLevel + 0.5, 2);
+            const ease = Power2.easeOut; // "bounce.out", "expo.out"  "elastic.out(1, 0.3)" 
+            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? this.engine.camera.zoomLevel - 0.5 : this.engine.camera.zoomLevel + 0.5,
+                2, ease);
         }
 
         // test change camera target

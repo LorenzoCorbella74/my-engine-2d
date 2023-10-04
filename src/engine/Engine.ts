@@ -42,8 +42,8 @@ export class Engine {
     public crosshair!: CrossHairManager
     public filters!: FiltersManager;
 
-    paused: boolean = false;
-    debug: boolean = false;
+    private _paused: boolean = false;
+    private _debug: boolean = false;
 
     constructor() { }
 
@@ -132,35 +132,42 @@ export class Engine {
         });
     }
 
-
     startLoop() {
         this.app.ticker.start();
-        this.paused = false;
+        this._paused = false;
     }
 
 
     stopLoop() {
-        this.paused = true;
+        this._paused = true;
         this.app.ticker.stop();
     }
 
     toggle() {
-        if (!this.paused) {
+        if (!this._paused) {
             this.stopLoop();
-            this.paused = true;
+            this._paused = true;
         } else {
             this.startLoop();
-            this.paused = false;
+            this._paused = false;
         }
     }
 
+    togleDebug() {
+        this._debug = !this._debug
+    }
+
+    get debug() {
+        return this._debug
+    }
+
     log(message: string, ...other: any) {
-        // TODO: if (!import.meta.env.DEV) return;
+        if (!import.meta.env.DEV) return;
         console.log(ENGINE_MSG_PREFIX + message, ...other)
     }
 
     warn(message: string, ...other: any) {
-        // TODO: if (!import.meta.env.DEV) return;
+        if (!import.meta.env.DEV) return;
         console.warn(ENGINE_MSG_PREFIX + message, ...other)
     }
 

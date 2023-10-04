@@ -47,6 +47,9 @@ export function createTimelineAnimation(context: Sprite): GSAPTimeline {
     return timeline;
 }
 
+/*
+    FOR EASING in V3: https://greensock.com/docs/v3/Eases
+*/
 
 
 /* gsap.to(this, {  // this è bunny

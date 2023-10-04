@@ -19,8 +19,6 @@ export const GROUP = {
     NPC: 0x0040
 } as const
 
-
-
 export class RigidBodyComponent extends Component {
 
     dependencies: string[] = [ComponentNames.Sprite];
@@ -65,11 +63,10 @@ export class RigidBodyComponent extends Component {
      * Sync the entity position with the rigid body
      */
     update() {
-        if (this.entity) {
-            this.entity.x = this.rigidBody.position.x
-            this.entity.y = this.rigidBody.position.y
-            this.entity.rotation = this.rigidBody.angle;
-        }
+        this.entity.x = this.rigidBody.position.x
+        this.entity.y = this.rigidBody.position.y
+        this.entity.rotation = this.rigidBody.angle;
+
     }
 
     updateSize() {
@@ -79,6 +76,7 @@ export class RigidBodyComponent extends Component {
 
     updatePosition(x: number, y: number) {
         Body.set(this.rigidBody, "position", { x, y })
+        // Body.setPosition(this.rigidBody, {x, y})
     }
 
     removeRigidBody() {

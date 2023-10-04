@@ -1,11 +1,18 @@
+import { Sound } from "@pixi/sound";
+
 export class SoundManager {
 
-    sounds = new Map()  // sounds are loaded via the LoaderHelper
+    private sounds = new Map()
 
     constructor() {
     }
 
-    addSound(name: string, soundObj: any) {
+    /**
+     * Add a sound 
+     * @param name name of the asset file
+     * @param soundObj  sound coming from AssetManager
+     */
+    addSound(name: string, soundObj: Sound) {
         this.sounds.set(name, soundObj);
     }
 

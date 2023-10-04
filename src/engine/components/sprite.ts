@@ -9,25 +9,24 @@ export class SpriteComponent extends Component {
 
     public sprite: Sprite;
 
-    constructor(gameObject: GameObject, spriteName: string, x = 0, y = 0) {
+    constructor(gameObject: GameObject, spriteName: string, localX = 0, localY = 0) {
         super(gameObject, ComponentNames.Sprite);
         this.sprite = PixiEngine.getAsset(spriteName);
-        // se ha uno sprite si mette nella scena
-        if (this.sprite && this.entity) {
+        // if we have a sprite we put in the scene
+        if (this.sprite) {
             console.log(`Sprite name for ${spriteName}: width ${this.sprite.width}px and height ${this.sprite.height}px`);
             this.sprite.anchor.set(0.5);
             this.entity.addChild(this.sprite);
         } else {
             this.sprite = {
-                x: x,
-                y: y
+                x: localX,
+                y: localY
             } as Sprite
         }
-        if (x && y) {
-            this.setPosition(x, y);
+        if (localX && localY) {
+            this.setPosition(localX, localY);
         }
     }
-    update(deltaTime: number) { }
 
     /**
      * Set local coordinates inside container
@@ -50,7 +49,7 @@ export class SpriteComponent extends Component {
     setWidthAndHeight(width: number, height: number) {
         this.sprite.width = width;
         this.sprite.height = height;
-        if (this.entity && this.entity.getComponents(ComponentNames.RigidBody)) {
+        if (this.entity.getComponents(ComponentNames.RigidBody)) {
             this.entity?.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].updateSize();
         }
     }

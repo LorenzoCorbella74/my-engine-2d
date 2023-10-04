@@ -1,0 +1,18 @@
+{
+    "fontFamily": "Arial",
+    "dropShadow": true,
+    "dropShadowAlpha": 0.8,
+    "dropShadowAngle": 2.1,
+    "dropShadowBlur": 4,
+    "dropShadowColor": "0x111111",
+    "dropShadowDistance": 5,
+    "fill": [
+        "#ffffff"
+    ],
+    "stroke": "#004620",
+    "fontSize": 60,
+    "fontWeight": "lighter",
+    "lineJoin": "round",
+    "strokeThickness": 12,
+    "align": "center"
+}
