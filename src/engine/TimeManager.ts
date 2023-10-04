@@ -1,19 +1,6 @@
 import { Application } from "pixi.js";
 import { gsap } from "gsap";
-
-
-type Timer = {
-    delay: number;
-    cacheDelay: number;
-    callback: (remaining: number | null) => any;
-    repeat?: number; // if 
-}
-
-type FunctionToBeCalledContinuously = {
-    duration: number;
-    callback: (dt: number) => void;
-    callBackEnd?: () => any;
-}
+import { Timer, FunctionToBeCalledContinuously } from "./models/timers";
 
 /*
     TAKEN from https://hump.readthedocs.io/en/latest/timer.html
@@ -97,7 +84,7 @@ export class TimeManager {
      * @param callback 
      * @param repeat 
      */
-    every(delay: number, callback: (remaining) => void, repeat: number = Infinity) {
+    every(delay: number, callback: (remaining: any) => void, repeat: number = Infinity) {
         let newTimer = { delay, callback, cacheDelay: delay, repeat }
         this.timers.push(newTimer)
         return newTimer
@@ -108,7 +95,7 @@ export class TimeManager {
      * @param fn 
      * @returns 
      */
-    script(fn: (wait) => any) {
+    script(fn: (wait: any) => any) {
         return this.timers.push({ delay: -1, callback: () => fn(this.wait), cacheDelay: 0 })
     }
 
@@ -202,7 +189,7 @@ export class TimeManager {
      * @param frameNumber 
      * @param fn 
      */
-    runOnFrameNum(frameNumbers: number[], fn: (frameNumber: number, ...arg) => any) {
+    runOnFrameNum(frameNumbers: number[], fn: (frameNumber: number, ...arg: any) => any) {
         frameNumbers.forEach(frame => {
             if (frame === this._frame) {
                 fn(frame, ...arguments)

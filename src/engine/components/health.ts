@@ -1,6 +1,6 @@
 import { Component } from '../Component';
 import { GameObject } from '../GameObject';
-import { ComponentNames } from './component-names.enum';
+import { ComponentNames } from '../models/component-names.enum';
 
 export class HealthComponent extends Component {
 

@@ -7,19 +7,22 @@ import { createTimelineAnimation } from './animations/timeline';
 
 export class FirstScene extends Scene {
 
-    bg: any;
-    bunny: any;
-    bunny2: any;
-    bunny3: any;
+    bg!: Sprite;
+    bunny!: Sprite;
+    bunny2!: Sprite;
+    bunny3!: Sprite;
+    bunny4!: Sprite;
 
-    timeline: GSAPTimeline
-    game: Game;
+    timeline!: GSAPTimeline
+    game!: Game;
 
     constructor() {
         super(PixiEngine)
     }
 
-    init() {
+    async init() {
+
+        await this.engine.loader.loadAssetsGroup('group1');
 
         this.game = new Game('Game')
 
@@ -70,6 +73,21 @@ export class FirstScene extends Scene {
             })
         });
 
+        this.bunny4 = this.engine.getAsset("bunny") as Sprite;
+        this.bunny4.width = 64;
+        this.bunny4.height = 64;
+        this.bunny4.x = 500
+        this.bunny4.y = 100
+        this.bunny4.anchor.set(0.5);
+        this.bunny4.interactive = true;
+        this.addChild(this.bunny4);
+        this.bunny4.on("mousedown", (e) => {
+            this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2)
+            this.engine.time.after(2, () => {
+                this.engine.scenes.changeScene('GraphicScene')
+            })
+        });
+
         this.bunny2 = this.engine.getAsset("bunny") as Sprite;
         this.bunny2.width = 128;
         this.bunny2.height = 128;
@@ -97,13 +115,15 @@ export class FirstScene extends Scene {
 
         // test Stortage
         this.engine.storage.save('test-engine', { lore: 'is ok!' })
+
+
     }
 
-    update(dt, delta: number) {
+    update(dt: number, delta: number) {
         this.bunny.rotation += dt;
     }
 
-    onExit(): void {
+    onExit() {
 
         this.engine.sounds.stopSound("mp3_test");
     }

@@ -9,8 +9,8 @@ import { Scene } from "./Scene";
 export class Camera {
 
     app: PIXI.Application<PIXI.ICanvas>;
-    target: GameObject;
-    container: PIXI.Container<PIXI.DisplayObject>;
+    target: GameObject | null;
+    container!: PIXI.Container<PIXI.DisplayObject>;
 
     // ZOOM
     zoomLevel: number;
@@ -31,7 +31,7 @@ export class Camera {
         this.shakeStartTime = 0;
     }
 
-    focusOn(element: GameObject, currentScene: Scene) {
+    focusOn(element: GameObject | null, currentScene: Scene) {
         this.app.stage.removeChild(this.container);
         // se non passato focus al centro dello schermo
         if (!element) {
@@ -83,8 +83,8 @@ export class Camera {
      * @param targetZoom level of zoom (ddefault 1)
      * @param duration  duration in sec to reach the desired zoom
      */
-    zoomTo(targetZoom, duration) {
-        gsap.to(this, { zoomLevel: targetZoom, duration: duration })
+    zoomTo(targetZoom: number, duration: number, callback: () => void = () => { }) {
+        gsap.to(this, { zoomLevel: targetZoom, duration: duration, ...callback ? { onComplete: callback } : null });
     }
 
     // TODO

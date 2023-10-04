@@ -8,10 +8,10 @@ export class GameObjectRepo {
     public gameObjectsGroups: { [key: string]: GameObject[] } = {};
 
     /**
- * Take the object from the gameObjects store
- * @param name the name of the object
- * @returns the object
- */
+     * Take the object from the gameObjects store
+     * @param name the name of the object
+     * @returns the object
+     */
     getObjectByName(name: string) {
         if (this.gameObjectsNameMap.has(name)) {
             return this.gameObjectsNameMap.get(name)

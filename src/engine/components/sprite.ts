@@ -3,7 +3,7 @@ import { Component } from '../Component';
 import { PixiEngine } from '../Engine';
 import { RigidBodyComponent } from './rigidBody';
 import { GameObject } from '../GameObject';
-import { ComponentNames } from './component-names.enum';
+import { ComponentNames } from '../models/component-names.enum';
 
 export class SpriteComponent extends Component {
 
@@ -13,7 +13,7 @@ export class SpriteComponent extends Component {
         super(gameObject, ComponentNames.Sprite);
         this.sprite = PixiEngine.getAsset(spriteName);
         // se ha uno sprite si mette nella scena
-        if (this.sprite) {
+        if (this.sprite && this.entity) {
             console.log(`Sprite name for ${spriteName}: width ${this.sprite.width}px and height ${this.sprite.height}px`);
             this.sprite.anchor.set(0.5);
             this.entity.addChild(this.sprite);
@@ -27,20 +27,7 @@ export class SpriteComponent extends Component {
             this.setPosition(x, y);
         }
     }
-
-    /**
-     * Si aggiona lo sprite in base al rigidBody
-     * @param deltaTime 
-     */
-    update(deltaTime: number) {
-        /* if (this.entity && this.entity.getComponents(ComponentNames.RigidBody)) {
-            const rigidBody = this.entity?.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].rigidBody
-            const { x, y } = rigidBody.position;
-            this.sprite.x = x
-            this.sprite.y = y
-            this.setRotation(rigidBody.angle)
-        } */
-    }
+    update(deltaTime: number) { }
 
     setPosition(x: number, y: number) {
         this.sprite.x = x

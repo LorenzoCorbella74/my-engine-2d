@@ -1,10 +1,11 @@
 import { Application } from "pixi.js";
 import { PixiEngine as $PE } from "./Engine";
+import { KeyMapping } from "./models/key-mapping";
 
 export class InputKeyboardManager {
 
     app: Application;
-    private keys: { [key: string]: boolean } = {};
+    private keys: KeyMapping = {};
     private ctrlKey = false;
     private shiftKey = false;
 

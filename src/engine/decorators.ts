@@ -1,14 +1,16 @@
 import { Component } from './Component';
 import { PixiEngine } from './Engine';
-import { EventType, GameEvent } from './EventManager';
+import { GameEvent } from './EventManager';
 import { GameObject } from './GameObject';
+import { DecoratorOptions } from './models/decorator-option';
+import { EventType } from './models/events';
 
-type DecoratorOptions = {
-    id?: string;
-    groupName?: string;
-} | null
 
-// Decoratore Matter.js per GameObject
+
+/**
+ *  Set the id for the GameObject and put in the current scene and inside the repos for quick access 
+ * @param options DecoratorOptions
+ */
 export function GameNode(options?: DecoratorOptions) {
 
     return function (target: any) {
@@ -84,10 +86,10 @@ export function updateUI(entitiesName: string[]) {
             if (previousValue !== newVal) {
                 previousValue = newVal;
 
-                let origin: GameObject | Component;
+                let origin: GameObject;
                 if (target instanceof GameObject) {
                     origin = target
-                } else if (target instanceof Component) {
+                } else if (target?.entity && target instanceof Component) {
                     origin = target.entity
                 } else {
                     throw new Error('updateUI can be used with GameObject or single Component instances.')
@@ -95,7 +97,7 @@ export function updateUI(entitiesName: string[]) {
                 // Invia l'evento a ciascuna delle entità specificate nella lista
                 for (const name of entitiesName) {
                     // events are sent to GameObject only !
-                    PixiEngine.events.sendEvent(new GameEvent(EventType.UpdateForUI, origin, PixiEngine.getObjectByName(name), {
+                    PixiEngine.events.sendEvent(new GameEvent(EventType.UpdateForUI, origin, PixiEngine.getObjectByName(name)!, {
                         [propertyKey]: newVal
                     }));
                 }

@@ -15,6 +15,7 @@ export const Config = {
     name: 'My Game',
     scenes: [FirstScene, SecondScene, MatterScene, GraphicScene],  // the first is the startScene
     storagePrefix: 'app_',
+    assetPath: 'assets',
     input: {
         'UP': 'w',
         'DOWN': 's',

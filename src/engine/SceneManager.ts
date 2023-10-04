@@ -1,27 +1,27 @@
 import * as PIXI from "pixi.js";
 import { GameConfig } from "../game/Config";
-import { PixiEngine as $PE } from "./Engine";
+import { PixiEngine as $PE, PixiEngine } from "./Engine";
 
 import { Scene } from './Scene';
 import { gsap } from "gsap";
 
 export class SceneManager {
 
-    currentScene: Scene;
+    currentScene!: Scene;
     private scenes: { [key: string]: Scene } = {}
 
     constructor(public app: PIXI.Application, public config: GameConfig) {
-        this.currentScene = null;
         this.config.scenes.forEach(scene => {
             this.scenes[scene.name] = new scene($PE)
         });
     }
 
-    setupNewScene(sceneName: string, animate: boolean = true) {
+    async setupNewScene(sceneName: string, animate: boolean = true) {
         this.currentScene = this.scenes[sceneName];
         this.app.stage.addChild(this.currentScene);
-        this.currentScene.init();
-
+        await this.currentScene.init();
+        // START LOOP
+        PixiEngine.startLoop()
         if (animate) {
             this.currentScene.alpha = 0;
             gsap.to(this.currentScene, {
@@ -32,6 +32,7 @@ export class SceneManager {
     }
 
     private removeOldScene(sceneName: string, destroyScene: boolean = true) {
+        PixiEngine.stopLoop()
         this.app.stage.removeChild(this.currentScene);
         if (this.currentScene.onExit) {
             this.currentScene.onExit();
@@ -59,6 +60,7 @@ export class SceneManager {
                     this.setupNewScene(sceneName);
                 }
             } else {
+                // first run
                 this.setupNewScene(sceneName);
             }
         } else {

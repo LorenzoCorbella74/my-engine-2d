@@ -26,14 +26,6 @@ export class InputMouseManager {
             }
         });
 
-        // Aggiungi l'evento di ridimensionamento della finestra
-        /*  document.addEventListener('mousemove', e => {
-             this.mouse = {
-                 x: e.clientX,
-                 y: e.clientY
-             }
-         }); */
-
         document.addEventListener('mousewheel', e => {
             // this.mouseWheel = e.deltaY ;
         });

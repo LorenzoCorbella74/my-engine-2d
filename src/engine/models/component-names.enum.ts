@@ -1,5 +1,6 @@
 export enum ComponentNames {
     Sprite = 'Sprite',
     RigidBody = 'RigidBody',
-    Health = 'Health'
+    Health = 'Health',
+    InputController = 'InputController',
 }

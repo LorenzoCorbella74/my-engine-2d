@@ -9,9 +9,8 @@ import { GameNode } from '../../engine/decorators';
 })
 export class Enemy extends GameObject {
 
-    constructor(name, spriteName) {
+    constructor(name: string, spriteName: string) {
         super(name);
-
         this.addComponent(new SpriteComponent(this, spriteName));
         this.addComponent(new RigidBodyComponent(this, {
             shape: 'rectangle',
@@ -25,16 +24,9 @@ export class Enemy extends GameObject {
                 y: 500
             }
         }))
-
         const enemySprite = this.getComponents<SpriteComponent>('Sprite')[0]
         // set sprite dimension
         enemySprite.setWidthAndHeight(32, 32);
         enemySprite.setAnchor(0.5)
-
-    }
-
-    update(dt) {
-        // si aggiornano i componenti
-        super.update(dt)
     }
 }

@@ -6,23 +6,22 @@ import { GameObject } from '../../engine/GameObject';
 
 import * as Matter from 'matter-js';
 import { GraphicsWithPhisics } from '../../engine/PhysicManager';
-import { SpriteComponent } from '../../engine/components/sprite';
 import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
 
 export class MatterScene extends Scene {
 
-    player: GameObject;
-    obstacle: GraphicsWithPhisics;
-    obstacle2: GraphicsWithPhisics;
-    crossHair: Graphics;
+    player!: GameObject;
+    obstacle!: GraphicsWithPhisics;
+    obstacle2!: GraphicsWithPhisics;
+    crossHair!: Graphics;
 
-    tilingSprite: TilingSprite;
+    tilingSprite!: TilingSprite;
 
     constructor() {
         super(PixiEngine)
     }
 
-    init() {
+    async init() {
         // background tile
         const texture = PixiEngine.getTexture('tile')
         this.tilingSprite = new TilingSprite(
@@ -40,17 +39,14 @@ export class MatterScene extends Scene {
 
         // si definisce il player
         this.player = new Player('Player', 'player')
-        this.player.x = window.innerWidth / 2;
-        this.player.y = window.innerHeight / 2 - 100
-
-
+        this.player.position.set(window.innerWidth / 2, window.innerHeight / 2 - 100)
         // focus della camera sul player
         this.engine.camera.focusOn(this.player, this)
 
         this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
     }
 
-    private createObstacle(name: string, x, y, width, height): GraphicsWithPhisics {
+    private createObstacle(name: string, x: number, y: number, width: number, height: number): GraphicsWithPhisics {
         let obstacle = new Graphics() as GraphicsWithPhisics;
         obstacle.beginFill(0xff0000);
         obstacle.drawRect(x, y, width, height);
@@ -121,4 +117,6 @@ export class MatterScene extends Scene {
             this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
         }
     }
+
+    onExit() { }
 }

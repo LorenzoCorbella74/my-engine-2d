@@ -1,4 +1,4 @@
-export interface IGameConditionEntity { isSatisfied: () => boolean }
+import { IGameConditionEntity } from "./models/condition-logic";
 
 export class GameLogic {
     private winConditions: IGameConditionEntity[];

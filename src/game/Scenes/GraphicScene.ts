@@ -6,20 +6,20 @@ import { GameGraphics } from "../../engine/GameGraphics";
 
 export class GraphicScene extends Scene {
 
-    rectangle: Graphics;
-    circle: Graphics;
-    line: Graphics;
+    rectangle!: Graphics;
+    circle!: Graphics;
+    line!: Graphics;
 
     constructor() {
         super(PixiEngine)
     }
 
-    init() {
+    async init() {
         // test GameGraphics
         this.rectangle = new GameGraphics(this).drawRectangle(500, 0, 100, 100)
         this.rectangle.interactive = true
 
-        let timer
+        let timer: any;
 
         // test timer.every
         this.rectangle.on('pointerdown', () => {

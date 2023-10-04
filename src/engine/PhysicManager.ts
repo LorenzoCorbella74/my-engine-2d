@@ -1,9 +1,10 @@
 import { Body, Query, Engine, Events, Composite, Render } from 'matter-js';
 import { PixiEngine } from './Engine'
-import { EventType, GameEvent } from './EventManager';
+import { GameEvent } from './EventManager';
 import { GameObject } from './GameObject';
 import { Application, Graphics } from 'pixi.js';
 import { GROUP, RigidBodyComponent } from './components/rigidBody';
+import { BasePayload, EventType } from './models/events';
 
 export type GraphicsWithPhisics = Graphics & {
     rigidBody: Body
@@ -11,7 +12,7 @@ export type GraphicsWithPhisics = Graphics & {
 
 export class PhysicManager {
 
-    physicsEngine: Engine = null
+    physicsEngine!: Engine;
     render: Render;
 
     constructor(public app: Application) {
@@ -19,7 +20,7 @@ export class PhysicManager {
         this.physicsEngine = Engine.create()
 
         this.render = Render.create({
-            element: document.querySelector('#phisic-debugger'),
+            element: document.querySelector('#phisic-debugger') as HTMLCanvasElement,
             engine: this.physicsEngine,
             options: {
                 width: this.app.view.width,
@@ -74,11 +75,11 @@ export class PhysicManager {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
         console.log(`${bodyA.label} starts collision with ${bodyB.label}.`, bodyA, bodyB)
-        const colisionEvent = new GameEvent(
+        const colisionEvent = new GameEvent<BasePayload>(
             EventType.Collision,
-            PixiEngine.getObjectByName(bodyA.label),
-            PixiEngine.getObjectByName(bodyB.label),
-            null
+            PixiEngine.getObjectByName(bodyA.label)!,
+            PixiEngine.getObjectByName(bodyB.label)!,
+            { empty: true },
         );
         PixiEngine.events.sendEvent(colisionEvent);
 

@@ -5,27 +5,27 @@ import { Graphics, Text } from "pixi.js";
 import { PixiEngine } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
-import { EventType, GameEvent, GameEventForGroup } from '../../engine/EventManager';
-import { SpriteComponent } from '../../engine/components/sprite';
+import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
 import { RigidBodyComponent } from '../../engine/components/rigidBody';
+import { EventType } from '../../engine/models/events';
 
 export class SecondScene extends Scene {
 
-    text: Text
-    textCoord: Text
+    text!: Text
+    textCoord!: Text
 
-    player: GameObject;
-    playerSpeed: number;
+    player!: GameObject;
+    playerSpeed!: number;
 
-    enemy1: GameObject;
+    enemy1!: GameObject;
 
-    crossHair: Graphics;
+    crossHair!: Graphics;
 
     constructor() {
         super(PixiEngine)
     }
 
-    init() {
+    async init() {
         // for text see https://codesandbox.io/s/8q7hs?file=/src/Scene.js:218-312
         this.text = new Text("Hello, I move with the elapsedTime \n😀", {
             fontSize: 18,
@@ -53,23 +53,25 @@ export class SecondScene extends Scene {
 
         // PLAYER
         this.player = new Player('Player', 'player')
-        const player = this.player.getComponents<SpriteComponent>('Sprite')[0]
-        this.player.x = window.innerWidth / 2
-        this.player.y = window.innerHeight / 2 - 100
+        this.player.position.set(window.innerWidth / 2, window.innerHeight / 2 - 100)
         // Focus on PLayer
         this.engine.camera.focusOn(this.player, this)
 
         // ENEMY 1
         this.enemy1 = new Enemy('Nemico1', 'color1')
-        const enemySprite = this.enemy1.getComponents<SpriteComponent>('Sprite')[0];
-        this.enemy1.x = 200
-        this.enemy1.y = 200
+        this.enemy1.position.set(200, 200)
 
         // get the reference of the objecty in the gameObjects repository
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
         this.engine.log('Test getGroup: ', this.engine.getGroup('Enemy'));
 
         this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
+
+
+        await this.engine.loader.loadAssetsGroup('group2')
+
+        // testing second load...
+        this.engine.log('group2: ', this.engine.getAsset('test-group2'));
     }
 
     update(delta: number) {
@@ -117,7 +119,7 @@ export class SecondScene extends Scene {
 
         // test change camera target
         if (this.engine.input.isKeyDown('O')) {
-            const target = this.engine.camera.target.name === 'Player' ? this.enemy1 : this.player
+            const target = this.engine.camera.target?.name === 'Player' ? this.enemy1 : this.player
             this.engine.camera.focusOn(target, this)
         }
 

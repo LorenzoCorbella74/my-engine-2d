@@ -1,29 +1,27 @@
-import { sound } from '@pixi/sound';
-
 export class SoundManager {
-     
+
     sounds = new Map()  // sounds are loaded via the LoaderHelper
 
     constructor() {
     }
 
-    addSound(name, soundObj) {
+    addSound(name: string, soundObj: any) {
         this.sounds.set(name, soundObj);
     }
 
-    playSound(name) {
+    playSound(name: string) {
         if (this.sounds.has(name)) {
             this.sounds.get(name).play();
         }
     }
 
-    stopSound(name) {
+    stopSound(name: string) {
         if (this.sounds.has(name)) {
             this.sounds.get(name).stop();
         }
     }
 
-    toggleSound(name) {
+    toggleSound(name: string) {
         if (this.sounds.has(name)) {
             let sound = this.sounds.get(name);
             if (sound.isPlaying) {
@@ -34,21 +32,21 @@ export class SoundManager {
         }
     }
 
-    setVolume(name, volume) {
+    setVolume(name: string, volume: number) {
         if (this.sounds.has(name)) {
             this.sounds.get(name).volume = volume;
         }
     }
 
-    isPlaying(name) {
+    isPlaying(name: string): boolean {
         if (this.sounds.has(name)) {
             return this.sounds.get(name).isPlaying;
         }
         return false;
     }
 
-    playRandomSound(keys:string[]){
-        let soundName = Math.ceil(Math.random()* keys.length)
-        this.playSound(soundName);
+    playRandomSound(keys: string[]) {
+        let soundIndex = Math.ceil(Math.random() * keys.length)
+        this.playSound(keys[soundIndex]);
     }
 }

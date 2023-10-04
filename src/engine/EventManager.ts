@@ -1,15 +1,8 @@
 import { PixiEngine } from './Engine';
 import { GameObject } from './GameObject'
+import { BasePayload, EventType } from './models/events';
 
-// Definizione dei tipi di evento
-export enum EventType {
-    Collision = 'Collision',
-    Pickup = 'Pickup',
-    CustomEvent = 'CustomEvent',
-    UpdateForUI = 'UpdateForUI',
-}
 
-export interface IGameObjectEventHandler { onEventHandler: (event: GameEvent<any>) => void }
 
 // Definizione dell'oggetto evento
 export class GameEvent<T> {
@@ -30,11 +23,6 @@ export class GameEventForGroup<T> {
     ) {
     }
 }
-
-export type BasePayload = {
-    [key: string]: any
-}
-
 
 export class EventManager {
 

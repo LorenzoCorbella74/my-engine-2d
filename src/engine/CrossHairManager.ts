@@ -4,7 +4,7 @@ import { Scene } from './Scene';
 
 export class CrossHairManager {
 
-    crosshair: Graphics;    // TODO: trasformare in Sprite:  https://pixijs.com/examples/events/custom-mouse-icon?_highlight=mouse
+    crosshair!: Graphics;    // TODO: trasformare in Sprite:  https://pixijs.com/examples/events/custom-mouse-icon?_highlight=mouse
 
     constructor() { }
 
@@ -25,13 +25,18 @@ export class CrossHairManager {
     }
 
     show() {
-        engine.app.view.style.cursor = 'none';
-        this.crosshair.visible = true
+        if (engine.app.view.style) {
+            engine.app.view.style.cursor = 'none';
+            this.crosshair.visible = true
+        }
     }
 
     hide() {
         // Nascondere l'icona del mouse usando CSS
-        this.crosshair.visible = false;
-        engine.app.view.style.cursor = 'default';
+        if (engine.app.view.style) {
+            this.crosshair.visible = false;
+            engine.app.view.style.cursor = 'default';
+
+        }
     }
 }

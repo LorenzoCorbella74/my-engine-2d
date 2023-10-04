@@ -5,8 +5,8 @@ import { PixiEngine } from '../Engine';
 import { SpriteComponent } from './sprite';
 import { GameObject } from '../GameObject';
 
-
-import { ComponentNames } from './component-names.enum';
+import { ComponentNames } from '../models/component-names.enum';
+import { Sprite } from 'pixi.js';
 
 export const GROUP = {
     DEFAULT: 0x0001,
@@ -37,21 +37,20 @@ type RigidBodyOptions = {
 
 export class RigidBodyComponent extends Component {
 
-    dependencies: string[] = ['Sprite'];
+    dependencies: string[] = [ComponentNames.Sprite];
 
-    public rigidBody: Body;
+    public rigidBody!: Body;
 
     constructor(gameObject: GameObject, public options: RigidBodyOptions) {
         super(gameObject, ComponentNames.RigidBody);
 
         this.createRigidBody(options);
-
     }
 
     private createRigidBody(options: RigidBodyOptions) {
         const { shape, isStatic } = options;
-        const { x, y } = options.position || this.entity.getComponents<SpriteComponent>('Sprite')[0].sprite;
-        const { width, height } = this.entity.getComponents<SpriteComponent>('Sprite')[0].sprite;
+        const { x, y } = options.position || this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite;
+        const { width, height } = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite;
         const config = {
             isStatic,
             friction: options.friction || 0.5,  // https://www.medianic.co.uk/getting-started-with-matter-js-the-body-module/
@@ -74,6 +73,17 @@ export class RigidBodyComponent extends Component {
         }
         // Aggiungi il corpo Matter.js al mondo
         World.add(PixiEngine.physics.physicsEngine.world, this.rigidBody);
+    }
+
+    /**
+     * Sync the entity position with the rigid body
+     */
+    update() {
+        if (this.entity) {
+            this.entity.x = this.rigidBody.position.x
+            this.entity.y = this.rigidBody.position.y
+            this.entity.rotation = this.rigidBody.angle;
+        }
     }
 
     updateSize() {

@@ -1,15 +1,13 @@
 import { PixiEngine } from './Engine';
 import { Component } from './Component';
-
-import { IGameConditionEntity } from './GameLogic'
-import { GameEvent, GameEventForGroup, IGameObjectEventHandler, BasePayload } from './EventManager'
+import { GameEvent, GameEventForGroup, } from './EventManager'
 import { Container } from 'pixi.js';
-import { ComponentNames } from './components/component-names.enum';
-import { RigidBodyComponent } from './components/rigidBody';
+import { IGameConditionEntity } from './models/condition-logic';
+import { BasePayload, IGameObjectEventHandler } from './models/events';
 
 export class GameObject extends Container implements IGameConditionEntity, IGameObjectEventHandler {
 
-  private _id: string;
+  private _id!: string;
   private _name: string;
   private components: { [key: string]: Component[] } = {};
 
@@ -22,13 +20,12 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   }
 
   onEventHandler(event: GameEvent<BasePayload> | GameEventForGroup<BasePayload>) {
-    // Implementa la logica per gestire l'evento specifico per questo oggetto
     // TODO: nel caso di evento per gruppo non sarebbe male ricevere tutto il gruppo...
     console.log(`GameObject ${this.name} received event:`, event);
   }
 
   // check for game logic
-  isSatisfied: () => boolean;
+  isSatisfied!: () => boolean;
 
   get id(): string {
     return this._id;
@@ -53,18 +50,6 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
         component[0].update(deltaTime);
       }
     }
-
-    if (this.hasComponent(ComponentNames.RigidBody)) {
-      const rigidBody = this.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].rigidBody
-      const { x, y } = rigidBody.position;
-      this.x = x
-      this.y = y
-      this.rotation = rigidBody.angle;
-    }
-  }
-
-  destroy() {
-    this.destroy()
   }
 
 
