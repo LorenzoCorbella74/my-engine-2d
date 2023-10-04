@@ -7,6 +7,7 @@ import { GameObject } from '../GameObject';
 
 import { ComponentNames } from '../models/component-names.enum';
 import { Sprite } from 'pixi.js';
+import { RigidBodyOptions } from '../models/rigid-body';
 
 export const GROUP = {
     DEFAULT: 0x0001,
@@ -18,22 +19,7 @@ export const GROUP = {
     NPC: 0x0040
 } as const
 
-type GroupsType = keyof typeof GROUP;
-type GroupsValue = typeof GROUP[keyof typeof GROUP];
 
-// Opzioni per il corpo Matter
-type RigidBodyOptions = {
-    shape: 'rectangle' | 'circle' | 'polygon';
-    isStatic: boolean;
-    friction?: number;
-    frictionAir?: number;
-    restitution?: number;
-    collisionFilter: {
-        category?: GroupsValue,
-        mask?: number  // Esempio maschera di collisione
-    }
-    position?: { x: number, y: number }
-}
 
 export class RigidBodyComponent extends Component {
 
