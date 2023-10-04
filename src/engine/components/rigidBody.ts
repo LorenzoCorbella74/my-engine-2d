@@ -77,6 +77,10 @@ export class RigidBodyComponent extends Component {
         this.createRigidBody(this.options);
     }
 
+    updatePosition(x: number, y: number) {
+        Body.set(this.rigidBody, "position", { x, y })
+    }
+
     removeRigidBody() {
         World.remove(PixiEngine.physics.physicsEngine.world, this.rigidBody);
     }

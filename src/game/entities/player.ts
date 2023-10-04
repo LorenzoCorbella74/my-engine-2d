@@ -20,8 +20,8 @@ export class Player extends GameObject {
                 mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
             },
             position: {
-                x: this.getComponents<SpriteComponent>('Sprite')[0].sprite.x,
-                y: this.getComponents<SpriteComponent>('Sprite')[0].sprite.y
+                x: 0,
+                y: 0
             }
         }))
         this.addComponent(new InputController(this, 150));

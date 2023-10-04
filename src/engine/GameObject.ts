@@ -4,6 +4,8 @@ import { GameEvent, GameEventForGroup, } from './EventManager'
 import { Container } from 'pixi.js';
 import { IGameConditionEntity } from './models/condition-logic';
 import { BasePayload, IGameObjectEventHandler } from './models/events';
+import { ComponentNames } from './models/component-names.enum';
+import { RigidBodyComponent } from './components/rigidBody';
 
 export class GameObject extends Container implements IGameConditionEntity, IGameObjectEventHandler {
 
@@ -25,7 +27,7 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   }
 
   // check for game logic
-  isSatisfied!: () => boolean;
+  isSatisfied(): boolean { return true }
 
   get id(): string {
     return this._id;
@@ -37,6 +39,16 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
 
   get name(): string {
     return this._name;
+  }
+
+  setPosition(x: number, y: number) {
+    if (this.hasComponent(ComponentNames.RigidBody)) {
+      this.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].updatePosition(x, y);
+    } else {
+      // update container position
+      this.x = x;
+      this.y = y;
+    }
   }
 
   /**

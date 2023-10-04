@@ -15,10 +15,10 @@ export class HealthComponent extends Component {
         return this.health > 0;
     }
 
-    decreaseHealth(amount: number) {
-        this.health -= amount;
+    updateHealth(amount: number, mode: 'add' | 'subtract' = 'subtract') {
+        this.health -= mode === 'subtract' ? amount : -amount;
         if (this.health <= 0) {
-            // TODO:
+            // TODO: EVENT ?
         }
     }
 }

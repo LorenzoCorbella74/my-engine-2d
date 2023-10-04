@@ -53,13 +53,13 @@ export class SecondScene extends Scene {
 
         // PLAYER
         this.player = new Player('Player', 'player')
-        this.player.position.set(window.innerWidth / 2, window.innerHeight / 2 - 100)
+        this.player.setPosition(300, 100);
         // Focus on PLayer
         this.engine.camera.focusOn(this.player, this)
 
         // ENEMY 1
         this.enemy1 = new Enemy('Nemico1', 'color1')
-        this.enemy1.position.set(200, 200)
+        this.enemy1.setPosition(300, 300);
 
         // get the reference of the objecty in the gameObjects repository
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
@@ -88,8 +88,8 @@ export class SecondScene extends Scene {
         // UI
         const { x: xp, y: yp } = this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody.position
         this.textCoord.x = Math.ceil(xp)
-        this.textCoord.y = Math.ceil(yp) - 16
-        this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y}`
+        this.textCoord.y = Math.ceil(yp) - 32
+        this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y + 32}`
 
         this.enemy1.update(delta)
     }

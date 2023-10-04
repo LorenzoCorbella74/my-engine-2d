@@ -19,6 +19,7 @@ export class Enemy extends GameObject {
                 category: GROUP.ENEMY,
                 mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.WALL
             },
+            // posizione iniziale
             position: {
                 x: 500,
                 y: 500

@@ -29,6 +29,11 @@ export class SpriteComponent extends Component {
     }
     update(deltaTime: number) { }
 
+    /**
+     * Set local coordinates inside container
+     * @param x 
+     * @param y 
+     */
     setPosition(x: number, y: number) {
         this.sprite.x = x
         this.sprite.y = y
