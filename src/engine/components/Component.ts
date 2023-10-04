@@ -1,11 +1,11 @@
-import { GameObject } from './GameObject';
-import { EngineError } from './EngineError';
+import { GameObject } from '../GameObject';
+import { EngineError } from '../EngineError';
 
 export class Component {
 
-    public entity: GameObject | null = null;
-    public dependencies: string[] = []; // nomi dei componenti obbligatori
-    public enabled: boolean = true;
+    public entity!: GameObject;
+    public dependencies: string[] = [];         // mandatory components
+    public enabled: boolean = true;             // enabled by default
 
     constructor(gameObject: GameObject, public name: string) {
         this.entity = gameObject;
@@ -22,7 +22,5 @@ export class Component {
         this.enabled = enabled;
     }
 
-    update(delta: number) {
-
-    }
+    update(delta: number) { }
 }

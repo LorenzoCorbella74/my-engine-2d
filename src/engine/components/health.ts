@@ -1,4 +1,4 @@
-import { Component } from '../Component';
+import { Component } from './Component';
 import { GameObject } from '../GameObject';
 import { ComponentNames } from '../models/component-names.enum';
 

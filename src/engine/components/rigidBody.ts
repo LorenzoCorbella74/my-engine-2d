@@ -1,4 +1,4 @@
-import { Component } from '../Component';
+import { Component } from './Component';
 
 import { Body, Bodies, World } from 'matter-js';
 import { PixiEngine } from '../Engine';

@@ -1,5 +1,5 @@
 import { Sprite } from 'pixi.js';
-import { Component } from '../Component';
+import { Component } from './Component';
 import { PixiEngine } from '../Engine';
 import { RigidBodyComponent } from './rigidBody';
 import { GameObject } from '../GameObject';

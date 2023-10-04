@@ -29,7 +29,13 @@ this.engine.getAsset(<asset-name>)  // use as aaset name the name of the file wi
 ## GameObject Architecture and ECS
 
 Thanks to the `GameNode` decorator it is possible to instanciate game entities with an unique id, add them automatically to the current scene and be retrievable by name or id via the `getObjectByName`, `getObjectById` and `getGroup` methods.
-The "Gameobject" extends the PIXI.Container, and as our Entity is composed of components. The engine provides the sprite, rigidbody and input-controller component.
+
+The "Gameobject" extends the PIXI.Container, and being the "Entity" is composed of components. The engine provides out of the box:
+
+- sprite component
+- rigidbody component to manage collision of rigid bodies
+- script component
+- input-controller component.
 
 ```typescript
 @GameNode()

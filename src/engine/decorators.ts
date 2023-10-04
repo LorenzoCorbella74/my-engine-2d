@@ -1,4 +1,4 @@
-import { Component } from './Component';
+import { Component } from './components/Component';
 import { PixiEngine } from './Engine';
 import { GameEvent } from './EventManager';
 import { GameObject } from './GameObject';

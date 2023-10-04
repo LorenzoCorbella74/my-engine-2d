@@ -1,5 +1,5 @@
 import { Body } from 'matter-js';
-import { Component } from '../Component';
+import { Component } from './Component';
 import { GameObject } from '../GameObject';
 import { ComponentNames } from '../models/component-names.enum';
 import { RigidBodyComponent } from './rigidBody';
@@ -8,11 +8,11 @@ export class InputController extends Component {
 
     dependencies: string[] = [ComponentNames.RigidBody];
 
-    private speed: number; // px/sec
-
+    // px/sec
+    private speed: number;
     // velocity
-    dx: number = 0;
-    dy: number = 0;
+    private dx: number = 0;
+    private dy: number = 0;
 
     constructor(gameObject: GameObject, speed: number) {
         super(gameObject, ComponentNames.InputController);

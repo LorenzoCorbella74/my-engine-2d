@@ -1,5 +1,5 @@
 import { PixiEngine } from './Engine';
-import { Component } from './Component';
+import { Component } from './components/Component';
 import { GameEvent, GameEventForGroup, } from './EventManager'
 import { Container } from 'pixi.js';
 import { IGameConditionEntity } from './models/condition-logic';

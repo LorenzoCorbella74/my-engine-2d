@@ -3,4 +3,5 @@ export enum ComponentNames {
     RigidBody = 'RigidBody',
     Health = 'Health',
     InputController = 'InputController',
+    Script = 'Script'
 }
