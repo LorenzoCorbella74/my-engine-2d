@@ -1,5 +1,5 @@
 import { Graphics } from 'pixi.js';
-import { PixiEngine as engine } from './Engine';
+import { MyEngine2D as engine } from './Engine';
 import { Scene } from './Scene';
 
 export class CrossHairManager {

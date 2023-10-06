@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js";
-import { GameConfig } from "../game/Config";
-import { PixiEngine as $PE, PixiEngine } from "./Engine";
+import { gsap } from "gsap";
+import { MyEngine2D } from "./Engine";
 
 import { Scene } from './Scene';
-import { gsap } from "gsap";
+import { GameConfig } from "./models/config";
 
 export class SceneManager {
 
@@ -11,17 +11,18 @@ export class SceneManager {
     private scenes: { [key: string]: Scene } = {}
 
     constructor(public app: PIXI.Application, public config: GameConfig) {
-        this.config.scenes.forEach(scene => {
-            this.scenes[scene.name] = new scene($PE)
+        this.config.scenes.forEach((scene: new (...arg: any) => Scene) => {
+            this.scenes[scene.name] = new scene(MyEngine2D)
         });
     }
 
     async setupNewScene(sceneName: string, animate: boolean = true) {
         this.currentScene = this.scenes[sceneName];
         this.app.stage.addChild(this.currentScene);
+        MyEngine2D.state = 'loading';
         await this.currentScene.init();
         // START LOOP
-        PixiEngine.startLoop()
+        MyEngine2D.startLoop()
         if (animate) {
             this.currentScene.alpha = 0;
             gsap.to(this.currentScene, {
@@ -32,7 +33,7 @@ export class SceneManager {
     }
 
     private removeOldScene(sceneName: string, destroyScene: boolean = true) {
-        PixiEngine.stopLoop()
+        MyEngine2D.stopLoop()
         this.app.stage.removeChild(this.currentScene);
         if (this.currentScene.onExit) {
             this.currentScene.onExit();
@@ -64,17 +65,17 @@ export class SceneManager {
                 this.setupNewScene(sceneName);
             }
         } else {
-            $PE.log(`Scene "${sceneName}" not found`);
+            MyEngine2D.log(`Scene "${sceneName}" not found`);
         }
     }
 
     startDefaultScene() {
         const startScene = this.config.scenes[0].name;   // si istanzia
         if (startScene) {
-            $PE.log(`Start default Scene ${startScene}`);
+            MyEngine2D.log(`Start default Scene ${startScene}`);
             this.changeScene(startScene);
         } else {
-            $PE.log(`Default Scene not present!`);
+            MyEngine2D.log(`Default Scene not present!`);
         }
     }
 }

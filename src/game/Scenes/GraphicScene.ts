@@ -1,6 +1,6 @@
 
 import { Graphics } from "pixi.js";
-import { PixiEngine } from "../../engine/Engine";
+import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameGraphics } from "../../engine/GameGraphics";
 
@@ -11,7 +11,7 @@ export class GraphicScene extends Scene {
     line!: Graphics;
 
     constructor() {
-        super(PixiEngine)
+        super(MyEngine2D)
     }
 
     async init() {
@@ -40,7 +40,7 @@ export class GraphicScene extends Scene {
 
 
     update(delta: number) {
-        // PixiEngine.log(PixiEngine.time.getFrame().toString())
+        // MyEngine2D.log(MyEngine2D.time.getFrame().toString())
         // const dt = this.engine.time.getDeltaTime()
     }
 

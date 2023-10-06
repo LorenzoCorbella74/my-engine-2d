@@ -1,10 +1,10 @@
 import { Body, Query, Engine, Events, Composite, Render } from 'matter-js';
-import { PixiEngine } from './Engine'
+import { MyEngine2D } from './Engine'
 import { GameEvent } from './EventManager';
 import { GameObject } from './GameObject';
 import { Application, Graphics } from 'pixi.js';
 import { GROUP, RigidBodyComponent } from './components/rigidBody';
-import { BasePayload, EventType } from './models/events';
+import { BaseEventType, BasePayload } from './models/events';
 
 export type GraphicsWithPhisics = Graphics & {
     rigidBody: Body
@@ -75,13 +75,13 @@ export class PhysicManager {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
         console.log(`${bodyA.label} starts collision with ${bodyB.label}.`, bodyA, bodyB)
-        const colisionEvent = new GameEvent<BasePayload>(
-            EventType.Collision,
-            PixiEngine.getObjectByName(bodyA.label)!,
-            PixiEngine.getObjectByName(bodyB.label)!,
+        const colisionEvent = new GameEvent<BasePayload, BaseEventType>(
+            MyEngine2D.config.events?.Collision,
+            MyEngine2D.getObjectByName(bodyA.label)!,
+            MyEngine2D.getObjectByName(bodyB.label)!,
             { empty: true },
         );
-        PixiEngine.events.sendEvent(colisionEvent);
+        MyEngine2D.events.sendEvent(colisionEvent);
 
     }
 
@@ -103,7 +103,7 @@ export class PhysicManager {
         const to = fromObj.getComponents<RigidBodyComponent>('RigidBody')[0];
         if (from.rigidBody && to.rigidBody) {
             let collisions = Query.ray(
-                Composite.allBodies(PixiEngine.physics.physicsEngine.world),
+                Composite.allBodies(MyEngine2D.physics.physicsEngine.world),
                 from.rigidBody.position,
                 to.rigidBody.position
             );

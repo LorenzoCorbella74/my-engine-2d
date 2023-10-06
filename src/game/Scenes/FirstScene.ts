@@ -1,5 +1,5 @@
 import { BlurFilter, Sprite } from "pixi.js";
-import { PixiEngine } from "../../engine/Engine";
+import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { Game } from '../entities/game';
 
@@ -17,7 +17,7 @@ export class FirstScene extends Scene {
     game!: Game;
 
     constructor() {
-        super(PixiEngine)
+        super(MyEngine2D)
     }
 
     async init() {

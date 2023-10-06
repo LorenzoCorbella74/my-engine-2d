@@ -9,20 +9,9 @@ export default class AssetManager {
 
     private assetFileUrls = this.importAssetPaths();
     list: Asset[];
-    resources: Resources = {}; // cache di tutte le risorse caricate
+    resources: Resources = {}; // loaded resources cache
     sound: SoundLibrary;
     soundsManager: SoundManager;
-    /*
-    [
-        {
-            "group": "group1",
-            "category": "audio",
-            "name": "match",
-            "ext": "wav",
-            "url": "/group1/audio/match.wav"
-        },
-    ]
-    */
 
     constructor(soundsManager: SoundManager) {
         this.sound = sound;
@@ -31,7 +20,7 @@ export default class AssetManager {
     }
 
     private importAssetPaths() {
-        const assetFiles = import.meta.glob("/assets/**/*.*");
+        const assetFiles = import.meta.glob(`/assets/**/*.*`);
         return Object.keys(assetFiles);
     }
 

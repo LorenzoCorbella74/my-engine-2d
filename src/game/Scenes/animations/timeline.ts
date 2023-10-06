@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import { PixiEngine as engine } from './../../../engine/Engine';
+import { MyEngine2D as engine } from './../../../engine/Engine';
 import { Sprite } from "pixi.js";
 
 export function createTimelineAnimation(context: Sprite): GSAPTimeline {

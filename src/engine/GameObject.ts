@@ -1,9 +1,9 @@
-import { PixiEngine } from './Engine';
+import { MyEngine2D } from './Engine';
 import { Component } from './components/Component';
 import { GameEvent, GameEventForGroup, } from './EventManager'
 import { Container } from 'pixi.js';
 import { IGameConditionEntity } from './models/condition-logic';
-import { BasePayload, IGameObjectEventHandler } from './models/events';
+import { BaseEventType, BasePayload, IGameObjectEventHandler } from './models/events';
 import { ComponentNames } from './models/component-names.enum';
 import { RigidBodyComponent } from './components/rigidBody';
 
@@ -13,15 +13,15 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   private _name: string;
   private components: { [key: string]: Component[] } = {};
 
-  engine: typeof PixiEngine;
+  engine: typeof MyEngine2D;
 
   constructor(name: string) {
     super()
     this._name = name;
-    this.engine = PixiEngine
+    this.engine = MyEngine2D
   }
 
-  onEventHandler(event: GameEvent<BasePayload> | GameEventForGroup<BasePayload>) {
+  onEventHandler(event: GameEvent<BasePayload, BaseEventType> | GameEventForGroup<BasePayload, BaseEventType>) {
     // TODO: nel caso di evento per gruppo non sarebbe male ricevere tutto il gruppo...
     console.log(`GameObject ${this.name} received event:`, event);
   }

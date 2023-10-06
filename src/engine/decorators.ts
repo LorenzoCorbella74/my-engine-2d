@@ -1,10 +1,8 @@
 import { Component } from './components/Component';
-import { PixiEngine } from './Engine';
+import { MyEngine2D } from './Engine';
 import { GameEvent } from './EventManager';
 import { GameObject } from './GameObject';
 import { DecoratorOptions } from './models/decorator-option';
-import { EventType } from './models/events';
-
 
 
 /**
@@ -23,18 +21,18 @@ export function GameNode(options?: DecoratorOptions) {
 
             instance.id = options?.id || Math.random().toString(36).substring(2, 15); // `${Date.now()}${Math.random()*1000000}`;
             // si registra nel objects repository
-            PixiEngine.repo.gameObjectsIdMap.set(instance.id, instance);
-            PixiEngine.repo.gameObjectsNameMap.set(instance.name, instance);
-            PixiEngine.repo.gameObjectsIdNameMap.set(instance.id, instance.name);
+            MyEngine2D.repo.gameObjectsIdMap.set(instance.id, instance);
+            MyEngine2D.repo.gameObjectsNameMap.set(instance.name, instance);
+            MyEngine2D.repo.gameObjectsIdNameMap.set(instance.id, instance.name);
             // si mette nella scena corrente
-            PixiEngine.scenes.currentScene.addChild(instance);
+            MyEngine2D.scenes.currentScene.addChild(instance);
 
             if (options?.groupName) {
                 // si registra nel objects repository
-                if (!PixiEngine.repo.gameObjectsGroups[options.groupName]) {
-                    PixiEngine.repo.gameObjectsGroups[options.groupName] = [];
+                if (!MyEngine2D.repo.gameObjectsGroups[options.groupName]) {
+                    MyEngine2D.repo.gameObjectsGroups[options.groupName] = [];
                 }
-                PixiEngine.repo.gameObjectsGroups[options.groupName].push(instance);
+                MyEngine2D.repo.gameObjectsGroups[options.groupName].push(instance);
             }
 
             // ritorna l'istanza
@@ -62,7 +60,7 @@ export function LogExecutionTime(target: any, propertyKey: string, descriptor: P
         const startTime = performance.now();
         const result = originalMethod.apply(this, args);
         const endTime = performance.now();
-        PixiEngine.log(`${propertyKey} took ${endTime - startTime} milliseconds.`);
+        MyEngine2D.log(`${propertyKey} took ${endTime - startTime} milliseconds.`);
         return result;
     };
 }
@@ -97,7 +95,7 @@ export function updateUI(entitiesName: string[]) {
                 // Invia l'evento a ciascuna delle entità specificate nella lista
                 for (const name of entitiesName) {
                     // events are sent to GameObject only !
-                    PixiEngine.events.sendEvent(new GameEvent(EventType.UpdateForUI, origin, PixiEngine.getObjectByName(name)!, {
+                    MyEngine2D.events.sendEvent(new GameEvent(MyEngine2D.config.events?.UpdateForUI, origin, MyEngine2D.getObjectByName(name)!, {
                         [propertyKey]: newVal
                     }));
                 }

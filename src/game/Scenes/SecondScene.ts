@@ -2,12 +2,11 @@ import { Player } from '../entities/player';
 import { Enemy } from '../entities/enemy';
 
 import { Graphics, Text } from "pixi.js";
-import { PixiEngine } from "../../engine/Engine";
+import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
 import { RigidBodyComponent } from '../../engine/components/rigidBody';
-import { EventType } from '../../engine/models/events';
 
 import { Power2 } from 'gsap'
 
@@ -22,7 +21,7 @@ export class SecondScene extends Scene {
     crossHair!: Graphics;
 
     constructor() {
-        super(PixiEngine)
+        super(MyEngine2D)
     }
 
     async init() {
@@ -67,7 +66,7 @@ export class SecondScene extends Scene {
     }
 
     update(delta: number) {
-        // PixiEngine.log(PixiEngine.time.getFrame().toString())
+        // MyEngine2D.log(MyEngine2D.time.getFrame().toString())
         // const dt = this.engine.time.getDeltaTime()
         this.text.x = Math.sin(this.engine.time.getElapsedTime()) * window.innerWidth / 8;
 
@@ -121,11 +120,11 @@ export class SecondScene extends Scene {
 
         // test event to single entity
         if (this.engine.input.isKeyDown('E')) {
-            this.engine.events.sendEvent(new GameEvent(EventType.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
+            this.engine.events.sendEvent(new GameEvent(this.engine.config.events?.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
         }
         // test event to group of entity
         if (this.engine.input.isKeyDown('R')) {
-            this.engine.events.sendEvent(new GameEventForGroup('Enemy', EventType.Pickup, this.player, { test: 'test GameEventForGroup' }))
+            this.engine.events.sendEvent(new GameEventForGroup('Enemy', this.engine.config.events?.Pickup, this.player, { test: 'test GameEventForGroup' }))
         }
     }
 

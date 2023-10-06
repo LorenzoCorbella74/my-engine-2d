@@ -1,36 +1,41 @@
-import { PixiEngine } from './Engine';
+import { MyEngine2D } from './Engine';
 import { GameObject } from './GameObject'
-import { BasePayload, EventType } from './models/events';
+import { BaseEventType, BasePayload } from './models/events';
 
 
 
 // Definizione dell'oggetto evento
-export class GameEvent<T> {
+export class GameEvent<Payload, EventType> {
     constructor(
         public eventType: EventType,
         public sender: GameObject,
         public receiver: GameObject,
-        public payload: T
+        public payload: Payload
     ) { }
 }
 
-export class GameEventForGroup<T> {
+export class GameEventForGroup<Payload, EventType> {
     constructor(
         public groupName: string,
         public eventType: EventType,
         public sender: GameObject,
-        public payload: T
+        public payload: Payload
     ) {
     }
 }
 
+/**
+ * Manage custom events
+ * the PIXI event system is not used. EventManager has more power 
+ * (events for groups, sender, receiver, etc) 
+ */
 export class EventManager {
 
-    private eventQueue: (GameEvent<BasePayload> | GameEventForGroup<BasePayload>)[] = [];
+    private eventQueue: (GameEvent<BasePayload, BaseEventType> | GameEventForGroup<BasePayload, BaseEventType>)[] = [];
 
-    constructor(public engine: typeof PixiEngine) { }
+    constructor(public engine: typeof MyEngine2D) { }
 
-    sendEvent(event: GameEvent<BasePayload> | GameEventForGroup<BasePayload>) {
+    sendEvent(event: GameEvent<BasePayload, BaseEventType> | GameEventForGroup<BasePayload, BaseEventType>) {
         this.eventQueue.push(event);
     }
 

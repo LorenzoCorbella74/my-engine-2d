@@ -1,6 +1,6 @@
 import { Player } from '../entities/player';
 import { Graphics, TilingSprite } from "pixi.js";
-import { PixiEngine } from "../../engine/Engine";
+import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 
@@ -18,19 +18,19 @@ export class MatterScene extends Scene {
     tilingSprite!: TilingSprite;
 
     constructor() {
-        super(PixiEngine)
+        super(MyEngine2D)
     }
 
     async init() {
         // background tile
-        const texture = PixiEngine.getTexture('tile')
+        const texture = MyEngine2D.getTexture('tile')
         this.tilingSprite = new TilingSprite(
             texture,
-            PixiEngine.app.screen.width,
-            PixiEngine.app.screen.height,
+            MyEngine2D.app.screen.width,
+            MyEngine2D.app.screen.height,
         );
-        this.tilingSprite.tileScale.x = 0.05 /* texture.width / PixiEngine.app.screen.width */
-        this.tilingSprite.tileScale.y = 0.05 /* texture.height / PixiEngine.app.screen.width */
+        this.tilingSprite.tileScale.x = 0.05 /* texture.width / MyEngine2D.app.screen.width */
+        this.tilingSprite.tileScale.y = 0.05 /* texture.height / MyEngine2D.app.screen.width */
         this.addChild(this.tilingSprite);
 
         // test MATTER-JS
@@ -65,7 +65,7 @@ export class MatterScene extends Scene {
     }
 
     update(delta: number) {
-        // PixiEngine.log(PixiEngine.time.getFrame().toString())
+        // MyEngine2D.log(MyEngine2D.time.getFrame().toString())
         // const dt = this.engine.time.getDeltaTime()
 
         // rotate player to target

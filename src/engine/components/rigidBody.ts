@@ -1,7 +1,7 @@
 import { Component } from './Component';
 
 import { Body, Bodies, World } from 'matter-js';
-import { PixiEngine } from '../Engine';
+import { MyEngine2D } from '../Engine';
 import { SpriteComponent } from './sprite';
 import { GameObject } from '../GameObject';
 
@@ -47,16 +47,16 @@ export class RigidBodyComponent extends Component {
                 mask: options?.collisionFilter?.mask || GROUP.DEFAULT
             }
         };
-        // Crea il corpo Matter.js in base alle opzioni
+        // Create the  Matter.js BODY according to passed options
         if (shape === 'rectangle') {
             this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, config) as Body;
         } else if (shape === 'circle') {
             this.rigidBody = Bodies.circle(x + width / 2, y + height / 2, width, config) as Body; // TODO
         } else if (shape === 'polygon') {
-            // TODO: poligono personalizzato
+            // TODO: poligon
         }
         // Aggiungi il corpo Matter.js al mondo
-        World.add(PixiEngine.physics.physicsEngine.world, this.rigidBody);
+        World.add(MyEngine2D.physics.physicsEngine.world, this.rigidBody);
     }
 
     /**
@@ -80,7 +80,7 @@ export class RigidBodyComponent extends Component {
     }
 
     removeRigidBody() {
-        World.remove(PixiEngine.physics.physicsEngine.world, this.rigidBody);
+        World.remove(MyEngine2D.physics.physicsEngine.world, this.rigidBody);
     }
 
     setRotation(angle: number) {

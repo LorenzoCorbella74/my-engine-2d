@@ -1,0 +1,1 @@
+export type State = 'idle' | 'loading' | 'running' | 'paused' | 'ended';

@@ -24,7 +24,7 @@ loader.loadAssetsGroup('group1').then((resources) => {
 // npx degit user/project#main my-project
 
 
-import { Engine, PixiEngine } from "./engine/Engine";
+import { Engine, MyEngine2D } from "./engine/Engine";
 import { Config } from "./game/Config";
 
 declare global {
@@ -33,4 +33,4 @@ declare global {
   }
 }
 
-PixiEngine.run(Config);
+MyEngine2D.run(Config);

@@ -1,5 +1,5 @@
 import { Application } from "pixi.js";
-import { PixiEngine as $PE } from "./Engine";
+import { MyEngine2D as $PE } from "./Engine";
 import { KeyMapping } from "./models/key-mapping";
 
 export class InputKeyboardManager {

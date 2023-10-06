@@ -1,6 +1,6 @@
 import { Sprite } from 'pixi.js';
 import { Component } from './Component';
-import { PixiEngine } from '../Engine';
+import { MyEngine2D } from '../Engine';
 import { RigidBodyComponent } from './rigidBody';
 import { GameObject } from '../GameObject';
 import { ComponentNames } from '../models/component-names.enum';
@@ -11,7 +11,7 @@ export class SpriteComponent extends Component {
 
     constructor(gameObject: GameObject, spriteName: string, localX = 0, localY = 0) {
         super(gameObject, ComponentNames.Sprite);
-        this.sprite = PixiEngine.getAsset(spriteName);
+        this.sprite = MyEngine2D.getAsset(spriteName);
         // if we have a sprite we put in the scene
         if (this.sprite) {
             console.log(`Sprite name for ${spriteName}: width ${this.sprite.width}px and height ${this.sprite.height}px`);

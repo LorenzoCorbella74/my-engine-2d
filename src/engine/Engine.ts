@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Texture } from "pixi.js";
+import { Texture, Application, ICanvas } from "pixi.js";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 
@@ -10,7 +10,6 @@ import { StorageDB } from './StorageManager';
 import { SceneManager } from './SceneManager';
 import { InputKeyboardManager } from './InputKeyboardManager';
 import { InputMouseManager } from './InputMouseManager';
-import { GameConfig } from "../game/Config";
 import { Camera } from './Camera';
 import { GameLogic } from './GameLogic';
 import { GameObjectRepo } from "./GameObjectRepo";
@@ -19,12 +18,13 @@ import { PhysicManager } from './PhysicManager'
 import { CrossHairManager } from './CrossHairManager'
 import { FiltersManager } from './FiltersManager'
 import AssetManager from "./AssetManager";
-import { GameObject } from "./GameObject";
 
-export const ENGINE_MSG_PREFIX = "[PIXI-ENGINE]: "
+import { GameObject } from "./GameObject";
+import { State } from "./models/engine-state";
+import { GameConfig } from "./models/config";
 
 export class Engine {
-    app!: PIXI.Application<PIXI.ICanvas>;
+    app!: Application<ICanvas>;
     config!: GameConfig;
 
     public loader!: AssetManager;
@@ -42,8 +42,10 @@ export class Engine {
     public crosshair!: CrossHairManager
     public filters!: FiltersManager;
 
-    private _paused: boolean = false;
+    private _state: State = 'idle';
     private _debug: boolean = false;
+
+    private engineLogPrefix: string = '';
 
     constructor() { }
 
@@ -61,22 +63,36 @@ export class Engine {
 
     }
 
+    get state(): State {
+        return this._state;
+    }
+
+    set state(state: State) {
+        this._state = state;
+        if (this._state === 'loading') {
+            document.getElementById('loader')!.style.display = 'block';
+        } else {
+            document.getElementById('loader')!.style.display = 'none';
+        }
+    }
+
     async run(config: GameConfig) {
         gsap.registerPlugin(PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
 
+        document.title = config.name || 'MY-ENGINE-2D';  // name of the game
+        this.engineLogPrefix = "[MY-ENGINE-2D]: " || config.engineLogPrefix;
+
         this.config = config;
 
-        document.title = config.name || 'PIXI-ENGINE';  // name of the game
-
         this.app = new PIXI.Application({
-            // backgroundAlpha: 0, // transparente
+            // backgroundAlpha: 0, // transparent
             resizeTo: window,
             autoStart: false,
-            // antialias: true, riduce la performance
+            // antialias: true, performance !!!
             autoDensity: true,
             powerPreference: "high-performance",
-            backgroundColor: /* 0x0 */0x31383E,
+            backgroundColor: 0x31383E,
             resolution: devicePixelRatio
         });
 
@@ -84,7 +100,7 @@ export class Engine {
 
         // @ts-expect-error Set PIXI app to global window object for the PIXI Inspector
         globalThis.__PIXI_APP__ = this.app; // PIXI DEVTOOLS
-        window.$PE = PixiEngine             // debug
+        window.$PE = MyEngine2D             // debug
 
         this.storage = new StorageDB(config.storagePrefix);
         this.sounds = new SoundManager();
@@ -94,7 +110,7 @@ export class Engine {
         this.mouse = new InputMouseManager(this.app);
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this.app, this.scenes);
-        this.loader = new AssetManager(this.sounds) /* new Preloader(this.sounds) */;
+        this.loader = new AssetManager(this.sounds);
         this.physics = new PhysicManager(this.app)
         this.crosshair = new CrossHairManager();
         this.filters = new FiltersManager();
@@ -111,7 +127,6 @@ export class Engine {
 
         this.handleResize();
 
-        /* this.log(ENGINE_MSG_PREFIX + 'Resources loaded, starting loop!!'); */
         this.scenes.startDefaultScene();
 
         // the loop starts when startLoop is called
@@ -126,7 +141,7 @@ export class Engine {
             this.events.processEvents()
             this.camera.update();
 
-            this.time.runOnFrameNum([1], (frame: number) => {
+            this.time.runOnFrameNum([1, 30], (frame: number) => {
                 this.logic.update()
             })
         });
@@ -134,22 +149,22 @@ export class Engine {
 
     startLoop() {
         this.app.ticker.start();
-        this._paused = false;
+        this.state = 'running';
     }
 
 
     stopLoop() {
-        this._paused = true;
+        this.state = 'paused';
         this.app.ticker.stop();
     }
 
     toggle() {
-        if (!this._paused) {
+        if (this.state === 'running') {
             this.stopLoop();
-            this._paused = true;
+            this.state = 'paused';
         } else {
             this.startLoop();
-            this._paused = false;
+            this.state = 'running';
         }
     }
 
@@ -163,12 +178,12 @@ export class Engine {
 
     log(message: string, ...other: any) {
         if (!import.meta.env.DEV) return;
-        console.log(ENGINE_MSG_PREFIX + message, ...other)
+        console.log(this.engineLogPrefix + message, ...other)
     }
 
     warn(message: string, ...other: any) {
         if (!import.meta.env.DEV) return;
-        console.warn(ENGINE_MSG_PREFIX + message, ...other)
+        console.warn(this.engineLogPrefix + message, ...other)
     }
 
     /**
@@ -211,6 +226,4 @@ export class Engine {
     }
 }
 
-export const PixiEngine = new Engine();
-
-// come salvare uno screen : https://codesandbox.io/s/pixitests-forked-1gm13?file=/src/index.js:1164-1548
+export const MyEngine2D = new Engine();
