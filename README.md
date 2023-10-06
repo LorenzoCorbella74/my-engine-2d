@@ -120,7 +120,7 @@ It's possible to send events to gameObject or to gameObject groups with the `sen
 - [x] Keyboard and mouse management
 - [x] Object pool
 - [x] Storage in localstorage
-- [x] Game Logic class for win/lose conditions
+- [x] Basic Game Logic class for win/lose conditions
 - [x] CrossHair management
 - [x] PIXI Filters management
 

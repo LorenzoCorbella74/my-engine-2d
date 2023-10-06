@@ -1,22 +1,15 @@
-import { Graphics } from 'pixi.js';
-import { MyEngine2D as engine } from './Engine';
+import { Graphics, Sprite } from 'pixi.js';
+import { MyEngine2D } from './Engine';
 import { Scene } from './Scene';
 
 export class CrossHairManager {
 
-    crosshair!: Graphics;    // TODO: trasformare in Sprite:  https://pixijs.com/examples/events/custom-mouse-icon?_highlight=mouse
+    crosshair!: Graphics | Sprite;
 
     constructor() { }
 
-    activateOnCurrentScene(currentScene: Scene) {
-        // Creazione del mirino
-        this.crosshair = new Graphics();
-        this.crosshair.lineStyle(2, 0xFFFFFF, 1);
-        this.crosshair.moveTo(-15, 0);
-        this.crosshair.lineTo(15, 0);
-        this.crosshair.moveTo(0, -15);
-        this.crosshair.lineTo(0, 15);
-        this.crosshair.position.set(engine.app.screen.width / 2, engine.app.screen.height / 2);
+    activateOnCurrentScene(currentScene: Scene, crosshair: Graphics | Sprite) {
+        this.crosshair = crosshair
         currentScene.addChild(this.crosshair);
 
         this.show();
@@ -25,18 +18,17 @@ export class CrossHairManager {
     }
 
     show() {
-        if (engine.app.view.style) {
-            engine.app.view.style.cursor = 'none';
+        if (MyEngine2D.app.view.style) {
+            MyEngine2D.app.view.style.cursor = 'none';
             this.crosshair.visible = true
         }
     }
 
     hide() {
         // Nascondere l'icona del mouse usando CSS
-        if (engine.app.view.style) {
+        if (MyEngine2D.app.view.style) {
             this.crosshair.visible = false;
-            engine.app.view.style.cursor = 'default';
-
+            MyEngine2D.app.view.style.cursor = 'default';
         }
     }
 }

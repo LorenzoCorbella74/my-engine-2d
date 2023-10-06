@@ -61,8 +61,6 @@ export class SecondScene extends Scene {
         // get the reference of the objecty in the gameObjects repository
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
         this.engine.log('Test getGroup: ', this.engine.getGroup('Enemy'));
-
-        this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
     }
 
     update(delta: number) {

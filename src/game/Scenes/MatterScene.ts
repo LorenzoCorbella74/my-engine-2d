@@ -1,5 +1,5 @@
 import { Player } from '../entities/player';
-import { Graphics, TilingSprite } from "pixi.js";
+import { Graphics, Sprite, TilingSprite } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
@@ -13,7 +13,7 @@ export class MatterScene extends Scene {
     player!: GameObject;
     obstacle!: GraphicsWithPhisics;
     obstacle2!: GraphicsWithPhisics;
-    crossHair!: Graphics;
+    crosshair!: Graphics | Sprite;
 
     tilingSprite!: TilingSprite;
 
@@ -43,7 +43,16 @@ export class MatterScene extends Scene {
         // focus della camera sul player
         this.engine.camera.focusOn(this.player, this)
 
-        this.crossHair = this.engine.crosshair.activateOnCurrentScene(this);
+        // crosshair
+        this.crosshair = new Graphics();
+        this.crosshair.lineStyle(2, 0xFFFFFF, 1);
+        this.crosshair.moveTo(-15, 0);
+        this.crosshair.lineTo(15, 0);
+        this.crosshair.moveTo(0, -15);
+        this.crosshair.lineTo(0, 15);
+        this.crosshair.position.set(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2);
+
+        this.crosshair = this.engine.crosshair.activateOnCurrentScene(this, this.crosshair);
     }
 
     private createObstacle(name: string, x: number, y: number, width: number, height: number): GraphicsWithPhisics {
@@ -69,12 +78,11 @@ export class MatterScene extends Scene {
         // const dt = this.engine.time.getDeltaTime()
 
         // rotate player to target
-        const mousePosition = this.engine.mouse.getMouse();
-        this.crossHair.position.set(mousePosition.x, mousePosition.y);
-        //console.log('Mouse: ', mousePosition.x, mousePosition.y)
+        const { x, y } = this.engine.mouse.getMouse();
+        this.crosshair.position.set(x, y);
 
         const playerRigidBody = this.player.getComponents<RigidBodyComponent>('RigidBody')[0]
-        const angle = Math.atan2(mousePosition.y - this.player.y, mousePosition.x - this.player.x);
+        const angle = Math.atan2(y - this.player.y, x - this.player.x);
         this.player.rotation = angle;
         playerRigidBody.setRotation(angle)
 
@@ -115,6 +123,14 @@ export class MatterScene extends Scene {
         if (this.engine.input.isKeyDown('X')) {
             const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM;
             this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
+        }
+
+        /* test crosshair */
+        if (this.engine.input.isKeyDown('O')) {
+            this.engine.crosshair.hide()
+        }
+        if (this.engine.input.isKeyDown('N')) {
+            this.engine.crosshair.show()
         }
     }
 
