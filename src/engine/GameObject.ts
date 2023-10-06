@@ -41,6 +41,11 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     return this._name;
   }
 
+  /**
+   * Update container position or, if present the rigidbody
+   * @param x 
+   * @param y 
+   */
   setPosition(x: number, y: number) {
     if (this.hasComponent(ComponentNames.RigidBody)) {
       this.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].updatePosition(x, y);
@@ -58,8 +63,10 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   update(deltaTime: number) {
     for (const key in this.components) {
       if (Object.prototype.hasOwnProperty.call(this.components, key)) {
-        const component = this.components[key];
-        component[0].update(deltaTime);
+        const components = this.components[key];
+        components.forEach(component => {
+          component.update(deltaTime);
+        })
       }
     }
   }

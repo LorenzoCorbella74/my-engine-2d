@@ -20,14 +20,15 @@ export class FiltersManager {
     public animateFilter(
         target: DisplayObject,
         filter: Filter,
-        duration: number = 1
+        duration: number = 1,
+        animationObject: any
     ): void {
         // old way  ma deprecato
         /* gsap.to(filter, 2, {blur: 0,}); */
         // new way - https://greensock.com/docs/v3/Plugins/PixiPlugin
         gsap.to(target, {
             duration,
-            pixi: { blur: 0 }
+            pixi: animationObject
         })
         /* 
                 gsap.to(image, {duration: 1, pixi:{colorize:"red", colorizeAmount:1}});

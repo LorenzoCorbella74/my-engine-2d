@@ -1,4 +1,4 @@
-import { DisplayObjectEvents, Sprite } from 'pixi.js';
+import { Sprite } from 'pixi.js';
 import { Component } from './Component';
 import { MyEngine2D } from '../Engine';
 import { RigidBodyComponent } from './rigidBody';
@@ -9,6 +9,14 @@ export class SpriteComponent extends Component {
 
     public sprite: Sprite;
 
+    /**
+     * Constructor for the Sprite component.
+     *
+     * @param {GameObject} gameObject - the parent game object
+     * @param {string} spriteName - the name of the sprite
+     * @param {number} localX - the local x coordinate (default: 0)
+     * @param {number} localY - the local y coordinate (default: 0)
+     */
     constructor(gameObject: GameObject, spriteName: string, localX = 0, localY = 0) {
         super(gameObject, ComponentNames.Sprite);
         this.sprite = MyEngine2D.getAsset(spriteName);
@@ -29,7 +37,7 @@ export class SpriteComponent extends Component {
     }
 
     /**
-     * Set local coordinates inside container
+     * Sets the width and height of the sprite in LOCAL coordinates.
      * @param x 
      * @param y 
      */
@@ -46,6 +54,12 @@ export class SpriteComponent extends Component {
         this.sprite.rotation = angle
     }
 
+    /**
+     * Sets the width and height of the sprite.
+     *
+     * @param {number} width - The desired width of the sprite.
+     * @param {number} height - The desired height of the sprite.
+     */
     setWidthAndHeight(width: number, height: number) {
         this.sprite.width = width;
         this.sprite.height = height;
@@ -56,10 +70,6 @@ export class SpriteComponent extends Component {
 
     setInteractive(val: boolean) {
         this.sprite.interactive = val
-    }
-
-    on(event: keyof DisplayObjectEvents, fn: (...args: any) => void, context?: any) {
-        this.sprite.on(event, fn, context);
     }
 
     hide() {

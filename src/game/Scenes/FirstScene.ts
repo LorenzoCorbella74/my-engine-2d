@@ -1,4 +1,4 @@
-import { BlurFilter, Sprite } from "pixi.js";
+import { BlurFilter } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { Game } from '../entities/game';
@@ -6,14 +6,17 @@ import { Game } from '../entities/game';
 import { createTimelineAnimation } from './animations/timeline';
 import { Background } from "../entities/FirstScene/background";
 import { GameObject } from "../../engine/GameObject";
+import { Button } from "../entities/FirstScene/button";
+import { ComponentNames } from "../../engine/models/component-names.enum";
+import { SpriteComponent } from "../../engine/components/sprite";
 
 export class FirstScene extends Scene {
 
-    bg!: Sprite;
-    bunny!: Sprite;
-    bunny2!: Sprite;
-    bunny3!: Sprite;
-    bunny4!: Sprite;
+    bg!: GameObject;
+    bunny!: GameObject;
+    bunny2!: GameObject;
+    bunny3!: GameObject;
+    bunny4!: GameObject;
 
     timeline!: GSAPTimeline
     game!: Game;
@@ -33,87 +36,37 @@ export class FirstScene extends Scene {
         blurFilter.blur = 10;
         this.engine.filters.addFilter(this.engine.scenes.currentScene, blurFilter);
 
-        // 1 test 
-        // this.bg = new Background('Background', 'bg');
-        this.bg = this.engine.getAsset("bg");
-        this.bg.width = window.innerWidth;
-        this.bg.height = window.innerHeight;
-        this.bg.interactive = true;
-        this.addChild(this.bg);
+        this.bg = new Background('Background', 'bg');
 
         this.engine.camera.focusOn(null, this)
 
-        this.bg.on("mousedown", (e) => {
-            this.engine.toggle();
-        });
+        this.bunny = new Button('Bunny', 'bunny', 100, 100, 64, 64, () => this.engine.scenes.changeScene('SecondScene'));
 
-        // 2 Go to the second Scene
-        this.bunny = this.engine.getAsset("bunny") as Sprite;
-        this.bunny.width = 64;
-        this.bunny.height = 64;
-        this.bunny.x = 100
-        this.bunny.y = 100
-        this.bunny.anchor.set(0.5);
-        this.bunny.interactive = true;
-        this.addChild(this.bunny);
-        this.bunny.on("mousedown", (e) => {
-            this.engine.scenes.changeScene('SecondScene')
-        });
+        // Timeline for complex animation
+        this.bunny2 = new Button('Bunny2', 'bunny', 200, 200, 128, 128, () => { timeline.play(); });
+        const bunny2Sprite = this.bunny2.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite
+        const timeline = createTimelineAnimation(bunny2Sprite);
+        this.timeline = timeline;
+        timeline.pause()
 
-        //  Go to the Matter Scene
-        this.bunny3 = this.engine.getAsset("bunny") as Sprite;
-        this.bunny3.width = 64;
-        this.bunny3.height = 64;
-        this.bunny3.x = 300
-        this.bunny3.y = 100
-        this.bunny3.anchor.set(0.5);
-        this.bunny3.interactive = true;
-        this.addChild(this.bunny3);
-        this.bunny3.on("mousedown", (e) => {
-            this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2)
+        this.bunny3 = new Button('Bunny3', 'bunny', 300, 100, 64, 64, () => {
+            this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2, { blur: 0 })
             this.engine.time.after(3, () => {
                 this.engine.scenes.changeScene('MatterScene')
             })
         });
 
-        this.bunny4 = this.engine.getAsset("bunny") as Sprite;
-        this.bunny4.width = 64;
-        this.bunny4.height = 64;
-        this.bunny4.x = 500
-        this.bunny4.y = 100
-        this.bunny4.anchor.set(0.5);
-        this.bunny4.interactive = true;
-        this.addChild(this.bunny4);
-        this.bunny4.on("mousedown", (e) => {
-            this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2)
+        this.bunny4 = new Button('Bunny4', 'bunny', 500, 100, 64, 64, () => {
+            this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2, { blur: 0 })
             this.engine.time.after(2, () => {
                 this.engine.scenes.changeScene('GraphicScene')
             })
         });
 
-        this.bunny2 = this.engine.getAsset("bunny") as Sprite;
-        this.bunny2.width = 128;
-        this.bunny2.height = 128;
-        this.bunny2.x = 200
-        this.bunny2.y = 200
-        this.bunny2.anchor.set(0.5);
-        this.bunny2.interactive = true;
-        this.addChild(this.bunny2);
-
-        // Creazione di una timeline per l'animazione complessa
-        const timeline = createTimelineAnimation(this.bunny2);
-        this.timeline = timeline;
-        timeline.pause()
-
-        // Esegui l'animazione
-        this.bunny2.on("mousedown", (e) => {
-            timeline.play();
-        })
-
-        // 3 JSON
+        // 3 Recover JSON from assets cache
         console.log(this.engine.getAsset("test"));
 
-        // 4. SOUNDS (mp3)
+        // 4.Recover SOUNDS (mp3) from assets cache 
         this.engine.sounds.playSound("mp3_test");
 
         // test Storage
@@ -134,6 +87,7 @@ export class FirstScene extends Scene {
         // NOTE:  GSAP ANIMATION MUST BE STOPPED
         this.timeline.kill()
 
+        // Remove scene and its gameObjects and rigidbodies (if present)
         super.onExit()
     }
 
