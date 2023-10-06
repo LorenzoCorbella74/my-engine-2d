@@ -1,7 +1,7 @@
 import { Player } from '../entities/player';
 import { Enemy } from '../entities/enemy';
 
-import { Graphics, Text } from "pixi.js";
+import { Text } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
@@ -9,6 +9,7 @@ import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
 import { RigidBodyComponent } from '../../engine/components/rigidBody';
 
 import { Power2 } from 'gsap'
+import { KeyMapping } from '../../engine/models/key-mapping';
 
 export class SecondScene extends Scene {
 
@@ -48,7 +49,7 @@ export class SecondScene extends Scene {
 
         // PLAYER
         this.player = new Player('Player', 'player')
-        this.player.setPosition(300, 100); // update player container position
+        // this.player.setPosition(300, 100); // update player container position
         // Focus on PLayer
         this.engine.camera.focusOn(this.player, this)
 
@@ -78,7 +79,7 @@ export class SecondScene extends Scene {
     }
 
 
-    onInputChange(inputs: any): void {
+    onInputChange(inputs: KeyMapping): void {
 
         if (this.engine.input.isKeyDown('Z')) {
             this.engine.togleDebug()

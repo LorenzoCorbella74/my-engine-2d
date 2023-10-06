@@ -14,5 +14,9 @@ export type RigidBodyOptions = {
         category?: GroupsValue,
         mask?: number  // Esempio maschera di collisione
     }
-    position?: { x: number, y: number }
+    // the initial position is required
+    position: {
+        x: number,
+        y: number
+    }
 }

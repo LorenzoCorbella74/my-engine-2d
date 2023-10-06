@@ -19,6 +19,7 @@ export class Player extends GameObject {
                 category: GROUP.PLAYER,
                 mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
             },
+            //  inizial position in world coordinates
             position: {
                 x: 0,
                 y: 0

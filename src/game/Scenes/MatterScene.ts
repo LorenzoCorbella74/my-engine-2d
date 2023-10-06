@@ -4,15 +4,17 @@ import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 
-import * as Matter from 'matter-js';
+
 import { GraphicsWithPhisics } from '../../engine/PhysicManager';
 import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
+import { Obstacle } from '../entities/MatterScene/obstacle';
+import { KeyMapping } from '../../engine/models/key-mapping';
 
 export class MatterScene extends Scene {
 
     player!: GameObject;
-    obstacle!: GraphicsWithPhisics;
-    obstacle2!: GraphicsWithPhisics;
+    obstacle!: GameObject;
+    obstacle2!: GameObject;
     crosshair!: Graphics | Sprite;
 
     tilingSprite!: TilingSprite;
@@ -34,8 +36,8 @@ export class MatterScene extends Scene {
         this.addChild(this.tilingSprite);
 
         // test MATTER-JS
-        this.obstacle = this.createObstacle('Obstacle', 100, 50, 200, 100);
-        this.obstacle2 = this.createObstacle('Obstacle2', 300, 450, 200, 100);
+        this.obstacle = new Obstacle('Obstacle', 100, 50, 200, 100);
+        this.obstacle2 = new Obstacle('Obstacle2', 300, 450, 200, 100);
 
         // si definisce il player
         this.player = new Player('Player', 'player')
@@ -55,23 +57,7 @@ export class MatterScene extends Scene {
         this.crosshair = this.engine.crosshair.activateOnCurrentScene(this, this.crosshair);
     }
 
-    private createObstacle(name: string, x: number, y: number, width: number, height: number): GraphicsWithPhisics {
-        let obstacle = new Graphics() as GraphicsWithPhisics;
-        obstacle.beginFill(0xff0000);
-        obstacle.drawRect(x, y, width, height);
-        this.addChild(obstacle);
-        // rigidBody
-        obstacle.rigidBody = Matter.Bodies.rectangle(x + width / 2, y + height / 2, width, height, {
-            isStatic: true,
-            label: name,
-            collisionFilter: {
-                category: GROUP.WALL,
-                mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.ENEMY
-            }
-        });
-        Matter.World.add(this.engine.physics.physicsEngine.world, obstacle.rigidBody);
-        return obstacle
-    }
+
 
     update(delta: number) {
         // rotate player to target
@@ -92,7 +78,7 @@ export class MatterScene extends Scene {
         super.update(delta)
     }
 
-    onInputChange(inputs: any): void {
+    onInputChange(inputs: KeyMapping): void {
         /** TEST GAME SPEED*/
         if (this.engine.input.isKeyDown('M')) {
             // this.engine.time.aminateGameSpeed(2)

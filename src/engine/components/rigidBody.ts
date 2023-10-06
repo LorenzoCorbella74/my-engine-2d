@@ -6,8 +6,9 @@ import { SpriteComponent } from './sprite';
 import { GameObject } from '../GameObject';
 
 import { ComponentNames } from '../models/component-names.enum';
-import { Sprite } from 'pixi.js';
+import { Graphics, Sprite } from 'pixi.js';
 import { RigidBodyOptions } from '../models/rigid-body';
+import { GraphicsComponent } from './graphic';
 
 export const GROUP = {
     DEFAULT: 0x0001,
@@ -33,8 +34,21 @@ export class RigidBodyComponent extends Component {
 
     private createRigidBody(options: RigidBodyOptions) {
         const { shape, isStatic } = options;
-        const { x, y } = options.position || this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite;
-        const { width, height } = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite;
+        let x, y, width, height;
+        if (this.entity.hasComponent(ComponentNames.Sprite)) {
+            const spriteComp = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite
+            x = options.position?.x || 0;
+            y = options.position?.y || 0;
+            width = spriteComp.width;
+            height = spriteComp.height;
+        } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
+            const graphicsComp = this.entity?.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics as Graphics
+            x = options.position?.x || 0;
+            y = options.position?.y || 0;
+            width = graphicsComp.width;
+            height = graphicsComp.height;
+        }
+
         const config = {
             isStatic,
             friction: options.friction || 0.5,  // https://www.medianic.co.uk/getting-started-with-matter-js-the-body-module/
@@ -48,9 +62,9 @@ export class RigidBodyComponent extends Component {
             }
         };
         // Create the  Matter.js BODY according to passed options
-        if (shape === 'rectangle') {
+        if (shape === 'rectangle' && width && height && x !== undefined && y !== undefined) {
             this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, config) as Body;
-        } else if (shape === 'circle') {
+        } else if (shape === 'circle' && width && height && x !== undefined && y !== undefined) {
             this.rigidBody = Bodies.circle(x + width / 2, y + height / 2, width, config) as Body; // TODO
         } else if (shape === 'polygon') {
             // TODO: poligon
@@ -66,7 +80,6 @@ export class RigidBodyComponent extends Component {
         this.entity.x = this.rigidBody.position.x
         this.entity.y = this.rigidBody.position.y
         this.entity.rotation = this.rigidBody.angle;
-
     }
 
     updateSize() {
@@ -86,7 +99,6 @@ export class RigidBodyComponent extends Component {
     setRotation(angle: number) {
         this.rigidBody.angle = angle
     }
-
 }
 
 
