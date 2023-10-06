@@ -1,4 +1,4 @@
-import { Sprite } from 'pixi.js';
+import { DisplayObjectEvents, Sprite } from 'pixi.js';
 import { Component } from './Component';
 import { MyEngine2D } from '../Engine';
 import { RigidBodyComponent } from './rigidBody';
@@ -49,9 +49,17 @@ export class SpriteComponent extends Component {
     setWidthAndHeight(width: number, height: number) {
         this.sprite.width = width;
         this.sprite.height = height;
-        if (this.entity.getComponents(ComponentNames.RigidBody)) {
+        if (this.entity.hasComponent(ComponentNames.RigidBody)) {
             this.entity?.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].updateSize();
         }
+    }
+
+    setInteractive(val: boolean) {
+        this.sprite.interactive = val
+    }
+
+    on(event: keyof DisplayObjectEvents, fn: (...args: any) => void, context?: any) {
+        this.sprite.on(event, fn, context);
     }
 
     hide() {

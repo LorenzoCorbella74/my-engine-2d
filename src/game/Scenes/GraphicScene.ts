@@ -15,6 +15,8 @@ export class GraphicScene extends Scene {
     }
 
     async init() {
+        // center on the middle of the screen
+        this.engine.camera.focusOn(null, this)
         // test GameGraphics
         this.rectangle = new GameGraphics(this).drawRectangle(500, 0, 100, 100)
         this.rectangle.interactive = true
@@ -31,20 +33,11 @@ export class GraphicScene extends Scene {
 
         this.circle = new GameGraphics(this).drawCircle(500, 500, 100)
         this.circle.interactive = true
+
         // test time.cancel
         this.circle.on('pointerdown', () => {
             this.engine.time.cancel(timer)
         })
-
-    }
-
-
-    update(delta: number) {
-        // MyEngine2D.log(MyEngine2D.time.getFrame().toString())
-        // const dt = this.engine.time.getDeltaTime()
-    }
-
-    destroy() {
 
     }
 

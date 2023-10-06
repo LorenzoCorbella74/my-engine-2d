@@ -18,8 +18,6 @@ export class SecondScene extends Scene {
     player!: GameObject;
     enemy1!: GameObject;
 
-    crossHair!: Graphics;
-
     constructor() {
         super(MyEngine2D)
     }
@@ -64,13 +62,7 @@ export class SecondScene extends Scene {
     }
 
     update(delta: number) {
-        // MyEngine2D.log(MyEngine2D.time.getFrame().toString())
-        // const dt = this.engine.time.getDeltaTime()
         this.text.x = Math.sin(this.engine.time.getElapsedTime()) * window.innerWidth / 8;
-
-        // rotate player to target
-        const { x, y } = this.engine.mouse.getMouse();
-        this.crossHair.position.set(x, y);
 
         // UI
         const { x: xp, y: yp } = this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody.position
@@ -81,15 +73,10 @@ export class SecondScene extends Scene {
         // DEBUG
         this.textCoord.visible = this.engine.debug
 
-        this.player.update(delta)
-        this.enemy1.update(delta)
+        // update gameObjects
+        super.update(delta)
     }
 
-    destroy() {
-        // remove sprites
-        this.player.destroy()
-        this.enemy1.destroy()
-    }
 
     onInputChange(inputs: any): void {
 

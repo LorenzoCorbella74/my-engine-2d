@@ -57,16 +57,23 @@ export class PhysicManager {
 
     /* --------------------------------------------------- */
     update() {
-        Engine.update(this.physicsEngine, 1000 / 60)    // TODO: al posto di 60 this.app.ticker.maxFPS ???
+        Engine.update(this.physicsEngine, 1000 / 60) // this.app.ticker.maxFPS
     }
 
-    // Funzione per rimuovere temporaneamente un corpo dal mondo
-    disableCollisions(body: Body,) {
+    /**
+     * Remove temporarily a body from the physics engine
+     * @param body 
+     */
+    disableCollisions(body: Body) {
         // Imposta il gruppo su zero per disabilitare temporaneamente le collisioni
         body.collisionFilter.category = GROUP.DEFAULT;
     }
 
-    // Funzione per riabilitare le collisioni di un corpo
+    /**
+     * Restore the rigid body to a Body
+     * @param body 
+     * @param groups 
+     */
     enableCollisions(body: Body, groups: number) {
         body.collisionFilter.category = groups;
     }
@@ -74,7 +81,7 @@ export class PhysicManager {
     onCollisionStart(event: Matter.IEventCollision<Matter.Engine>) {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
-        console.log(`${bodyA.label} starts collision with ${bodyB.label}.`, bodyA, bodyB)
+        MyEngine2D.log(`${bodyA.label} starts collision with ${bodyB.label}.`, bodyA, bodyB)
         const colisionEvent = new GameEvent<BasePayload, BaseEventType>(
             MyEngine2D.config.events?.Collision,
             MyEngine2D.getObjectByName(bodyA.label)!,
@@ -88,17 +95,22 @@ export class PhysicManager {
     onCollisionActive(event: Matter.IEventCollision<Matter.Engine>) {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
-        console.log(`${bodyA.label} has an active collision with ${bodyB.label}.`, bodyA, bodyB)
+        MyEngine2D.log(`${bodyA.label} has an active collision with ${bodyB.label}.`, bodyA, bodyB)
     }
 
     onCollisionEnd(event: Matter.IEventCollision<Matter.Engine>) {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
-        console.log(`${bodyA.label} ends collision with ${bodyB.label}.`, bodyA, bodyB)
+        MyEngine2D.log(`${bodyA.label} ends collision with ${bodyB.label}.`, bodyA, bodyB)
     }
 
-    // Funzione per verificare la visibilità tra due GameObject
-    hasLineOfSight(fromObj: GameObject /* | GraphicsWithPhisics */, toObj: GameObject /* | GraphicsWithPhisics */): boolean {
+    /**
+     * Line of sight from a body to another
+     * @param fromObj 
+     * @param toObj 
+     * @returns 
+     */
+    hasLineOfSight(fromObj: GameObject, toObj: GameObject): boolean {
         const from = fromObj.getComponents<RigidBodyComponent>('RigidBody')[0];
         const to = fromObj.getComponents<RigidBodyComponent>('RigidBody')[0];
         if (from.rigidBody && to.rigidBody) {
@@ -112,5 +124,4 @@ export class PhysicManager {
         }
         return false;
     }
-
 }

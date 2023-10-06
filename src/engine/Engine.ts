@@ -132,12 +132,12 @@ export class Engine {
         // the loop starts when startLoop is called
         this.app.ticker.maxFPS = 60;
         this.app.ticker.minFPS = 30;
-        this.app.ticker.add((delta) => {
+        this.app.ticker.add((delta) => {        // delta is close to 1
 
             this.time.update()     // updating timers
             this.physics.update()  // updating Matter-js 
 
-            this.scenes.currentScene.update(this.time.getDeltaTime(), delta);     // NOTE: delta è intorno a 1 !!!!!
+            this.scenes.currentScene.update(this.time.getDeltaTime());
             this.events.processEvents()
             this.camera.update();
 

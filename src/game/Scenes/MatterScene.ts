@@ -74,31 +74,22 @@ export class MatterScene extends Scene {
     }
 
     update(delta: number) {
-        // MyEngine2D.log(MyEngine2D.time.getFrame().toString())
-        // const dt = this.engine.time.getDeltaTime()
-
         // rotate player to target
         const { x, y } = this.engine.mouse.getMouse();
         this.crosshair.position.set(x, y);
-
+        // update player and rigidBody rotation
         const playerRigidBody = this.player.getComponents<RigidBodyComponent>('RigidBody')[0]
         const angle = Math.atan2(y - this.player.y, x - this.player.x);
         this.player.rotation = angle;
         playerRigidBody.setRotation(angle)
 
-        this.player.update(delta)
-
-        this.tilingSprite.tilePosition.x = 1
-        this.tilingSprite.tilePosition.y = 1
 
         this.engine.time.runOnFrameNum([1, 30], (frameNumber: number) => {
             // this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
         })
-    }
 
-    destroy() {
-        // remove sprites and rigidBodies
-        this.player.destroy()
+        // update gameObjects
+        super.update(delta)
     }
 
     onInputChange(inputs: any): void {
@@ -133,6 +124,4 @@ export class MatterScene extends Scene {
             this.engine.crosshair.show()
         }
     }
-
-    onExit() { }
 }

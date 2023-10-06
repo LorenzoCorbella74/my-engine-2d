@@ -4,6 +4,8 @@ import { Scene } from "../../engine/Scene";
 import { Game } from '../entities/game';
 
 import { createTimelineAnimation } from './animations/timeline';
+import { Background } from "../entities/FirstScene/background";
+import { GameObject } from "../../engine/GameObject";
 
 export class FirstScene extends Scene {
 
@@ -32,6 +34,7 @@ export class FirstScene extends Scene {
         this.engine.filters.addFilter(this.engine.scenes.currentScene, blurFilter);
 
         // 1 test 
+        // this.bg = new Background('Background', 'bg');
         this.bg = this.engine.getAsset("bg");
         this.bg.width = window.innerWidth;
         this.bg.height = window.innerHeight;
@@ -113,30 +116,25 @@ export class FirstScene extends Scene {
         // 4. SOUNDS (mp3)
         this.engine.sounds.playSound("mp3_test");
 
-        // test Stortage
+        // test Storage
         this.engine.storage.save('test-engine', { lore: 'is ok!' })
-
-
     }
 
-    update(dt: number, delta: number) {
+    update(dt: number) {
         this.bunny.rotation += dt;
+
+        // updates gameObjects
+        super.update(dt)
     }
 
     onExit() {
-
+        // stop sounds
         this.engine.sounds.stopSound("mp3_test");
-    }
 
-    destroy() {
         // NOTE:  GSAP ANIMATION MUST BE STOPPED
         this.timeline.kill()
 
-        // si rimovono tutti i figli
-        const removedChild = this.removeChildren()
-        this.engine.log(this.constructor.name + ' destroyed!: ', removedChild)
-
-        // super.destroy() // si rimuove gli elementi della scena
+        super.onExit()
     }
 
 }

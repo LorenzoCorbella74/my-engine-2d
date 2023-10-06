@@ -1,5 +1,9 @@
 import { Container } from "pixi.js";
 import { Engine } from "./Engine";
+import { GameObject } from "./GameObject";
+import { ComponentNames } from "./models/component-names.enum";
+import { RigidBodyComponent } from "./components/rigidBody";
+import { KeyMapping } from "./models/key-mapping";
 
 export class Scene extends Container {
     constructor(public engine: Engine) {
@@ -12,23 +16,37 @@ export class Scene extends Container {
     async init() { }
 
 
-    // Utilizzare dt per aggiornare gli elementi della scena
-    update(dt: number, delta: number) { }
-
-    onInputChange(inputs: any) {
-        console.log(this.constructor.name, inputs)
+    /**
+     * Update gameObjects (which internally update their components)
+     * @param dt 
+     */
+    update(dt: number) {
+        (this.children as GameObject[]).forEach(child => {
+            if (child instanceof GameObject) {
+                child.update(dt);
+            }
+        })
     }
 
+    onInputChange(inputs: KeyMapping) { }
+
     /**
-     * Clean up and load resources for next scene
+     * Remove scene and its gameObjects and rigidbodies (if present)
      */
     onExit() {
-        super.destroy()
-        console.log(this.constructor.name, ' exit')
+        // remove rigidbody
+        (this.children as GameObject[]).forEach(child => {
+            if (child instanceof GameObject && child.hasComponent(ComponentNames.RigidBody)) {
+                let rigidBody = child.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0]
+                rigidBody.removeRigidBody()
+            }
+        })
+        // destroy scene and game object
+        super.destroy({ children: true });
     }
 
     onResize(width: number, height: number) {
         console.log(this.constructor.name + '  resizing...', width, height)
-        // ogni oggetto dovrebbe essere scalato in caso di ridimensionamento della finestra
+        // resize each gameObject if window is resized
     }
 }

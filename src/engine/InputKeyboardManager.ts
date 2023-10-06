@@ -1,5 +1,5 @@
 import { Application } from "pixi.js";
-import { MyEngine2D as $PE } from "./Engine";
+import { MyEngine2D } from "./Engine";
 import { KeyMapping } from "./models/key-mapping";
 
 export class InputKeyboardManager {
@@ -19,7 +19,7 @@ export class InputKeyboardManager {
             } else if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
                 this.shiftKey = true;
             }
-            $PE.scenes.currentScene.onInputChange(this.keys);
+            MyEngine2D.scenes.currentScene.onInputChange(this.keys);
         });
 
         document.addEventListener('keyup', e => {
@@ -46,7 +46,7 @@ export class InputKeyboardManager {
 
     /**
      * Define the association between the action name and the relative key
-     * TODO: implement UI to set the keyMapping
+     * TODO: implement UI to make the user choose the keyMapping
      * @param keyName Set 
      * @param keyCode 
      */
