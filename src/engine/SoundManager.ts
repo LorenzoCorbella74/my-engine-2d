@@ -1,10 +1,17 @@
 import { Sound } from "@pixi/sound";
+import gsap from "gsap";
 
 export class SoundManager {
 
     private sounds = new Map()
+    private globalVolume: number;
 
-    constructor() {
+    constructor(globalVolume: number = 1) {
+        this.globalVolume = globalVolume;
+    }
+
+    setVolume(volume: number) {
+        this.globalVolume = volume;
     }
 
     /**
@@ -18,13 +25,28 @@ export class SoundManager {
 
     playSound(name: string) {
         if (this.sounds.has(name)) {
-            this.sounds.get(name).play();
+            this.sounds.get(name).play({ volume: this.globalVolume });
         }
     }
 
     stopSound(name: string) {
         if (this.sounds.has(name)) {
             this.sounds.get(name).stop();
+        }
+    }
+
+    fadeInSound(name: string, duration: number = 1) {
+        if (this.sounds.has(name)) {
+            const sound = this.sounds.get(name)
+            sound.play({ volume: 0 });
+            gsap.to(sound, { volume: this.globalVolume, duration });
+        }
+    }
+
+    fadeOutSound(name: string, volume: number = 0, duration: number = 1) {
+        if (this.sounds.has(name)) {
+            // this.sounds.get(name).fade(volume, duration);
+            gsap.to(this.sounds.get(name), { volume, duration });
         }
     }
 
@@ -39,7 +61,7 @@ export class SoundManager {
         }
     }
 
-    setVolume(name: string, volume: number) {
+    setSoundVolume(name: string, volume: number) {
         if (this.sounds.has(name)) {
             this.sounds.get(name).volume = volume;
         }
