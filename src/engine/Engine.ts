@@ -18,6 +18,7 @@ import { PhysicManager } from './PhysicManager'
 import { CrossHairManager } from './CrossHairManager'
 import { FiltersManager } from './FiltersManager'
 import AssetManager from "./AssetManager";
+import { Debug2UIManager } from "./DebugManager";
 
 import { GameObject } from "./GameObject";
 import { State } from "./models/engine-state";
@@ -41,6 +42,7 @@ export class Engine {
     public physics!: PhysicManager
     public crosshair!: CrossHairManager
     public filters!: FiltersManager;
+    private debug2UI!: Debug2UIManager;
 
     private _state: State = 'idle';
     private _debug: boolean = false;
@@ -111,7 +113,8 @@ export class Engine {
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this.app, this.scenes);
         this.loader = new AssetManager(this.sounds);
-        this.physics = new PhysicManager(this.app)
+        this.physics = new PhysicManager(this.app);
+        this.debug2UI = new Debug2UIManager(this.app);
         this.crosshair = new CrossHairManager();
         this.filters = new FiltersManager();
         this.input = new InputKeyboardManager({
@@ -184,6 +187,15 @@ export class Engine {
     warn(message: string, ...other: any) {
         if (!import.meta.env.DEV) return;
         console.warn(this.engineLogPrefix + message, ...other)
+    }
+
+    error(message: string, ...other: any) {
+        if (!import.meta.env.DEV) return;
+        console.error(this.engineLogPrefix + message, ...other)
+    }
+
+    log2UI(message: string) {
+        this.debug2UI.log2Screen(message)
     }
 
     /**
