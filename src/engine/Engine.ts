@@ -19,6 +19,7 @@ import { CrossHairManager } from './CrossHairManager'
 import { FiltersManager } from './FiltersManager'
 import AssetManager from "./AssetManager";
 import { Debug2UIManager } from "./DebugManager";
+import { ParticleManager } from "./ParticleManager";
 
 import { GameObject } from "./GameObject";
 import { State } from "./models/engine-state";
@@ -43,6 +44,7 @@ export class Engine {
     public crosshair!: CrossHairManager
     public filters!: FiltersManager;
     private debug2UI!: Debug2UIManager;
+    public emitter!: ParticleManager
 
     private _state: State = 'idle';
     private _debug: boolean = false;
@@ -115,6 +117,7 @@ export class Engine {
         this.loader = new AssetManager(this.sounds);
         this.physics = new PhysicManager(this.app);
         this.debug2UI = new Debug2UIManager(this.app);
+        this.emitter = new ParticleManager(this.app);
         this.crosshair = new CrossHairManager();
         this.filters = new FiltersManager();
         this.input = new InputKeyboardManager({
@@ -135,20 +138,22 @@ export class Engine {
         // the loop starts when startLoop is called
         this.app.ticker.maxFPS = 60;
         this.app.ticker.minFPS = 30;
-        this.app.ticker.add((delta) => {        // delta is close to 1
-
-            this.time.update()     // updating timers
-            this.physics.update()  // updating Matter-js 
+        this.app.ticker.add((delta) => {                    // delta is close to 1
+            this.time.update()                              // updating timers
+            this.emitter.update(this.time.getDeltaTime())   // updating particles
+            this.physics.update()                           // updating Matter-js 
 
             this.scenes.currentScene.update(this.time.getDeltaTime());
-            this.events.processEvents()
-            this.camera.update();
+            this.events.processEvents()                     // dispatching events
+            this.camera.update();                           // updating camera
 
             this.time.runOnFrameNum([1, 30], (frame: number) => {
-                this.logic.update()
+                this.logic.update()                         // check game logic
             })
         });
     }
+
+    /* -------------------------- LOOP -------------------------- */
 
     startLoop() {
         this.app.ticker.start();
@@ -170,14 +175,16 @@ export class Engine {
             this.state = 'running';
         }
     }
-
-    togleDebug() {
-        this._debug = !this._debug
-    }
+    /* -------------------------- DEBUG -------------------------- */
 
     get debug() {
         return this._debug
     }
+    togleDebug() {
+        this._debug = !this._debug
+    }
+
+    /* -------------------------- LOGS -------------------------- */
 
     log(message: string, ...other: any) {
         if (!import.meta.env.DEV) return;
@@ -195,6 +202,7 @@ export class Engine {
     }
 
     log2UI(message: string) {
+        if (!import.meta.env.DEV) return;
         this.debug2UI.log2Screen(message)
     }
 
