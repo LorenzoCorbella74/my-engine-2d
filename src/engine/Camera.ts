@@ -1,9 +1,12 @@
 import * as PIXI from "pixi.js";
-import gsap from 'gsap';
 
 import { GameObject } from './GameObject'
 import { SceneManager } from "./SceneManager";
 import { Scene } from "./Scene";
+import { MyEngine2D } from "./Engine";
+
+
+type Point = { x: number; y: number };
 
 
 export class Camera {
@@ -20,8 +23,14 @@ export class Camera {
     shakeAmplitude: number;
     shakeStartTime: number;
 
-    constructor(app: PIXI.Application, public sceneManager: SceneManager) {
-        this.app = app;
+    // TODO
+    startPoint: Point = { x: 0, y: 0 };
+    controlPoint1: Point = { x: 100, y: 200 };
+    controlPoint2: Point = { x: 200, y: 200 };
+    endPoint: Point = { x: 240, y: 100 };
+
+    constructor(public engine: typeof MyEngine2D, public sceneManager: SceneManager) {
+        this.app = engine.app;
         this.target = null; // The FOCUS of the camera
 
         this.zoomLevel = 1;
@@ -84,12 +93,88 @@ export class Camera {
      * @param duration  duration in sec to reach the desired zoom
      */
     zoomTo(targetZoom: number, duration: number, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
-        gsap.to(this, {
-            zoomLevel: targetZoom,
-            duration: duration,
-            ease: ease,
-            ...callback ? { onComplete: callback } : null
-        });
+        this.engine.animation.aminateOneObjectProperty(this, "zoomLevel", targetZoom, duration, ease, callback);
+    }
+
+
+    // calcola la posizione del punto tra 0 e 1
+    private getBezierPoint(t: number) {
+        const invT = 1 - t;
+        const x = invT * invT * invT * this.startPoint.x +
+            3 * invT * invT * t * this.controlPoint1.x +
+            3 * invT * t * t * this.controlPoint2.x +
+            t * t * t * this.endPoint.x;
+        const y = invT * invT * invT * this.startPoint.y +
+            3 * invT * invT * t * this.controlPoint1.y +
+            3 * invT * t * t * this.controlPoint2.y +
+            t * t * t * this.endPoint.y;
+        return { x, y };
+    }
+
+    animateOnBezierCurve(start: Point, controlOne: Point, controlTwo: Point, end: Point, callback: () => void = () => { }) {
+        this.startPoint = start;
+        this.controlPoint1 = controlOne;
+        this.controlPoint2 = controlTwo;
+        this.endPoint = end;
+        // POINT
+        const point = new PIXI.Graphics();
+        point.lineStyle(0); // draw a circle, set the lineStyle to zero so the circle doesn't have an outline
+        point.beginFill(0xDE3249, 1);
+        point.drawCircle(0, 0, 5);
+        point.endFill();
+        point.visible = false;
+        this.app.stage.addChild(point);
+
+        /* BEZIER CURVE */
+        const realPath = new PIXI.Graphics();
+        realPath.lineStyle(2, 0xFFFFFF, 1);
+        realPath.moveTo(this.startPoint.x, this.startPoint.y);
+        realPath.lineTo(this.controlPoint1.x, this.controlPoint1.y);
+        realPath.lineTo(this.controlPoint2.x, this.controlPoint2.y);
+        realPath.lineTo(this.endPoint.x, this.endPoint.y);
+        realPath.position.x = this.startPoint.x;
+        realPath.position.y = this.startPoint.y;
+        realPath.visible = false;
+        this.app.stage.addChild(realPath);
+
+        const bezier = new PIXI.Graphics();
+        bezier.lineStyle(1, 0xAA0000, 1);
+        bezier.bezierCurveTo(
+            this.controlPoint1.x,
+            this.controlPoint1.y,
+            this.controlPoint2.x,
+            this.controlPoint2.y,
+            this.endPoint.x,
+            this.endPoint.y
+        );
+        // punto iniziale
+        bezier.position.x = this.startPoint.x;
+        bezier.position.y = this.startPoint.y;
+        bezier.visible = false;
+        this.app.stage.addChild(bezier);
+        let dt = 0
+        const delta = 0.016
+        let sign = 1
+
+        this.app.ticker.add(one => {
+            if (this.engine.debug) {
+                bezier.visible = true;
+                realPath.visible = true;
+                point.visible = true;
+            } else {
+                bezier.visible = false;
+                realPath.visible = false;
+                point.visible = false;
+            }
+            // TODO: si inverte....
+            if (dt < 0 || dt > 1) {
+                sign = -sign
+                callback()
+            }
+            dt += delta * sign
+            let { x, y } = this.getBezierPoint(dt);
+            this.target?.position.set(x, y)
+        })
     }
 
     // TODO

@@ -24,6 +24,7 @@ import { ParticleManager } from "./ParticleManager";
 import { GameObject } from "./GameObject";
 import { State } from "./models/engine-state";
 import { GameConfig } from "./models/config";
+import { AnimationManager } from "./AnimationManager";
 
 export class Engine {
     app!: Application<ICanvas>;
@@ -45,6 +46,7 @@ export class Engine {
     public filters!: FiltersManager;
     private debug2UI!: Debug2UIManager;
     public emitter!: ParticleManager
+    public animation!: AnimationManager
 
     private _state: State = 'idle';
     private _debug: boolean = false;
@@ -109,12 +111,13 @@ export class Engine {
 
         this.storage = new StorageDB(config.storagePrefix);
         this.sounds = new SoundManager();
-        this.time = new TimeManager(this.app);
+        this.animation = new AnimationManager();
+        this.time = new TimeManager(this);
         this.logic = new GameLogic()
         this.events = new EventManager(this);
         this.mouse = new InputMouseManager(this.app);
         this.scenes = new SceneManager(this.app, this.config);
-        this.camera = new Camera(this.app, this.scenes);
+        this.camera = new Camera(this, this.scenes);
         this.loader = new AssetManager(this.sounds);
         this.physics = new PhysicManager(this.app);
         this.debug2UI = new Debug2UIManager(this.app);

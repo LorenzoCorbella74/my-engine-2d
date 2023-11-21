@@ -9,7 +9,6 @@ import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
 import { RigidBodyComponent } from '../../engine/components/rigidBody';
 
 import { Power2 } from 'gsap'
-import { KeyMapping } from '../../engine/models/key-mapping';
 
 export class SecondScene extends Scene {
 

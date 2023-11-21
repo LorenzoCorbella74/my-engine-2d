@@ -17,6 +17,7 @@ export const Config: GameConfig = {
         'DOWN': 's',
         'RIGHT': 'd',
         'LEFT': 'a',
+        'DEBUG': 'i',
         'Z': 'z',       // ZOOM IN
         'X': 'x',       // ZOOM OUT
         'N': 'n',       // ZOOM TO
@@ -24,7 +25,6 @@ export const Config: GameConfig = {
         'O': 'o',       // Change camera focus
         'E': 'e',       // TEST send event
         'R': 'r',       // TEST send event to group
-        'DEBUG': 'i'    // for debug.... :-)
     },
     // place your events here...
     events: {
