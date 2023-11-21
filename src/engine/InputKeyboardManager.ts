@@ -1,5 +1,4 @@
 import { Application } from "pixi.js";
-import { MyEngine2D } from "./Engine";
 import { KeyMapping } from "./models/key-mapping";
 
 export class InputKeyboardManager {
@@ -29,7 +28,6 @@ export class InputKeyboardManager {
         } else if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
             this.shiftKey = true;
         }
-        // MyEngine2D.scenes.currentScene?.onInputChange(this.keys);
     }
 
     handleKeyUp(e: KeyboardEvent) {

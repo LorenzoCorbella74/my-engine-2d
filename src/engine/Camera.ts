@@ -4,10 +4,7 @@ import { GameObject } from './GameObject'
 import { SceneManager } from "./SceneManager";
 import { Scene } from "./Scene";
 import { MyEngine2D } from "./Engine";
-
-
-type Point = { x: number; y: number };
-
+import { Point } from "./models/vectors";
 
 export class Camera {
 
@@ -152,11 +149,10 @@ export class Camera {
         bezier.position.y = this.startPoint.y;
         bezier.visible = false;
         this.app.stage.addChild(bezier);
-        let dt = 0
-        const delta = 0.016
-        let sign = 1
+        let elapsed = 0
+        const delta = this.engine.time.getDeltaTime();
 
-        this.app.ticker.add(one => {
+        const onTick = () => {
             if (this.engine.debug) {
                 bezier.visible = true;
                 realPath.visible = true;
@@ -166,15 +162,16 @@ export class Camera {
                 realPath.visible = false;
                 point.visible = false;
             }
-            // TODO: si inverte....
-            if (dt < 0 || dt > 1) {
-                sign = -sign
+            if (elapsed > 1) {
                 callback()
+                this.app.ticker.remove(onTick);
             }
-            dt += delta * sign
-            let { x, y } = this.getBezierPoint(dt);
+            elapsed += delta
+            let { x, y } = this.getBezierPoint(elapsed);
             this.target?.position.set(x, y)
-        })
+        }
+
+        this.app.ticker.add(onTick)
     }
 
     // TODO
