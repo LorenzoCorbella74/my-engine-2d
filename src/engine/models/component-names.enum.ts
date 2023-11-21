@@ -4,5 +4,6 @@ export enum ComponentNames {
     RigidBody = 'RigidBody',
     Health = 'Health',
     InputController = 'InputController',
+    BoundingBox='BoundingBox',
     Script = 'Script'
 }

@@ -3,7 +3,7 @@ import { Engine } from "./Engine";
 import { GameObject } from "./GameObject";
 import { ComponentNames } from "./models/component-names.enum";
 import { RigidBodyComponent } from "./components/rigidBody";
-import { KeyMapping } from "./models/key-mapping";
+/* import { KeyMapping } from "./models/key-mapping"; */
 
 export class Scene extends Container {
     constructor(public engine: Engine) {
@@ -28,7 +28,7 @@ export class Scene extends Container {
         })
     }
 
-    onInputChange(inputs: KeyMapping) { }
+    /* onInputChange(inputs: KeyMapping) { } */
 
     /**
      * Remove scene and its gameObjects and rigidbodies (if present)

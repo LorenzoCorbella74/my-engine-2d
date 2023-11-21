@@ -169,17 +169,27 @@ export class TimeManager {
         });
     }
 
+    /**
+     * 
+     * @param context the object to animate
+     * @param property the property
+     * @param amount  the final value of the property
+     * @param duration 
+     * @param ease 
+     * @param onComplete 
+     */
     aminateOneObjectProperty<T>(
         context: T,
         property: string,
         amount: number,
         duration: number = 1,
+        ease: string = "easeInOut",
         onComplete: () => void = () => { }
     ) {
         gsap.to(context as gsap.TweenTarget, {
             [property]: amount,
             duration,
-            ease: 'easeInOut',
+            ease,
             onComplete: onComplete,
         });
     }

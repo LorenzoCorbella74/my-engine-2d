@@ -41,17 +41,16 @@ export class GraphicScene extends Scene {
 
     }
 
-    onInputChange(inputs: KeyMapping): void {
-
+    update(dt: number): void {
         // test time.after
-        if (this.engine.input.isKeyDown('M')) {
+        if (this.engine.input.iskeyDownOnce('M')) {
             this.engine.time.after(1, () => {
                 this.engine.log('Fn has been called after 1 seconds')
             })
         }
 
         // test time.script
-        if (this.engine.input.isKeyDown('E')) {
+        if (this.engine.input.iskeyDownOnce('E')) {
             this.engine.time.script(async (wait) => {
                 this.engine.log('Fn has been called after 0 seconds')
                 await wait(1)
@@ -64,12 +63,12 @@ export class GraphicScene extends Scene {
         }
 
         // test time.during
-        if (this.engine.input.isKeyDown('R')) {
+        if (this.engine.input.iskeyDownOnce('R')) {
             this.engine.time.during(1, () => {
                 this.engine.log('Fn has been called for 1 seconds')
             }, () => {
                 this.engine.log('Test time.during completes succesfully')
             })
         }
-    }
+    }   
 }

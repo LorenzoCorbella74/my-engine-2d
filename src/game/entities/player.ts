@@ -4,6 +4,7 @@ import { SpriteComponent } from '../../engine/components/sprite';
 import { HealthComponent } from '../../engine/components/health';
 import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
 import { InputController } from '../../engine/components/input-controller';
+import { BoundingBoxComponent } from '../../engine/components/bounding-box';
 
 @GameNode()
 export class Player extends GameObject {
@@ -26,5 +27,6 @@ export class Player extends GameObject {
             }
         }))
         this.addComponent(new InputController(this, 150));
+        this.addComponent(new BoundingBoxComponent(this));
     }
 }
