@@ -64,8 +64,9 @@ export class Engine {
                this.scenes.currentScene?.onResize?.(innerWidth, innerHeight);
            }); */
         }
-
     }
+
+    /* -------------------------- GAME STATE -------------------------- */
 
     get state(): State {
         return this._state;
@@ -84,8 +85,8 @@ export class Engine {
         gsap.registerPlugin(PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
 
-        document.title = config.name || 'MY-ENGINE-2D';  // name of the game
-        this.engineLogPrefix = "[MY-ENGINE-2D]: " || config.engineLogPrefix;
+        document.title = config.name || 'MY-ENGINE-2D';                         // name of the game
+        this.engineLogPrefix = "[MY-ENGINE-2D]: " || config.engineLogPrefix;    // log prefix
 
         this.config = config;
 
@@ -205,6 +206,8 @@ export class Engine {
         if (!import.meta.env.DEV) return;
         this.debug2UI.log2Screen(message)
     }
+
+    /* -------------------------- PROXIED METHODS -------------------------- */
 
     /**
      * Get the pre-loaded assets (both img and .json)

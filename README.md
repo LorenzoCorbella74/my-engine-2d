@@ -4,6 +4,7 @@ I have always been fascinated by video game engines and my-engine-2d is my effor
 
 - [Pixijs v.7.2](https://pixijs.com/) for rendering,
 - [Pixi Sounds v.5](https://pixijs.io/sound/examples/index.html) for sounds,
+- [Pixi Particle Emitter v.5.0.8](https://github.com/pixijs/particle-emitter) for particles,
 - [GSAP V3 + pixiPlugin](https://greensock.com/docs/v3/Plugins/PixiPlugin) for animations,
 - [Matter-js](https://github.com/liabru/matter-js/tree/master) for physics,
 - [Vite](https://vitejs.dev/) for fast builds and HMR,
