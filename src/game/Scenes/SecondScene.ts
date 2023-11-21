@@ -76,40 +76,36 @@ export class SecondScene extends Scene {
 
         // update gameObjects
         super.update(delta)
-    }
 
-
-    onInputChange(inputs: KeyMapping): void {
-
-        if (this.engine.input.isKeyDown('Z')) {
+        if (this.engine.input.iskeyDownOnce('Z')) {
             this.engine.togleDebug()
         }
-        if (this.engine.input.isKeyDown('X')) {
+        if (this.engine.input.iskeyDownOnce('X')) {
             // TODO:
         }
-        if (this.engine.input.isKeyDown('N')) {
+        if (this.engine.input.iskeyDownOnce('N')) {
             this.engine.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
         }
 
         // test zoomTo
-        if (this.engine.input.isKeyDown('M')) {
+        if (this.engine.input.iskeyDownOnce('M')) {
             const ease = Power2.easeOut; // "bounce.out", "expo.out"  "elastic.out(1, 0.3)" 
             this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? this.engine.camera.zoomLevel - 0.5 : this.engine.camera.zoomLevel + 0.5,
                 2, ease);
         }
 
         // test change camera target
-        if (this.engine.input.isKeyDown('O')) {
+        if (this.engine.input.iskeyDownOnce('O')) {
             const target = this.engine.camera.target?.name === 'Player' ? this.enemy1 : this.player
             this.engine.camera.focusOn(target, this)
         }
 
         // test event to single entity
-        if (this.engine.input.isKeyDown('E')) {
+        if (this.engine.input.iskeyDownOnce('E')) {
             this.engine.events.sendEvent(new GameEvent(this.engine.config.events?.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
         }
         // test event to group of entity
-        if (this.engine.input.isKeyDown('R')) {
+        if (this.engine.input.iskeyDownOnce('R')) {
             this.engine.events.sendEvent(new GameEventForGroup('Enemy', this.engine.config.events?.Pickup, this.player, { test: 'test GameEventForGroup' }))
         }
     }

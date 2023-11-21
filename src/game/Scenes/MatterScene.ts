@@ -4,8 +4,6 @@ import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 
-
-import { GraphicsWithPhisics } from '../../engine/PhysicManager';
 import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
 import { Obstacle } from '../entities/MatterScene/obstacle';
 import { KeyMapping } from '../../engine/models/key-mapping';
@@ -60,6 +58,11 @@ export class MatterScene extends Scene {
 
 
     update(delta: number) {
+
+
+        
+
+
         // rotate player to target
         const { x, y } = this.engine.mouse.getMouse();
         this.crosshair.position.set(x, y);
@@ -76,37 +79,51 @@ export class MatterScene extends Scene {
 
         // update gameObjects
         super.update(delta)
-    }
 
-    onInputChange(inputs: KeyMapping): void {
-        /** TEST GAME SPEED*/
-        if (this.engine.input.isKeyDown('M')) {
+        if(this.engine.input.iskeyDownOnce('O')){
+            this.engine.log("the 'O' key has been pressed....")
+            this.engine.log2UI(`the 'O' key has been pressed....${Math.floor(Math.random()*10000)}`)
+        }
+
+        if(this.engine.input.iskeyDownOnce('DEBUG')){
+            this.engine.log("Debug mode active ....")
+            this.engine.togleDebug()
+        } 
+
+         /** TEST GAME SPEED*/
+         if (this.engine.input.iskeyDownOnce('M')) {
             // this.engine.time.aminateGameSpeed(2)
-            this.engine.time.aminateOneObjectProperty(this.engine.time, 'gameSpeed', 2, 3, () => {
+            this.engine.time.aminateOneObjectProperty(this.engine.time, 'gameSpeed', 2, 3, undefined, () => {
                 this.engine.log('GameSpeed animation completed!')
             })
         }
         /* TEST GAME SPPED CHANGE */
-        if (this.engine.input.isKeyDown('E')) {
+        if (this.engine.input.iskeyDownOnce('E')) {
             this.engine.time.setGameSpeed(this.engine.time.getGameSpeed() / 2)
         }
-        if (this.engine.input.isKeyDown('R')) {
+        if (this.engine.input.iskeyDownOnce('R')) {
             this.engine.time.setGameSpeed(this.engine.time.getGameSpeed() * 2)
         }
         // TEST enable/disable COLLISION
-        if (this.engine.input.isKeyDown('Z')) {
+        if (this.engine.input.iskeyDownOnce('Z')) {
             this.engine.physics.disableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody)
         }
-        if (this.engine.input.isKeyDown('X')) {
+
+        if (this.engine.input.iskeyDownOnce('X')) {
             const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM;
             this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
         }
 
+
+        /* if(this.engine.input.iskeyDownOnceButNotInPreviousFrame('O')){
+            this.engine.log("the 'O' key has been pressed....")
+        } */
+
         /* test crosshair */
-        if (this.engine.input.isKeyDown('O')) {
+        if (this.engine.input.iskeyDownOnce('O')) {
             this.engine.crosshair.hide()
         }
-        if (this.engine.input.isKeyDown('N')) {
+        if (this.engine.input.iskeyDownOnce('N')) {
             this.engine.crosshair.show()
         }
     }

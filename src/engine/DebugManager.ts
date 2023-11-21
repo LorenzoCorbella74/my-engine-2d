@@ -6,7 +6,7 @@ export class Debug2UIManager {
     private displayDuration: number;
     private displayTimer: number | undefined;
 
-    constructor(app: Application, displayDuration: number = 1250) {
+    constructor(app: Application, displayDuration: number = 750) {
         this.displayDuration = displayDuration;
 
         this.debugText = new Text('', {
