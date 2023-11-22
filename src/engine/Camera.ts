@@ -20,11 +20,11 @@ export class Camera {
     shakeAmplitude: number;
     shakeStartTime: number;
 
-    // TODO
+    // BEZIER CURVE POINTS
     startPoint: Point = { x: 0, y: 0 };
-    controlPoint1: Point = { x: 100, y: 200 };
-    controlPoint2: Point = { x: 200, y: 200 };
-    endPoint: Point = { x: 240, y: 100 };
+    controlPoint1: Point = { x: 0, y: 0 };
+    controlPoint2: Point = { x: 0, y: 0 };
+    endPoint: Point = { x: 0, y: 0 };
 
     constructor(public engine: typeof MyEngine2D, public sceneManager: SceneManager) {
         this.app = engine.app;
@@ -85,12 +85,27 @@ export class Camera {
     }
 
     /**
-     * 
-     * @param targetZoom level of zoom (ddefault 1)
-     * @param duration  duration in sec to reach the desired zoom
+     * Zooms to the target zoom level with optional duration, ease, and callback.
+     *
+     * @param {number} targetZoom - The target zoom level to zoom to.
+     * @param {number} duration - The duration of the zoom animation in seconds. Defaults to 1.
+     * @param {string | gsap.EaseFunction} ease - The easing function to use for the zoom animation. Defaults to "none".
+     * @param {() => void} callback - The callback function to be called after the zoom animation is complete. Defaults to an empty function.
      */
-    zoomTo(targetZoom: number, duration: number, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
-        this.engine.animation.aminateOneObjectProperty(this, "zoomLevel", targetZoom, duration, ease, callback);
+    zoomTo(targetZoom: number, duration: number = 1, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
+        this.engine.animation.aminateOneObjectProperty('camera-zoom', this, { "zoomLevel": targetZoom }, duration, ease, callback);
+    }
+
+    /**
+ * Moves the camera to the specified point. TODO: testare!!
+ *
+ * @param {Point} point - The point to move to.
+ * @param {number} [duration=1] - The duration of the animation in seconds.
+ * @param {string | gsap.EaseFunction} [ease="none"] - The easing function for the animation.
+ * @param {() => void} [callback=() => {}] - The callback function to be called after the animation completes.
+ */
+    moveTo(point: Point, duration: number = 1, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
+        this.engine.animation.aminateOneObjectProperty('camera-move', this, point, duration, ease, callback);
     }
 
 
@@ -108,6 +123,15 @@ export class Camera {
         return { x, y };
     }
 
+    /**
+ * Animate the camera on a bezier curve. TODO: testare!!
+ *
+ * @param {Point} start - The starting point of the curve.
+ * @param {Point} controlOne - The first control point of the curve.
+ * @param {Point} controlTwo - The second control point of the curve.
+ * @param {Point} end - The ending point of the curve.
+ * @param {() => void} callback - An optional callback function to be called when the animation is complete.
+ */
     animateOnBezierCurve(start: Point, controlOne: Point, controlTwo: Point, end: Point, callback: () => void = () => { }) {
         this.startPoint = start;
         this.controlPoint1 = controlOne;
@@ -174,28 +198,28 @@ export class Camera {
         this.app.ticker.add(onTick)
     }
 
-    // TODO
-    /* isGameObjectVisibleInCamera(
-        gameObjectX: number,
-        gameObjectY: number,
-        gameObjectWidth: number,
-        gameObjectHeight: number
-    ): boolean {
+    /**
+  * Determines if a game object is visible within the camera view.      TODO: testare!!
+  *
+  * @param {T} gameObject - The game object to check for visibility.
+  *                        It must have properties x, y, width, and height.
+  * @return {boolean} - True if the game object is visible in the camera, false otherwise.
+  */
+    isGameObjectVisibleInCamera<T extends { x: number, y: number, width: number, height: number }>(gameObject: T): boolean {
+        const { x, y, width, height } = gameObject;
         // Calcola le coordinate del bordo destro e inferiore del GameObject
-        const gameObjectRight = gameObjectX + gameObjectWidth;
-        const gameObjectBottom = gameObjectY + gameObjectHeight;
+        const gameObjectRight = x + width;
+        const gameObjectBottom = y + height;
         // Controlla se il GameObject è completamente fuori a sinistra, a destra, sopra o sotto la telecamera
-        if (
-            gameObjectX > cameraX + cameraWidth ||
-            gameObjectRight < cameraX ||
-            gameObjectY > cameraY + cameraHeight ||
-            gameObjectBottom < cameraY
+        if (this.target &&
+            (x > this.target.x + this.target?.width ||
+                gameObjectRight < this.target.x ||
+                y > this.target.y + this.target.height ||
+                gameObjectBottom < this.target.y)
         ) {
-            // Il GameObject non è visibile nella telecamera
             return false;
         }
-        // Se non è completamente fuori dalla telecamera, allora è visibile
         return true;
-    } */
+    }
 
 }

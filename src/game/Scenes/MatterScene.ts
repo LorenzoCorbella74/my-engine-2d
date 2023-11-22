@@ -90,7 +90,7 @@ export class MatterScene extends Scene {
 
         /** TEST GAME SPEED*/
         if (this.engine.input.iskeyDownOnce('M')) {
-            this.engine.animation.aminateOneObjectProperty(this.engine.time, 'gameSpeed', 2, 3, undefined, () => {
+            this.engine.animation.aminateOneObjectProperty('game-time', this.engine.time, { gameSpeed: 2 }, 3, undefined, () => {
                 this.engine.log('GameSpeed animation completed!')
             })
         }

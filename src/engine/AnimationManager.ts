@@ -12,20 +12,35 @@ export class AnimationManager {
      * @param onComplete 
      */
     aminateOneObjectProperty<T>(
+        id: string,
         context: T,
-        property: string,
-        amount: number,
+        change: { [key: string]: number },
         duration: number = 1,
         ease: string | gsap.EaseFunction = "easeInOut",
         onComplete: () => void = () => { }
     ) {
         const tween = gsap.to(context as gsap.TweenTarget, {
-            [property]: amount,
+            id,
+            ...change,
             duration,
             ease,
             onComplete: onComplete,
         });
         return tween;
+
+        /* 
+        
+            gsap.isTweening(context) per vedere se sul contesto è attivo un tween 
+            tween.isActive() per vedere se il tween è attivo
+            
+            gsap.killTweensOf(context, 'prop1.prop2') per killare il tween o solo certe properità
+            gsap.getTweensOf(context, ) per ottenere tutti i tween sul contesto
+            gsap.getById(id) per ottenere un tween per id
+
+            gsap.kill() per killare tutti i tween
+            gsap.kill(null, 'prop1.prop2') per killare solo certe prop di tutti i tween
+        
+        */
     }
 }
 

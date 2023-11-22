@@ -161,7 +161,7 @@ export class TimeManager {
     }
 
     aminateGameSpeed(amount: number, duration: number = 1, ease: string = "easeInOut", completeCallback: () => void = () => { }) {
-        this.engine.animation.aminateOneObjectProperty(this, 'gameSpeed', amount, duration, ease, completeCallback);
+        this.engine.animation.aminateOneObjectProperty('game-speed', this, { gameSpeed: amount }, duration, ease, completeCallback);
     }
 
     /**
