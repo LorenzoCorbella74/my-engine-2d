@@ -49,7 +49,7 @@ export class InputKeyboardManager {
     }
 
     /**
-       * Check if a key has been pressed in the current frame (and was not pressed on the previous frame)
+       * Check if a key has been pressed in the current frame (and was not pressed on the previous)
      * @param keyName the mapped key
      * @returns boolean
      */

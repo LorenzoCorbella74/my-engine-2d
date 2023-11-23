@@ -16,15 +16,14 @@ The engine provides a series of classes, contained in the `engine` folder, that 
 
 ## Asset Manager
 
-It is possible to load asincronously the resources placed in the assets folder in the relevant sub folder (audio for audio files, img for textures, data for json).
+It is possible to load asincronously the resources placed in the assets folder and subdivided in group folder. Each folder can contain specific scene resources organised in sub folders (`audio` for audio files, `img` for textures, `data` for json).
 
 ```typescript
 // load in the init() fn of your scene
-await this.engine.loader.loadAssetsGroup('groupOne')   // groupOne is the folder in assets/groupOne with
+await this.engine.loader.loadAssetsGroup("sceneOne"); // "sceneOne" is the name of the folder in /assets
 
-// get the asset
-this.engine.getAsset(<asset-name>)  // use as aaset name the name of the file without the extension
-
+// get the sprite
+this.engine.getAsset("rocket-launcher"); // use as asset name the name of the file without the extension
 ```
 
 ## GameObject Architecture and ECS
@@ -35,8 +34,8 @@ The "Gameobject" extends the PIXI.Container, and being the "Entity" is composed 
 
 - sprite component
 - rigidbody component to manage collision of rigid bodies
-- script component
-- input-controller component.
+- script component to manage custom logic
+- input-controller component to manage the entity via user inputs
 
 ```typescript
 @GameNode()
@@ -90,8 +89,6 @@ export class Scene extends Container {
 
   update(dt: number, delta: number) {}
 
-  onInputChange(inputs: any) {}
-
   /**
    * Clean up and load resources for next scene
    */
@@ -104,26 +101,49 @@ export class Scene extends Container {
 }
 ```
 
+## Keyboard and Mouse Input Manager
+
+Just track the user input with:
+
+- `iskeyDown(key)` to check CONTINUOSLY if a key has been pressed
+- `iskeyDownOnce(key)` to check if a key has been pressed in the current frame (and was not pressed on the previous)
+
 ## Camera Manager
 
-It's possible to focus the camera on a specific entity with the `focusOn(element: GameObject, currentScene: Scene)` method and animate the focus with the `zoomTo(targetZoom, duration)` method.
+The camera class allows to:
 
-## Time Manager
+- make the camera follow a gameObject with `focusOn(element: GameObject, currentScene: Scene)`
+- animate the camera with the `zoomTo(targetZoom, duration, ease, callback)` method.
+- move the camera with `moveTo(point: Point, duration, ease, callback)`
+- animate on a bezier curve with `animateOnBezierCurve(start: Point, controlOne: Point, controlTwo: Point, end: Point, callback)`
+- shake camera with `shake(duration: number, amplitude: number)`
 
-It's possible to set the game speed with the `setGameSpeed(speed: number)` and manage timers with several methods.
+## Time Manager and Timers
+
+It's possible to manage the game speed with the `setGameSpeed(speed)` and manage timers with the following methods:
+
+- Run a function after a certain delay with the method `after(delay, fn)`
+- Add a function that will be called count times every delay seconds with the method `every(delay, callback, repeat)`
+- Run a function only during specific frames with `runOnFrameNum(frameNumbers, fn)`
 
 ## Event Manager
 
-It's possible to send events to gameObject or to gameObject groups with the `sendEvent(GameEvent<BasePayload> | GameEventForGroup<BasePayload>)` method: the class GameObject implements the method `onEventHandler(event)` to listen to events.
+It's possible to send events to gameObject or to gameObject groups with the method`sendEvent(GameEvent<BasePayload> | GameEventForGroup<BasePayload>)`.
+
+The class GameObject implements the method `onEventHandler(event)` to listen to events.
+
+## Localization
+
+The engine provide a sinple class to manage locale translations. Put in the assets folder a folder called `i18n` or configure its name in the configuration object and the engine will load the relevant json files on engine bootstrap. The default locale is the `navigator.language` so use as names of the .json files appropiate names.
 
 ### Utils
 
-- [x] Keyboard and mouse management
 - [x] Object pool
 - [x] Storage in localstorage
 - [x] Basic Game Logic class for win/lose conditions
 - [x] CrossHair management
-- [x] PIXI Filters management
+- [x] PIXI Filters management in dedicated class
+- [x] PIXI Particles in dedicated class
 
 # Usage
 
@@ -148,6 +168,8 @@ export const Config = {
   name: "My Game",
   scenes: [FirstScene, SecondScene], // the first is the start Scene
   storagePrefix: "my-game_",
+  // defaultLocale: 'en',
+  // localeFolder: 'i18n',
   input: {
     UP: "w",
     DOWN: "s",

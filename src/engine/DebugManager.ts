@@ -19,7 +19,6 @@ export class Debug2UIManager {
 
     log2Screen(message: string) {
         this.messageQueue.push(message);
-
         if (!this.displayTimer) {
             this.getMsg();
         }

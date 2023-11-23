@@ -78,7 +78,7 @@ export class Camera {
         this.container.scale.set(this.zoomLevel);
     }
 
-    startShake(duration: number, amplitude: number) {
+    shake(duration: number, amplitude: number) {
         this.shakeDuration = duration;
         this.shakeAmplitude = amplitude;
         this.shakeStartTime = performance.now();

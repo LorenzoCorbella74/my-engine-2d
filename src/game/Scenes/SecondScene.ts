@@ -90,7 +90,7 @@ export class SecondScene extends Scene {
             // TODO:
         }
         if (this.engine.input.iskeyDownOnce('N')) {
-            this.engine.camera.startShake(750, 8); // Durata di 1000 ms e ampiezza in pixel
+            this.engine.camera.shake(750, 8); // Durata di 1000 ms e ampiezza in pixel
         }
 
         // test zoomTo

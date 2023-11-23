@@ -13,7 +13,7 @@ export class Background extends GameObject {
         spriteComp.setAnchor(0);
         spriteComp.setWidthAndHeight(window.innerWidth, window.innerHeight);
         spriteComp.sprite.on("mousedown", (e) => {
-            this.engine.toggle();
+            this.engine.toggleLoop();
         });
     }
 }

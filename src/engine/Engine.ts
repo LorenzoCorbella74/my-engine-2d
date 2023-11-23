@@ -142,7 +142,7 @@ export class Engine {
 
         const locales = await this.loader.loadAssetsFolder(this.config.localeFolder || 'i18n')
         if (locales) {
-            this.locale.setLanguage(this.config.defaultLocale || 'en')
+            this.locale.setLanguage(this.config.defaultLocale || navigator.language)
         }
 
         this.scenes.startDefaultScene();
@@ -174,11 +174,11 @@ export class Engine {
 
 
     stopLoop() {
-        this.state = 'paused';
         this.app.ticker.stop();
+        this.state = 'paused';
     }
 
-    toggle() {
+    toggleLoop() {
         if (this.state === 'running') {
             this.stopLoop();
             this.state = 'paused';
