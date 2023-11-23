@@ -11,6 +11,8 @@ export const Config: GameConfig = {
     scenes: [FirstScene, SecondScene, MatterScene, GraphicScene],  // the first is the startScene
     storagePrefix: 'MyGame_',
     engineLogPrefix: '[MY-ENGINE-2D]: ',
+    // defaultLocale: 'en',
+    // localeFolder: 'i18n',
     // set your input here...
     input: {
         'UP': 'w',
