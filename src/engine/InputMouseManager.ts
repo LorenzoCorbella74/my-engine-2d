@@ -26,10 +26,8 @@ export class InputMouseManager {
             }
         });
 
-        document.addEventListener('mousewheel', e => {
-            // this.mouseWheel = e.deltaY ;
-        });
-
+        document.addEventListener('wheel', this.mouseWheelEvent.bind(this));
+        document.addEventListener('contextmenu', this.contextMenuEvent.bind(this))
         document.addEventListener('pointerdown', e => {
             if (e.button === 0) {
                 this.mouseButton1 = true;
@@ -54,6 +52,24 @@ export class InputMouseManager {
                 this.mouseButton4 = false;
             }
         });
+    }
+
+    mouseWheelEvent(e: any) {
+        let delta = null;
+        let direction = null;
+        if (e.wheelDelta) {
+            delta = e.wheelDelta / 60;
+        } else if (e.detail) { // fallback for Firefox
+            delta = -e.detail / 2;
+        }
+        if (delta !== null) {
+            direction = delta > 0 ? 'up' : 'down';
+        }
+        console.log('delta: ', delta, 'direction: ', direction);
+    }
+
+    contextMenuEvent(e: any) {
+        e.preventDefault()
     }
 
     getMouse() {

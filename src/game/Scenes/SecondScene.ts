@@ -23,7 +23,7 @@ export class SecondScene extends Scene {
     }
 
     async init() {
-        await this.engine.loader.loadAssetsGroup('group2')
+        await this.engine.loader.loadAssetsFolder('group2')
 
         // testing second load...
         const textFormat = this.engine.getAsset('text-format');
@@ -59,6 +59,13 @@ export class SecondScene extends Scene {
         // get the reference of the objecty in the gameObjects repository
         this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
         this.engine.log('Test getGroup: ', this.engine.getGroup('Enemy'));
+
+        // Test engine.locale
+        this.engine.log('Test engine.locale: ',
+            this.engine.locale.translate('test'),
+            this.engine.locale.translate('nested.test'),
+            this.engine.locale.translate('test2', { name: 'Lorenzo' })
+        );
     }
 
     update(delta: number) {
