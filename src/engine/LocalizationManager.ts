@@ -14,10 +14,13 @@ export class LocalizationManager {
     availableLocales: string[] = [];
     localizations: Translation = {}; // loaded resources cache
 
-    private defaultLanguage: string = this.engine.config.defaultLocale || 'en';
-    private currentLanguage: string = this.defaultLanguage;
+    private defaultLanguage: string;
+    private currentLanguage: string;
 
-    constructor(public engine: typeof MyEngine2D) { }
+    constructor(public engine: typeof MyEngine2D) { 
+        this.defaultLanguage = this.engine.config.defaultLocale || 'en';
+        this.currentLanguage = this.defaultLanguage;
+    }
 
     // Imposta la lingua corrente
     setLanguage(language: string): void {
