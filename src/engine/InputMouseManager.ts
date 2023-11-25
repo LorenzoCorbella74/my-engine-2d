@@ -7,10 +7,14 @@ export class InputMouseManager {
         y: 0
     }
     private mouseWheel = 0;
-    private mouseButton1 = false;
-    private mouseButton2 = false;
-    private mouseButton3 = false;
-    private mouseButton4 = false;
+
+    private mouseButton1Down = false;
+    private mouseButton1Pressed = false;
+    private mouseButton1Released = false;
+
+    private mouseButton2Down = false;
+    private mouseButton2Pressed = false;
+    private mouseButton2Released = false;
 
     app: Application;
 
@@ -32,28 +36,30 @@ export class InputMouseManager {
 
         document.addEventListener('pointerdown', e => {
             if (e.button === 0) {
-                this.mouseButton1 = true;
+                this.mouseButton1Down = true;
+                this.mouseButton1Pressed = true;
             } else if (e.button === 1) {
-                this.mouseButton2 = true;
-            } else if (e.button === 2) {
-                e.preventDefault();  // TODO: apre il menu ...
-                this.mouseButton3 = true;
-            } else if (e.button === 3) {
-                this.mouseButton4 = true;
+                this.mouseButton2Down = true;
+                this.mouseButton2Pressed = true;
             }
         });
 
         document.addEventListener('mouseup', e => {
             if (e.button === 0) {
-                this.mouseButton1 = false;
+                this.mouseButton1Down = false;
+                this.mouseButton1Released = true;
             } else if (e.button === 1) {
-                this.mouseButton2 = false;
-            } else if (e.button === 2) {
-                this.mouseButton3 = false;
-            } else if (e.button === 3) {
-                this.mouseButton4 = false;
+                this.mouseButton2Down = false;
+                this.mouseButton2Released = true;
             }
         });
+    }
+
+    clear() {
+        this.mouseButton1Pressed = false;
+        this.mouseButton2Pressed = false;
+        this.mouseButton1Released = false;
+        this.mouseButton2Released = false;
     }
 
     getMouse() {
@@ -64,19 +70,57 @@ export class InputMouseManager {
         return this.mouseWheel;
     }
 
+    /**
+ * Checks if mouse button 1 is currently being held down.
+ *
+ * @return {boolean} true if mouse button 1 is down, false otherwise
+ */
     isMouseButton1Down() {
-        return this.mouseButton1;
+        return this.mouseButton1Down;
     }
 
+    /**
+     * Checks if mouse button 1 is pressed in the current frame.
+     *
+     * @return {boolean} Returns true if mouse button 1 is pressed, false otherwise.
+     */
+    isMouseButton1Pressed() {
+        return this.mouseButton1Pressed;
+    }
+
+    /**
+ * Checks if mouse button 1 is relased in the current frame.
+ *
+ * @return {boolean} Returns true if mouse button 1 is rekleased, false otherwise.
+ */
+    isMouseButton1Released() {
+        return this.mouseButton1Released;
+    }
+
+    /**
+* Checks if mouse button 2 is currently being held down.
+*
+* @return {boolean} true if mouse button 2 is down, false otherwise
+*/
     isMouseButton2Down() {
-        return this.mouseButton2;
+        return this.mouseButton2Down;
     }
 
-    isMouseButton3Down() {
-        return this.mouseButton3;
+    /**
+     * Checks if mouse button 2 is pressed in the current frame.
+     *
+     * @return {boolean} Returns true if mouse button 2 is pressed, false otherwise.
+     */
+    isMouseButton2Pressed() {
+        return this.mouseButton2Pressed;
     }
 
-    isMouseButton4Down() {
-        return this.mouseButton4;
+    /**
+ * Checks if mouse button 2 is released in the current frame.
+ *
+ * @return {boolean} Returns true if mouse button 2 is released, false otherwise.
+ */
+    isMouseButton2Released() {
+        return this.mouseButton2Released;
     }
 }

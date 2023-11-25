@@ -150,6 +150,8 @@ export class Engine {
             this.time.runOnFrameNum([1, 30], (frame: number) => {
                 this.logic.update()                         // check game logic
             })
+
+            this.mouse.clear();
         });
     }
 
