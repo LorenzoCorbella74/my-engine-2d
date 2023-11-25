@@ -24,6 +24,8 @@ import { ParticleManager } from "./ParticleManager";
 import { GameObject } from "./GameObject";
 import { State } from "./models/engine-state";
 import { GameConfig } from "./models/config";
+import { AnimationManager } from "./AnimationManager";
+import { LocalizationManager } from "./LocalizationManager";
 
 export class Engine {
     app!: Application<ICanvas>;
@@ -44,7 +46,9 @@ export class Engine {
     public crosshair!: CrossHairManager
     public filters!: FiltersManager;
     private debug2UI!: Debug2UIManager;
-    public emitter!: ParticleManager
+    public emitter!: ParticleManager;
+    public animation!: AnimationManager;
+    public locale!: LocalizationManager;
 
     private _state: State = 'idle';
     private _debug: boolean = false;
@@ -64,8 +68,9 @@ export class Engine {
                this.scenes.currentScene?.onResize?.(innerWidth, innerHeight);
            }); */
         }
-
     }
+
+    /* -------------------------- GAME STATE -------------------------- */
 
     get state(): State {
         return this._state;
@@ -84,8 +89,8 @@ export class Engine {
         gsap.registerPlugin(PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
 
-        document.title = config.name || 'MY-ENGINE-2D';  // name of the game
-        this.engineLogPrefix = "[MY-ENGINE-2D]: " || config.engineLogPrefix;
+        document.title = config.name || 'MY-ENGINE-2D';                         // name of the game
+        this.engineLogPrefix = "[MY-ENGINE-2D]: " || config.engineLogPrefix;    // log prefix
 
         this.config = config;
 
@@ -108,13 +113,15 @@ export class Engine {
 
         this.storage = new StorageDB(config.storagePrefix);
         this.sounds = new SoundManager();
-        this.time = new TimeManager(this.app);
+        this.animation = new AnimationManager();
+        this.time = new TimeManager(this);
         this.logic = new GameLogic()
         this.events = new EventManager(this);
+        this.locale = new LocalizationManager(this);
         this.mouse = new InputMouseManager(this.app);
         this.scenes = new SceneManager(this.app, this.config);
-        this.camera = new Camera(this.app, this.scenes);
-        this.loader = new AssetManager(this.sounds);
+        this.camera = new Camera(this, this.scenes);
+        this.loader = new AssetManager(this);
         this.physics = new PhysicManager(this.app);
         this.debug2UI = new Debug2UIManager(this.app);
         this.emitter = new ParticleManager(this.app);
@@ -132,6 +139,11 @@ export class Engine {
         }, this.app);
 
         this.handleResize();
+
+        const locales = await this.loader.loadAssetsFolder(this.config.localeFolder || 'i18n')
+        if (locales) {
+            this.locale.setLanguage(this.config.defaultLocale || navigator.language)
+        }
 
         this.scenes.startDefaultScene();
 
@@ -164,11 +176,11 @@ export class Engine {
 
 
     stopLoop() {
-        this.state = 'paused';
         this.app.ticker.stop();
+        this.state = 'paused';
     }
 
-    toggle() {
+    toggleLoop() {
         if (this.state === 'running') {
             this.stopLoop();
             this.state = 'paused';
@@ -207,6 +219,8 @@ export class Engine {
         if (!import.meta.env.DEV) return;
         this.debug2UI.log2Screen(message)
     }
+
+    /* -------------------------- PROXIED METHODS -------------------------- */
 
     /**
      * Get the pre-loaded assets (both img and .json)

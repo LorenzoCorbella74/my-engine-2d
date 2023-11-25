@@ -59,9 +59,8 @@ export class MatterScene extends Scene {
 
     update(delta: number) {
 
-
-        
-
+        // update gameObjects
+        super.update(delta)
 
         // rotate player to target
         const { x, y } = this.engine.mouse.getMouse();
@@ -74,26 +73,24 @@ export class MatterScene extends Scene {
 
 
         this.engine.time.runOnFrameNum([1, 30], (frameNumber: number) => {
-            // this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
+            this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
         })
 
-        // update gameObjects
-        super.update(delta)
 
-        if(this.engine.input.iskeyDownOnce('O')){
+        if (this.engine.input.iskeyDownOnce('O')) {
             this.engine.log("the 'O' key has been pressed....")
-            this.engine.log2UI(`the 'O' key has been pressed....${Math.floor(Math.random()*10000)}`)
+            // TEST log2UI
+            this.engine.log2UI(`the 'O' key has been pressed....${Math.floor(Math.random() * 10000)}`)
         }
 
-        if(this.engine.input.iskeyDownOnce('DEBUG')){
+        if (this.engine.input.iskeyDownOnce('DEBUG')) {
             this.engine.log("Debug mode active ....")
             this.engine.togleDebug()
-        } 
+        }
 
-         /** TEST GAME SPEED*/
-         if (this.engine.input.iskeyDownOnce('M')) {
-            // this.engine.time.aminateGameSpeed(2)
-            this.engine.time.aminateOneObjectProperty(this.engine.time, 'gameSpeed', 2, 3, undefined, () => {
+        /** TEST GAME SPEED*/
+        if (this.engine.input.iskeyDownOnce('M')) {
+            this.engine.animation.aminateOneObjectProperty('game-time', this.engine.time, { gameSpeed: 2 }, 3, undefined, () => {
                 this.engine.log('GameSpeed animation completed!')
             })
         }
@@ -113,11 +110,6 @@ export class MatterScene extends Scene {
             const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM;
             this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
         }
-
-
-        /* if(this.engine.input.iskeyDownOnceButNotInPreviousFrame('O')){
-            this.engine.log("the 'O' key has been pressed....")
-        } */
 
         /* test crosshair */
         if (this.engine.input.iskeyDownOnce('O')) {

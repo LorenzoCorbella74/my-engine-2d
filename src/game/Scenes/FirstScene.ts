@@ -27,7 +27,7 @@ export class FirstScene extends Scene {
 
     async init() {
 
-        await this.engine.loader.loadAssetsGroup('group1');
+        await this.engine.loader.loadAssetsFolder('group1');
 
         this.game = new Game('Game')
 

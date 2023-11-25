@@ -1,6 +1,6 @@
 import { Application } from "pixi.js";
-import { gsap } from "gsap";
 import { Timer, FunctionToBeCalledContinuously } from "./models/timers";
+import { MyEngine2D } from "./Engine";
 
 /*
     TAKEN from https://hump.readthedocs.io/en/latest/timer.html
@@ -15,8 +15,10 @@ export class TimeManager {
 
     private timers: Timer[] = []                                // timers
     private functions: FunctionToBeCalledContinuously[] = []    // Function To Be Called Continuously
+    app: Application;
 
-    constructor(public app: Application) {
+    constructor(public engine: typeof MyEngine2D) {
+        this.app = engine.app;
         this.elapsed = 0;
         this._frame = 0;
         this.dt = this.app.ticker.elapsedMS / 1000;
@@ -125,7 +127,8 @@ export class TimeManager {
     }
 
     /**
-     * Remove all timed and periodic functions. Functions that have not yet been executed will discarded
+     * Remove all timed and periodic functions. 
+     * Functions that have not yet been executed will be discarded
      */
     clear() {
         this.timers = [];
@@ -157,45 +160,12 @@ export class TimeManager {
         return new Promise(resolve => setTimeout(resolve, delayInSec * 1000));
     }
 
-    aminateGameSpeed(amount: number) {
-        gsap.to(this, {
-            gameSpeed: amount,
-            duration: 1,
-            ease: 'easeInOut',
-            onComplete: () => {
-                // Questa funzione verrà chiamata al termine dell'animazione
-                console.log('GameSpeed animation completed!', this);
-            },
-        });
+    aminateGameSpeed(amount: number, duration: number = 1, ease: string = "easeInOut", completeCallback: () => void = () => { }) {
+        this.engine.animation.aminateOneObjectProperty('game-speed', this, { gameSpeed: amount }, duration, ease, completeCallback);
     }
 
     /**
-     * 
-     * @param context the object to animate
-     * @param property the property
-     * @param amount  the final value of the property
-     * @param duration 
-     * @param ease 
-     * @param onComplete 
-     */
-    aminateOneObjectProperty<T>(
-        context: T,
-        property: string,
-        amount: number,
-        duration: number = 1,
-        ease: string = "easeInOut",
-        onComplete: () => void = () => { }
-    ) {
-        gsap.to(context as gsap.TweenTarget, {
-            [property]: amount,
-            duration,
-            ease,
-            onComplete: onComplete,
-        });
-    }
-
-    /**
-     * Esegue la fn al frame indicato
+     * Run the function for the passed frames
      * @param frameNumber 
      * @param fn 
      */

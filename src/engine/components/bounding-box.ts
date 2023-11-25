@@ -40,6 +40,7 @@ export class BoundingBoxComponent extends Component {
             this.bb.visible = true;
             this.bb.position.x = this.entity.x;
             this.bb.position.y = this.entity.y;
+            this.bb.rotation = this.entity.rotation;
         } else {
             this.bb.visible = false;
         }

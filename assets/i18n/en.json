@@ -1,0 +1,7 @@
+{
+    "test": "test",
+    "nested": {
+        "test": "test for nested"
+    },
+    "test2": "test with {{name}}"
+}

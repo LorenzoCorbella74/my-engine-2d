@@ -15,7 +15,6 @@ export class Scene extends Container {
      */
     async init() { }
 
-
     /**
      * Update gameObjects (which internally update their components)
      * @param dt 
@@ -27,8 +26,6 @@ export class Scene extends Container {
             }
         })
     }
-
-    /* onInputChange(inputs: KeyMapping) { } */
 
     /**
      * Remove scene and its gameObjects and rigidbodies (if present)

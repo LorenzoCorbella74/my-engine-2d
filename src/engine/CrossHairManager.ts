@@ -31,4 +31,12 @@ export class CrossHairManager {
             MyEngine2D.app.view.style.cursor = 'default';
         }
     }
+
+    toggle() {
+        if (this.crosshair.visible) {
+            this.hide();
+        } else {
+            this.show();
+        }
+    }
 }

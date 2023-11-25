@@ -1,0 +1,7 @@
+{
+    "test": "prova",
+    "nested": {
+        "test": "prova per campo innestato"
+    },
+    "test2": "prova con {{name}}"
+}

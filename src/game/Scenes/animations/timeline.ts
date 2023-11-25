@@ -46,23 +46,3 @@ export function createTimelineAnimation(context: Sprite): GSAPTimeline {
 
     return timeline;
 }
-
-/*
-    FOR EASING in V3: https://greensock.com/docs/v3/Eases
-*/
-
-
-/* gsap.to(this, {  // this è bunny
-    x: this.engine.app.view.width / 2,   // Posizione finale x
-    y: this.y,   // Posizione finale y
-    alpha: 0, // Valore di opacità finale
-    duration: 2,         // in  secondi
-    rotation: Math.PI * 2,
-    // scale: 2, FA SCOPPIARE TUTTO !!!!
-    // repeat: -1, yoyo: true,
-    // ease: 'power1.inOut',
-    onComplete: () => {
-        // Questa funzione verrà chiamata al termine dell'animazione
-        console.log('Animazione completata!', this);
-    },
-}); */
