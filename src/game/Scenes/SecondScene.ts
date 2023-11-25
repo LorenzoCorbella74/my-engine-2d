@@ -83,35 +83,47 @@ export class SecondScene extends Scene {
         // update gameObjects
         super.update(delta)
 
-        if (this.engine.input.iskeyDownOnce('Z')) {
+        if (this.engine.keyboard.iskeyDownOnce('Z')) {
             this.engine.togleDebug()
         }
-        if (this.engine.input.iskeyDownOnce('X')) {
-            // TODO:
+
+        if (this.engine.keyboard.iskeyDownOnce('X')) {
+            this.engine.camera.moveTo({ x: 100, y: 400 }, 3, Power2.easeIn, () => {
+                console.log('camera.moveTo done!')
+            })
         }
-        if (this.engine.input.iskeyDownOnce('N')) {
+
+        if (this.engine.keyboard.iskeyDownOnce('B')) {
+            console.time('camera.animateOnBezierCurve')
+            this.engine.camera.animateOnBezierCurve(this.player, { x: 100, y: 400 }, { x: 300, y: 200 }, { x: 300, y: 400 }, 3, () => {
+                console.timeEnd('camera.animateOnBezierCurve')
+                console.log('camera.animateOnBezierCurve done!')
+            })
+        }
+
+        if (this.engine.keyboard.iskeyDownOnce('N')) {
             this.engine.camera.shake(750, 8); // Durata di 1000 ms e ampiezza in pixel
         }
 
         // test zoomTo
-        if (this.engine.input.iskeyDownOnce('M')) {
+        if (this.engine.keyboard.iskeyDownOnce('M')) {
             const ease = Power2.easeOut; // "bounce.out", "expo.out"  "elastic.out(1, 0.3)" 
             this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? this.engine.camera.zoomLevel - 0.5 : this.engine.camera.zoomLevel + 0.5,
                 2, ease);
         }
 
         // test change camera target
-        if (this.engine.input.iskeyDownOnce('O')) {
+        if (this.engine.keyboard.iskeyDownOnce('O')) {
             const target = this.engine.camera.target?.name === 'Player' ? this.enemy1 : this.player
             this.engine.camera.focusOn(target, this)
         }
 
         // test event to single entity
-        if (this.engine.input.iskeyDownOnce('E')) {
+        if (this.engine.keyboard.iskeyDownOnce('E')) {
             this.engine.events.sendEvent(new GameEvent(this.engine.config.events?.Pickup, this.player, this.enemy1, { test: 'test GameEvent' }))
         }
         // test event to group of entity
-        if (this.engine.input.iskeyDownOnce('R')) {
+        if (this.engine.keyboard.iskeyDownOnce('R')) {
             this.engine.events.sendEvent(new GameEventForGroup('Enemy', this.engine.config.events?.Pickup, this.player, { test: 'test GameEventForGroup' }))
         }
     }

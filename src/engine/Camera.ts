@@ -20,16 +20,12 @@ export class Camera {
     shakeAmplitude: number;
     shakeStartTime: number;
 
-    // BEZIER CURVE POINTS
-    startPoint: Point = { x: 0, y: 0 };
-    controlPoint1: Point = { x: 0, y: 0 };
-    controlPoint2: Point = { x: 0, y: 0 };
-    endPoint: Point = { x: 0, y: 0 };
+    defaultCamera = new GameObject('camera-default')
 
     constructor(public engine: typeof MyEngine2D, public sceneManager: SceneManager) {
         this.app = engine.app;
-        this.target = null; // The FOCUS of the camera
 
+        this.target = null; // The FOCUS of the camera
         this.zoomLevel = 1;
 
         this.shakeDuration = 0;
@@ -41,7 +37,7 @@ export class Camera {
         this.app.stage.removeChild(this.container);
         // se non passato focus al centro dello schermo
         if (!element) {
-            element = new GameObject('cameraDefault');
+            element = this.defaultCamera;
             element.x = this.app.screen.width / 2,
                 element.y = this.app.screen.height / 2
         }
@@ -74,6 +70,9 @@ export class Camera {
         this.container.position.x = this.app.screen.width / 2 - (this.target.x * this.zoomLevel);
         this.container.position.y = this.app.screen.height / 2 - (this.target.y * this.zoomLevel);
 
+        /* pos.x = math.mix(pos.x, x, ease);
+        pos.y = math.mix(pos.y, y, ease); */
+
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel);
     }
@@ -97,34 +96,39 @@ export class Camera {
     }
 
     /**
- * Moves the camera to the specified point. TODO: testare!!
+ * Moves the camera to the specified point (moving over a line).
  *
  * @param {Point} point - The point to move to.
  * @param {number} [duration=1] - The duration of the animation in seconds.
  * @param {string | gsap.EaseFunction} [ease="none"] - The easing function for the animation.
  * @param {() => void} [callback=() => {}] - The callback function to be called after the animation completes.
  */
-    moveTo(point: Point, duration: number = 1, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
-        this.engine.animation.aminateOneObjectProperty('camera-move', this, point, duration, ease, callback);
+    moveTo(destination: Point, duration: number = 1, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
+        this.resetToDefaultCamera()
+        this.engine.animation.aminateOneObjectProperty('camera-move', this.target, destination, duration, ease, callback);
+    }
+
+    resetToDefaultCamera(origin?: Point) {
+        if (this.target && !origin) {
+            origin = {
+                x: this.target.x,
+                y: this.target.y
+            }
+        } else if (!origin) {
+            origin = {
+                x: 0,
+                y: 0
+            }
+        }
+        this.defaultCamera?.position.set(origin.x, origin.y);
+        this.focusOn(this.defaultCamera, this.engine.scenes.currentScene);
     }
 
 
-    // calcola la posizione del punto tra 0 e 1
-    private getBezierPoint(t: number) {
-        const invT = 1 - t;
-        const x = invT * invT * invT * this.startPoint.x +
-            3 * invT * invT * t * this.controlPoint1.x +
-            3 * invT * t * t * this.controlPoint2.x +
-            t * t * t * this.endPoint.x;
-        const y = invT * invT * invT * this.startPoint.y +
-            3 * invT * invT * t * this.controlPoint1.y +
-            3 * invT * t * t * this.controlPoint2.y +
-            t * t * t * this.endPoint.y;
-        return { x, y };
-    }
+
 
     /**
- * Animate the camera on a bezier curve. TODO: testare!!
+ * Animate the camera on a bezier curve.
  *
  * @param {Point} start - The starting point of the curve.
  * @param {Point} controlOne - The first control point of the curve.
@@ -132,67 +136,58 @@ export class Camera {
  * @param {Point} end - The ending point of the curve.
  * @param {() => void} callback - An optional callback function to be called when the animation is complete.
  */
-    animateOnBezierCurve(start: Point, controlOne: Point, controlTwo: Point, end: Point, callback: () => void = () => { }) {
-        this.startPoint = start;
-        this.controlPoint1 = controlOne;
-        this.controlPoint2 = controlTwo;
-        this.endPoint = end;
-        // POINT
-        const point = new PIXI.Graphics();
+    animateOnBezierCurve(startPoint: Point, controlOne: Point, controlTwo: Point, endPoint: Point, duration: number = 1, callback: () => void = () => { }) {
+        this.resetToDefaultCamera(startPoint)
+
+        // calcola la posizione del punto tra 0 e 1
+        function getBezierPoint(t: number) {
+            const invT = 1 - t;
+            const x = invT * invT * invT * startPoint.x +
+                3 * invT * invT * t * controlOne.x +
+                3 * invT * t * t * controlTwo.x +
+                t * t * t * endPoint.x;
+            const y = invT * invT * invT * startPoint.y +
+                3 * invT * invT * t * controlOne.y +
+                3 * invT * t * t * controlTwo.y +
+                t * t * t * endPoint.y;
+            return { x, y };
+        }
+        let point = new PIXI.Graphics();
         point.lineStyle(0); // draw a circle, set the lineStyle to zero so the circle doesn't have an outline
         point.beginFill(0xDE3249, 1);
-        point.drawCircle(0, 0, 5);
+        point.drawCircle(startPoint.x, startPoint.y, 5);
         point.endFill();
         point.visible = false;
-        this.app.stage.addChild(point);
-
-        /* BEZIER CURVE */
-        const realPath = new PIXI.Graphics();
-        realPath.lineStyle(2, 0xFFFFFF, 1);
-        realPath.moveTo(this.startPoint.x, this.startPoint.y);
-        realPath.lineTo(this.controlPoint1.x, this.controlPoint1.y);
-        realPath.lineTo(this.controlPoint2.x, this.controlPoint2.y);
-        realPath.lineTo(this.endPoint.x, this.endPoint.y);
-        realPath.position.x = this.startPoint.x;
-        realPath.position.y = this.startPoint.y;
-        realPath.visible = false;
-        this.app.stage.addChild(realPath);
-
         const bezier = new PIXI.Graphics();
         bezier.lineStyle(1, 0xAA0000, 1);
-        bezier.bezierCurveTo(
-            this.controlPoint1.x,
-            this.controlPoint1.y,
-            this.controlPoint2.x,
-            this.controlPoint2.y,
-            this.endPoint.x,
-            this.endPoint.y
-        );
         // punto iniziale
-        bezier.position.x = this.startPoint.x;
-        bezier.position.y = this.startPoint.y;
+        bezier.x = startPoint.x;
+        bezier.y = startPoint.y;
+        bezier.bezierCurveTo(
+            controlOne.x,
+            controlOne.y,
+            controlTwo.x,
+            controlTwo.y,
+            endPoint.x,
+            endPoint.y
+        );
         bezier.visible = false;
-        this.app.stage.addChild(bezier);
+        this.engine.scenes.currentScene.addChild(bezier);
+        this.engine.scenes.currentScene.addChild(point);
         let elapsed = 0
         const delta = this.engine.time.getDeltaTime();
 
         const onTick = () => {
-            if (this.engine.debug) {
-                bezier.visible = true;
-                realPath.visible = true;
-                point.visible = true;
-            } else {
-                bezier.visible = false;
-                realPath.visible = false;
-                point.visible = false;
-            }
-            if (elapsed > 1) {
-                callback()
+            bezier.visible = this.engine.debug;     // debug
+            point.visible = this.engine.debug;     // debug
+            elapsed += delta / duration
+            let { x, y } = getBezierPoint(elapsed);
+            this.target?.position.set(x, y)
+            point?.position.set(x, y)
+            if (elapsed >= 1) {
+                callback && callback()
                 this.app.ticker.remove(onTick);
             }
-            elapsed += delta
-            let { x, y } = this.getBezierPoint(elapsed);
-            this.target?.position.set(x, y)
         }
 
         this.app.ticker.add(onTick)

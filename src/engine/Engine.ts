@@ -36,7 +36,7 @@ export class Engine {
     public storage!: StorageDB;
     public time!: TimeManager;
     public scenes!: SceneManager;
-    public input!: InputKeyboardManager;
+    public keyboard!: InputKeyboardManager;
     public mouse!: InputMouseManager;
     public camera!: Camera
     public logic!: GameLogic;
@@ -127,7 +127,7 @@ export class Engine {
         this.emitter = new ParticleManager(this.app);
         this.crosshair = new CrossHairManager();
         this.filters = new FiltersManager();
-        this.input = new InputKeyboardManager({
+        this.keyboard = new InputKeyboardManager({
             // DEFAULTS
             ...{
                 'UP': 'w',
@@ -140,9 +140,9 @@ export class Engine {
 
         this.handleResize();
 
-        const locales = await this.loader.loadAssetsFolder(this.config.localeFolder || 'i18n')
+        const locales = await this.loader.loadAssetsFolder(this.config?.localeFolder || 'i18n')
         if (locales) {
-            this.locale.setLanguage(this.config.defaultLocale || navigator.language)
+            this.locale.setLanguage(this.config?.defaultLocale || navigator.language)
         }
 
         this.scenes.startDefaultScene();
@@ -163,6 +163,7 @@ export class Engine {
                 this.logic.update()                         // check game logic
             })
 
+            // clear mouse state
             this.mouse.clear();
         });
     }

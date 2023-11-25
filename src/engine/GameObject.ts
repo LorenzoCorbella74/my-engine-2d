@@ -85,6 +85,8 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
         this.setComponentEnabled(dependency, true);
       }
     }
+
+    return this;
   }
 
   // Rimuoviamo un componente dall'entità.

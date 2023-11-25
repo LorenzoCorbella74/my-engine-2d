@@ -24,16 +24,16 @@ export class InputController extends Component {
         this.dy = 0;
         if (this.entity && this.entity?.hasComponent(ComponentNames.RigidBody)) {
             // PLayer movement
-            if (this.entity.engine.input.isKeyDown('UP')) {
+            if (this.entity.engine.keyboard.isKeyDown('UP')) {
                 this.dy -= this.speed * dt;
             }
-            if (this.entity.engine.input.isKeyDown('DOWN')) {
+            if (this.entity.engine.keyboard.isKeyDown('DOWN')) {
                 this.dy += this.speed * dt;
             }
-            if (this.entity.engine.input.isKeyDown('RIGHT')) {
+            if (this.entity.engine.keyboard.isKeyDown('RIGHT')) {
                 this.dx += this.speed * dt;
             }
-            if (this.entity.engine.input.isKeyDown('LEFT')) {
+            if (this.entity.engine.keyboard.isKeyDown('LEFT')) {
                 this.dx -= this.speed * dt;
             }
 

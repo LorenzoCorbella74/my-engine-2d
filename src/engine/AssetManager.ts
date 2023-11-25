@@ -27,7 +27,7 @@ export default class AssetManager {
     private generateResourceList() {
         const assetData: Asset[] = [];
         const assetPathRegexp =
-            /assets\/(?<group>[\w.-]+)\/(?<category>[\w.-]+)\/(?<name>[\w.-]+)\.(?<ext>\w+)$/;
+            /assets\/(?<group>[\w.-]+)\/((?<category>[\w.-]+)\/?)(?<name>[\w.-]+)\.(?<ext>\w+)$/;
 
         this.assetFileUrls.forEach((assetPath) => {
             const match = assetPathRegexp.exec(assetPath);

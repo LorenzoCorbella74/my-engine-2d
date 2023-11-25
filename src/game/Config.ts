@@ -27,6 +27,7 @@ export const Config: GameConfig = {
         'O': 'o',       // Change camera focus
         'E': 'e',       // TEST send event
         'R': 'r',       // TEST send event to group
+        'B': 'b',       // TEST 
     },
     // place your events here...
     events: {

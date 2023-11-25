@@ -4,20 +4,20 @@ import gsap from 'gsap';
 export class FiltersManager {
 
     // Aggiungi un filtro a un oggetto PIXI
-    public addFilter(target: DisplayObject, filter: Filter): void {
+    addFilter(target: DisplayObject, filter: Filter): void {
         target.filters = target.filters || [];
         target.filters.push(filter);
     }
 
     // Rimuovi un filtro da un oggetto PIXI
-    public removeFilter(target: DisplayObject, filter: Filter): void {
+    removeFilter(target: DisplayObject, filter: Filter): void {
         if (target.filters) {
             target.filters = target.filters.filter((existingFilter) => existingFilter !== filter);
         }
     }
 
     // Anima l'applicazione di un filtro utilizzando GSAP
-    public animateFilter(
+    animateFilter(
         target: DisplayObject,
         filter: Filter,
         duration: number = 1,

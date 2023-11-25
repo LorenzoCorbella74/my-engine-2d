@@ -77,45 +77,45 @@ export class MatterScene extends Scene {
         })
 
 
-        if (this.engine.input.iskeyDownOnce('O')) {
+        if (this.engine.keyboard.iskeyDownOnce('O')) {
             this.engine.log("the 'O' key has been pressed....")
             // TEST log2UI
             this.engine.log2UI(`the 'O' key has been pressed....${Math.floor(Math.random() * 10000)}`)
         }
 
-        if (this.engine.input.iskeyDownOnce('DEBUG')) {
+        if (this.engine.keyboard.iskeyDownOnce('DEBUG')) {
             this.engine.log("Debug mode active ....")
             this.engine.togleDebug()
         }
 
         /** TEST GAME SPEED*/
-        if (this.engine.input.iskeyDownOnce('M')) {
+        if (this.engine.keyboard.iskeyDownOnce('M')) {
             this.engine.animation.aminateOneObjectProperty('game-time', this.engine.time, { gameSpeed: 2 }, 3, undefined, () => {
                 this.engine.log('GameSpeed animation completed!')
             })
         }
         /* TEST GAME SPPED CHANGE */
-        if (this.engine.input.iskeyDownOnce('E')) {
+        if (this.engine.keyboard.iskeyDownOnce('E')) {
             this.engine.time.setGameSpeed(this.engine.time.getGameSpeed() / 2)
         }
-        if (this.engine.input.iskeyDownOnce('R')) {
+        if (this.engine.keyboard.iskeyDownOnce('R')) {
             this.engine.time.setGameSpeed(this.engine.time.getGameSpeed() * 2)
         }
         // TEST enable/disable COLLISION
-        if (this.engine.input.iskeyDownOnce('Z')) {
+        if (this.engine.keyboard.iskeyDownOnce('Z')) {
             this.engine.physics.disableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody)
         }
 
-        if (this.engine.input.iskeyDownOnce('X')) {
+        if (this.engine.keyboard.iskeyDownOnce('X')) {
             const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM;
             this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
         }
 
         /* test crosshair */
-        if (this.engine.input.iskeyDownOnce('O')) {
+        if (this.engine.keyboard.iskeyDownOnce('O')) {
             this.engine.crosshair.hide()
         }
-        if (this.engine.input.iskeyDownOnce('N')) {
+        if (this.engine.keyboard.iskeyDownOnce('N')) {
             this.engine.crosshair.show()
         }
     }

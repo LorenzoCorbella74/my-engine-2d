@@ -28,7 +28,6 @@ export class BoundingBoxComponent extends Component {
             this.engine.scenes.currentScene.addChild(this.bb);
         } else {
             this.engine.error('Sprite Component is required for BoundingBoxComponent');
-            throw new Error("Sprite Component is required for BoundingBoxComponent");
         }
     }
 

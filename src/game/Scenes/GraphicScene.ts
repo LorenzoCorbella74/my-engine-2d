@@ -3,7 +3,6 @@ import { Graphics } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameGraphics } from "../../engine/GameGraphics";
-import { KeyMapping } from "../../engine/models/key-mapping";
 
 export class GraphicScene extends Scene {
 
@@ -43,14 +42,14 @@ export class GraphicScene extends Scene {
 
     update(dt: number): void {
         // test time.after
-        if (this.engine.input.iskeyDownOnce('M')) {
+        if (this.engine.keyboard.iskeyDownOnce('M')) {
             this.engine.time.after(1, () => {
                 this.engine.log('Fn has been called after 1 seconds')
             })
         }
 
         // test time.script
-        if (this.engine.input.iskeyDownOnce('E')) {
+        if (this.engine.keyboard.iskeyDownOnce('E')) {
             this.engine.time.script(async (wait) => {
                 this.engine.log('Fn has been called after 0 seconds')
                 await wait(1)
@@ -63,12 +62,21 @@ export class GraphicScene extends Scene {
         }
 
         // test time.during
-        if (this.engine.input.iskeyDownOnce('R')) {
+        if (this.engine.keyboard.iskeyDownOnce('R')) {
             this.engine.time.during(1, () => {
                 this.engine.log('Fn has been called for 1 seconds')
             }, () => {
                 this.engine.log('Test time.during completes succesfully')
             })
+        }
+
+
+        // TEST MOUSE
+        if(this.engine.mouse.isMouseButton1Down()){
+            this.engine.log('mouse.isMouseButton1Down')
+        }
+        if(this.engine.mouse.isMouseButton1Pressed()) {
+            this.engine.log('mouse.isMouseButton1Pressed')
         }
     }   
 }
