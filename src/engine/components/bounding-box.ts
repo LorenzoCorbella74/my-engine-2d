@@ -4,11 +4,12 @@ import { GameObject } from '../GameObject';
 
 import { ComponentNames } from '../models/component-names.enum';
 import { Graphics, Sprite } from 'pixi.js';
+import { GraphicsComponent } from './graphic';
 
 export class BoundingBoxComponent extends Component {
 
     dependencies: string[] = [ComponentNames.Sprite];
-    sprite!: Sprite;
+    source!: Sprite | Graphics;
 
     public bb: Graphics = new Graphics();
 
@@ -18,16 +19,18 @@ export class BoundingBoxComponent extends Component {
     }
 
     private createBB() {
-        if (this.entity.hasComponent(ComponentNames.Sprite)) {
-            this.sprite = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite
-            const { x, y, width, height, anchor } = this.sprite;
+        const hasSprite = this.entity.hasComponent(ComponentNames.Sprite)
+        const hasGraphics = this.entity.hasComponent(ComponentNames.Graphics)
+        if (hasSprite || hasGraphics) {
+            this.source = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)?.[0]?.sprite as Sprite || this.entity?.getComponents<GraphicsComponent>(ComponentNames.Graphics)?.[0]?.graphics as Graphics
+            const { x, y, width, height, anchor } = this.source;
             this.bb.lineStyle(2.5, 0xFF0000);
-            this.bb.drawRect(x - anchor.x * width, y - anchor.y * height, width, height);
+            this.bb.drawRect(x - anchor?.x * width, y - anchor?.y * height, width, height);
             this.bb.visible = false; // default hidden
             // console.log(`Bounding Box: width ${this.bb.width}px and height ${this.bb.height}px - x:${this.bb.x}px y:${this.bb.y}px`);
             this.engine.scenes.currentScene.addChild(this.bb);
         } else {
-            this.engine.error('Sprite Component is required for BoundingBoxComponent');
+            this.engine.error('For BoundingBoxComponent or Sprite Component or Graphics Component are required!');
         }
     }
 

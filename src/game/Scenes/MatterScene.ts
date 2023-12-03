@@ -61,11 +61,9 @@ export class MatterScene extends Scene {
 
         // update gameObjects
         super.update(delta)
-
-        // rotate player to target
-        const { x, y } = this.engine.mouse.getMouse();
-        this.crosshair.position.set(x, y);
+        
         // update player and rigidBody rotation
+        const { x, y } = this.engine.mouse.getMouse();
         const playerRigidBody = this.player.getComponents<RigidBodyComponent>('RigidBody')[0]
         const angle = Math.atan2(y - this.player.y, x - this.player.x);
         this.player.rotation = angle;
@@ -107,16 +105,16 @@ export class MatterScene extends Scene {
         }
 
         if (this.engine.keyboard.iskeyDownOnce('X')) {
-            const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM;
+            const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM | GROUP.TRIGGER;
             this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
         }
 
         /* test crosshair */
         if (this.engine.keyboard.iskeyDownOnce('O')) {
-            this.engine.crosshair.hide()
+            this.engine.crosshair.toggle()
         }
         if (this.engine.keyboard.iskeyDownOnce('N')) {
-            this.engine.crosshair.show()
+           
         }
     }
 }

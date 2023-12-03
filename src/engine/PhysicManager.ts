@@ -5,6 +5,7 @@ import { GameObject } from './GameObject';
 import { Application, Graphics } from 'pixi.js';
 import { GROUP, RigidBodyComponent } from './components/rigidBody';
 import { BaseEventType, BasePayload } from './models/events';
+import { Trigger } from './templates/trigger';
 
 export type GraphicsWithPhisics = Graphics & {
     rigidBody: Body
@@ -48,6 +49,7 @@ export class PhysicManager {
     showPhisicsCanvas() {
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "block";
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.zIndex = '100';
+       /*  (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.app.view.width / 2}px ${this.app.view.height / 2}px`; */
     }
 
     hidePhisicsCanvas() {
@@ -58,6 +60,10 @@ export class PhysicManager {
     /* --------------------------------------------------- */
     update() {
         Engine.update(this.physicsEngine, 1000 / 60) // this.app.ticker.maxFPS
+
+        /* if((document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "none"){
+            (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.app.view.width / 2}px ${this.app.view.height / 2}px`;
+        } */
     }
 
     /**
@@ -82,14 +88,23 @@ export class PhysicManager {
         let collision = event.pairs[0]
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
         MyEngine2D.log(`${bodyA.label} starts collision with ${bodyB.label}.`, bodyA, bodyB)
-        const colisionEvent = new GameEvent<BasePayload, BaseEventType>(
-            MyEngine2D.config.events?.Collision,
-            MyEngine2D.getObjectByName(bodyA.label)!,
-            MyEngine2D.getObjectByName(bodyB.label)!,
-            { empty: true },
-        );
-        MyEngine2D.events.sendEvent(colisionEvent);
-
+        if (bodyB.label.includes('trigger')) {
+            // RUN TRIGGER Callback only once
+            const trigger = MyEngine2D.getObjectByName(bodyB.label) as Trigger
+            if (!trigger.fired) {
+                trigger.fired = true;
+                trigger.callback();
+            }
+        } else {
+            // SEND EVENT TO TARGET
+            const colisionEvent = new GameEvent<BasePayload, BaseEventType>(
+                MyEngine2D.config.events?.Collision,
+                MyEngine2D.getObjectByName(bodyA.label)!,
+                MyEngine2D.getObjectByName(bodyB.label)!,
+                { empty: true },
+            );
+            MyEngine2D.events.sendEvent(colisionEvent);
+        }
     }
 
     onCollisionActive(event: Matter.IEventCollision<Matter.Engine>) {

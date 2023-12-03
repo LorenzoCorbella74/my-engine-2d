@@ -18,7 +18,7 @@ export class Player extends GameObject {
             isStatic: false,
             collisionFilter: {
                 category: GROUP.PLAYER,
-                mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM
+                mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM | GROUP.TRIGGER
             },
             //  inizial position in world coordinates
             position: {

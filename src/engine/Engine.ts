@@ -125,7 +125,7 @@ export class Engine {
         this.physics = new PhysicManager(this.app);
         this.debug2UI = new Debug2UIManager(this.app);
         this.emitter = new ParticleManager(this.app);
-        this.crosshair = new CrossHairManager();
+        this.crosshair = new CrossHairManager(this);
         this.filters = new FiltersManager();
         this.keyboard = new InputKeyboardManager({
             // DEFAULTS

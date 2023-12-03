@@ -9,6 +9,8 @@ import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
 import { RigidBodyComponent } from '../../engine/components/rigidBody';
 
 import { Power2 } from 'gsap'
+import { GameGraphics } from '../../engine/GameGraphics';
+import { Trigger } from '../../engine/templates/trigger';
 
 export class SecondScene extends Scene {
 
@@ -17,6 +19,8 @@ export class SecondScene extends Scene {
 
     player!: GameObject;
     enemy1!: GameObject;
+
+    testTrigger!: Trigger;
 
     constructor() {
         super(MyEngine2D)
@@ -66,6 +70,12 @@ export class SecondScene extends Scene {
             this.engine.locale.translate('nested.test'),
             this.engine.locale.translate('test2', { name: 'Lorenzo' })
         );
+
+
+        this.testTrigger = new Trigger(
+            'test-trigger',
+            new GameGraphics(this).drawRectangle(500, 0, 300, 100),
+            () => console.log('Trigger has been fired'))
     }
 
     update(delta: number) {

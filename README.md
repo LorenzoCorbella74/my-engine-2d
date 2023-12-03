@@ -63,6 +63,11 @@ export class Player extends GameObject {
 }
 ```
 
+### Gameobject Templates
+The engine provides the following template objects:
+- [X] Trigger
+- [ ] TODO...
+
 ## Sound Manager
 
 A map of all the .mp3 resources is available after pre loading and sounds are managed with the following methods:
@@ -101,12 +106,19 @@ export class Scene extends Container {
 }
 ```
 
-## Keyboard and Mouse Input Manager
+## Keyboard Input Manager
 
 Just track the user input with:
 
 - `iskeyDown(key)` to check CONTINUOSLY if a key has been pressed
 - `iskeyDownOnce(key)` to check if a key has been pressed in the current frame (and was not pressed on the previous)
+
+## Mouse Input Manager
+
+Just track the user input with:
+
+- `isMouseButton1Down()` to check CONTINUOSLY if mouse button One has been pressed
+- `isMouseButton1Pressed()` to check if mouse button One   has been pressed in the current frame (and was not pressed on the previous)
 
 ## Camera Manager
 
@@ -144,6 +156,11 @@ The engine provide a sinple class to manage locale translations. Put in the asse
 - [x] CrossHair management
 - [x] PIXI Filters management in dedicated class
 - [x] PIXI Particles in dedicated class
+
+## Debug
+It is possible to use the Chrome Extension[Pixijs Devtools](https://chromewebstore.google.com/detail/pixijs-devtools/aamddddknhcagpehecnhphigffljadon?pli=1) and check the engine object as window.$PE.
+
+To test physics use the 2d visualisation of the matter-js world by running in in the browser devtools the function `window.$PE.physics.showPhisicsCanvas()` (or `window.$PE.physics.hidePhisicsCanvas()` to hide).
 
 # Usage
 

@@ -17,7 +17,8 @@ export const GROUP = {
     PROJECTILE: 0x0008,
     WALL: 0x0010,
     ITEM: 0x0020,
-    NPC: 0x0040
+    NPC: 0x0040,
+    TRIGGER: 0x0080,
 } as const
 
 export class RigidBodyComponent extends Component {
@@ -55,7 +56,7 @@ export class RigidBodyComponent extends Component {
             frictionAir: options.frictionAir || 0.10,
             /* restitution: options.restitution || 0.09,
             density: 0.001, */
-            label: this.name,
+            label: this.entity.name,
             collisionFilter: {
                 category: options?.collisionFilter?.category || GROUP.DEFAULT,
                 mask: options?.collisionFilter?.mask || GROUP.DEFAULT
@@ -74,7 +75,7 @@ export class RigidBodyComponent extends Component {
     }
 
     /**
-     * Sync the entity position with the rigid body
+     * Sync the entity position/rotation with the rigid body
      */
     update() {
         this.entity.x = this.rigidBody.position.x

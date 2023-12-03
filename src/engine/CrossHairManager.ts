@@ -1,12 +1,15 @@
-import { Graphics, Sprite } from 'pixi.js';
+import { Application, Graphics, Sprite } from 'pixi.js';
 import { MyEngine2D } from './Engine';
 import { Scene } from './Scene';
 
 export class CrossHairManager {
 
     crosshair!: Graphics | Sprite;
+    app:Application
 
-    constructor() { }
+    constructor(public engine: typeof MyEngine2D) { 
+        this.app= engine.app;
+    }
 
     activateOnCurrentScene(currentScene: Scene, crosshair: Graphics | Sprite) {
         this.crosshair = crosshair
@@ -14,7 +17,20 @@ export class CrossHairManager {
 
         this.show();
 
+        const onTick = () => {
+        const { x, y } = this.engine.mouse.getMouse();
+        this.crosshair.position.set(x, y);
+        }
+
+        this.app.ticker.add(onTick)
+
         return this.crosshair
+    }
+
+    removeCrossHair() {
+        if (this.crosshair) {
+            this.crosshair.destroy();
+        }
     }
 
     show() {

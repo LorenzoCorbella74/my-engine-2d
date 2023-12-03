@@ -5,13 +5,14 @@ export class GameGraphics {
 
     constructor(parent: Container) {
         this.graphic = new Graphics();
-        parent.addChild(this.graphic);
+        // parent.addChild(this.graphic);
     }
 
     drawRectangle(x: number, y: number, width: number, height: number, color: number = 0xFFFFFF, alpha: number = 1) {
         this.graphic.beginFill(color, alpha);
         this.graphic.drawRect(x, y, width, height);
         this.graphic.endFill();
+        this.graphic.position.set(x, y);    
         return this.graphic
     }
 
