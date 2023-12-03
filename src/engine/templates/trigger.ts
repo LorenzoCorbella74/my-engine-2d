@@ -38,4 +38,12 @@ export class Trigger extends GameObject {
         /* const graphics = this.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0]
         graphics.hide(); */
     }
+
+    sync(x: number, y: number) {
+        this.setPosition(x, y)
+    }
+
+    reset() {
+        this.fired = false
+    }
 }

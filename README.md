@@ -16,7 +16,10 @@ The engine provides a series of classes, contained in the `engine` folder, that 
 
 ## Asset Manager
 
-It is possible to load asincronously the resources placed in the assets folder and subdivided in group folder. Each folder can contain specific scene resources organised in sub folders (`audio` for audio files, `img` for textures, `data` for json).
+It is possible to load asincronously the resources placed in the assets folder and subdivided in group folder. Each folder can contain specific scene resources organised in ther following mandatory sub folders:
+- `audio` for audio files, 
+- `img` for textures, 
+- `data` for json data and translations.
 
 ```typescript
 // load in the init() fn of your scene
@@ -50,7 +53,7 @@ export class Player extends GameObject {
         isStatic: false,
         collisionFilter: {
           category: GROUP.PLAYER,
-          mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM,
+          mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM | GROUP.TRIGGER,
         },
         position: {
           x: 0,
@@ -115,10 +118,12 @@ Just track the user input with:
 
 ## Mouse Input Manager
 
-Just track the user input with:
+Just track the mouse inputs with:
 
 - `isMouseButton1Down()` to check CONTINUOSLY if mouse button One has been pressed
-- `isMouseButton1Pressed()` to check if mouse button One   has been pressed in the current frame (and was not pressed on the previous)
+- `isMouseButton1Pressed()` to check if mouse button One has been pressed in the current frame (and was not pressed on the previous)
+- `isMouseButton2Down()` to check CONTINUOSLY if mouse button Two has been pressed
+- `isMouseButton2Pressed()` to check if mouse button Two has been pressed in the current frame (and was not pressed on the previous)
 
 ## Camera Manager
 
@@ -146,7 +151,7 @@ The class GameObject implements the method `onEventHandler(event)` to listen to 
 
 ## Localization
 
-The engine provide a sinple class to manage locale translations. Put in the assets folder a folder called `i18n` or configure its name in the configuration object and the engine will load the relevant json files on engine bootstrap. The default locale is the `navigator.language` so use as names of the .json files appropiate names.
+The engine provide a sinple class to manage locale translations. Put in the assets folder a folder called `i18n/data` (or configure its name in the configuration object) and the engine will load the relevant json files on engine bootstrap. The default locale is the `navigator.language` so use as names of the .json files appropiate names.
 
 ### Utils
 
@@ -158,9 +163,9 @@ The engine provide a sinple class to manage locale translations. Put in the asse
 - [x] PIXI Particles in dedicated class
 
 ## Debug
-It is possible to use the Chrome Extension[Pixijs Devtools](https://chromewebstore.google.com/detail/pixijs-devtools/aamddddknhcagpehecnhphigffljadon?pli=1) and check the engine object as window.$PE.
+It is possible to use the Chrome Extension [Pixijs Devtools](https://chromewebstore.google.com/detail/pixijs-devtools/aamddddknhcagpehecnhphigffljadon?pli=1) and check the engine object as window.$PE.
 
-To test physics use the 2d visualisation of the matter-js world by running in in the browser devtools the function `window.$PE.physics.showPhisicsCanvas()` (or `window.$PE.physics.hidePhisicsCanvas()` to hide).
+To test physics use the 2d visualisation of the matter-js world by running in the browser devtools the function `window.$PE.physics.showPhisicsCanvas()` to show (or `window.$PE.physics.hidePhisicsCanvas()` to hide).
 
 # Usage
 

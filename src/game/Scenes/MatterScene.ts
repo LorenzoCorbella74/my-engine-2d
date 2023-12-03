@@ -1,5 +1,5 @@
 import { Player } from '../entities/player';
-import { Graphics, Sprite, TilingSprite } from "pixi.js";
+import { Graphics, Sprite, TilingSprite, Text } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
@@ -16,6 +16,8 @@ export class MatterScene extends Scene {
     crosshair!: Graphics | Sprite;
 
     tilingSprite!: TilingSprite;
+
+    textCoord!: Text
 
     constructor() {
         super(MyEngine2D)
@@ -39,7 +41,7 @@ export class MatterScene extends Scene {
 
         // si definisce il player
         this.player = new Player('Player', 'player')
-        this.player.position.set(window.innerWidth / 2, window.innerHeight / 2 - 100)
+        // this.player.position.set(window.innerWidth / 2, window.innerHeight / 2 - 100)
         // focus della camera sul player
         this.engine.camera.focusOn(this.player, this)
 
@@ -53,6 +55,17 @@ export class MatterScene extends Scene {
         this.crosshair.position.set(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2);
 
         this.crosshair = this.engine.crosshair.activateOnCurrentScene(this, this.crosshair);
+
+        this.textCoord = new Text("Coord:", {
+            fontSize: 12,
+            lineHeight: 20,
+            letterSpacing: 0,
+            fill: 0xffffff,
+            align: "center"
+        });
+        this.textCoord.anchor.set(0.5);
+        this.textCoord.resolution = 8;
+        this.addChild(this.textCoord)
     }
 
 
@@ -68,6 +81,11 @@ export class MatterScene extends Scene {
         const angle = Math.atan2(y - this.player.y, x - this.player.x);
         this.player.rotation = angle;
         playerRigidBody.setRotation(angle)
+
+        const { x: xp, y: yp } = this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody.position
+        this.textCoord.x = Math.ceil(xp)
+        this.textCoord.y = Math.ceil(yp) - 32
+        this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y + 32}`
 
 
         this.engine.time.runOnFrameNum([1, 30], (frameNumber: number) => {

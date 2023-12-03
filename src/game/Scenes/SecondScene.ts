@@ -1,7 +1,7 @@
 import { Player } from '../entities/player';
 import { Enemy } from '../entities/enemy';
 
-import { Text } from "pixi.js";
+import { Graphics, Text } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
@@ -52,7 +52,8 @@ export class SecondScene extends Scene {
 
         // PLAYER
         this.player = new Player('Player', 'player')
-        // this.player.setPosition(300, 100); // update player container position
+        this.player.setPosition(300, 100); // update player container position
+
         // Focus on PLayer
         this.engine.camera.focusOn(this.player, this)
 
@@ -71,11 +72,15 @@ export class SecondScene extends Scene {
             this.engine.locale.translate('test2', { name: 'Lorenzo' })
         );
 
+        let triggerBox = new Graphics();
+        triggerBox.beginFill(0xff0000);
+        triggerBox.drawRect(500, 0, 300, 100);
 
         this.testTrigger = new Trigger(
             'test-trigger',
-            new GameGraphics(this).drawRectangle(500, 0, 300, 100),
-            () => console.log('Trigger has been fired'))
+            triggerBox,
+            () => console.log('Trigger has been fired', this));
+        this.testTrigger.sync(500, 0); // TODO: update trigger container position
     }
 
     update(delta: number) {
