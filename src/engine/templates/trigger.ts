@@ -13,11 +13,19 @@ export class Trigger extends GameObject {
 
     constructor(
         name: string,
-        rectangle: Graphics,
+        rectangle: { x: number, y: number, width: number, height: number },
         public callback: () => void
     ) {
-        super('trigger:'+name);
-        this.addComponent(new GraphicsComponent(this, rectangle))
+        super('trigger:' + name);
+        // set the position in global space
+        this.setPosition(rectangle.x, rectangle.y)
+
+        let triggerBox = new Graphics();
+        triggerBox.beginFill(0xff0000);
+        triggerBox.drawRect(0, 0, rectangle.width, rectangle.height);
+        // triggerBox.visible = false;
+
+        this.addComponent(new GraphicsComponent(this, triggerBox))
         this.addComponent(
             new RigidBodyComponent(this, {
                 shape: 'rectangle',
@@ -26,17 +34,13 @@ export class Trigger extends GameObject {
                     category: GROUP.TRIGGER,
                     mask: GROUP.PLAYER
                 },
-                //  inizial position in world coordinates
+                //  inizial position in local coordinates
                 position: {
-                    x: rectangle.position.x,
-                    y: rectangle.position.y
+                    x: 0,
+                    y: 0
                 }
             }))
         this.addComponent(new BoundingBoxComponent(this));
-
-        // as default graphics are invisible (but via debug the BB will be visible)
-        /* const graphics = this.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0]
-        graphics.hide(); */
     }
 
     sync(x: number, y: number) {

@@ -20,6 +20,7 @@ import { FiltersManager } from './FiltersManager'
 import AssetManager from "./AssetManager";
 import { Debug2UIManager } from "./DebugManager";
 import { ParticleManager } from "./ParticleManager";
+import * as math from "./utils/math";
 
 import { GameObject } from "./GameObject";
 import { State } from "./models/engine-state";
@@ -49,6 +50,7 @@ export class Engine {
     public emitter!: ParticleManager;
     public animation!: AnimationManager;
     public locale!: LocalizationManager;
+    public math!: typeof math;
 
     private _state: State = 'idle';
     private _debug: boolean = false;
@@ -62,7 +64,7 @@ export class Engine {
         // Aggiorna le dimensioni dell'applicazione in base alle nuove dimensioni della finestra
         this.app.renderer.resize(window.innerWidth, window.innerHeight);
         if (this.app.view) {
-            // TODO
+            // TODO: resize event listener
             /* this.app.view.addEventListener('resize', (ev: Event) => {
                const { innerWidth, innerHeight } = ev.target as Window;
                this.scenes.currentScene?.onResize?.(innerWidth, innerHeight);
@@ -111,6 +113,7 @@ export class Engine {
         globalThis.__PIXI_APP__ = this.app; // PIXI DEVTOOLS
         window.$PE = MyEngine2D             // debug
 
+        this.math = math;
         this.storage = new StorageDB(config.storagePrefix);
         this.sounds = new SoundManager();
         this.animation = new AnimationManager();
@@ -122,7 +125,7 @@ export class Engine {
         this.scenes = new SceneManager(this.app, this.config);
         this.camera = new Camera(this, this.scenes);
         this.loader = new AssetManager(this);
-        this.physics = new PhysicManager(this.app);
+        this.physics = new PhysicManager(this);
         this.debug2UI = new Debug2UIManager(this.app);
         this.emitter = new ParticleManager(this.app);
         this.crosshair = new CrossHairManager(this);
@@ -162,7 +165,6 @@ export class Engine {
             this.time.runOnFrameNum([1, 30], (frame: number) => {
                 this.logic.update()                         // check game logic
             })
-
             // clear mouse state
             this.mouse.clear();
         });

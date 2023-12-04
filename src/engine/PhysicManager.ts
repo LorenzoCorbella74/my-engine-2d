@@ -2,7 +2,7 @@ import { Body, Query, Engine, Events, Composite, Render } from 'matter-js';
 import { MyEngine2D } from './Engine'
 import { GameEvent } from './EventManager';
 import { GameObject } from './GameObject';
-import { Application, Graphics } from 'pixi.js';
+import { Graphics } from 'pixi.js';
 import { GROUP, RigidBodyComponent } from './components/rigidBody';
 import { BaseEventType, BasePayload } from './models/events';
 import { Trigger } from './templates/trigger';
@@ -16,7 +16,7 @@ export class PhysicManager {
     physicsEngine!: Engine;
     render: Render;
 
-    constructor(public app: Application) {
+    constructor(public engine: typeof MyEngine2D) {
 
         this.physicsEngine = Engine.create()
 
@@ -24,14 +24,13 @@ export class PhysicManager {
             element: document.querySelector('#phisic-debugger') as HTMLCanvasElement,
             engine: this.physicsEngine,
             options: {
-                width: this.app.view.width,
-                height: this.app.view.height,
+                width: this.engine.app.view.width,
+                height: this.engine.app.view.height,
                 wireframes: true,
                 background: 'transparent',
                 wireframeBackground: 'transparent'
             }
         });
-
         Render.run(this.render);
 
         this.physicsEngine.gravity.y = 0; // default is 0 as TOP DOWN SHHOTER
@@ -49,7 +48,7 @@ export class PhysicManager {
     showPhisicsCanvas() {
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "block";
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.zIndex = '100';
-       /*  (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.app.view.width / 2}px ${this.app.view.height / 2}px`; */
+        /*  (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.app.view.width / 2}px ${this.app.view.height / 2}px`; */
     }
 
     hidePhisicsCanvas() {
@@ -61,9 +60,10 @@ export class PhysicManager {
     update() {
         Engine.update(this.physicsEngine, 1000 / 60) // this.app.ticker.maxFPS
 
-        /* if((document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "none"){
-            (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.app.view.width / 2}px ${this.app.view.height / 2}px`;
-        } */
+        // TO BE TESTED:!!!!
+        if ((document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display !== "none") {
+            (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.engine.camera.target?.x}px ${this.engine.camera.target?.y}px`;
+        }
     }
 
     /**

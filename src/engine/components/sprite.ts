@@ -24,7 +24,7 @@ export class SpriteComponent extends Component {
         if (this.sprite) {
             console.log(`Sprite name for ${spriteName}: width ${this.sprite.width}px and height ${this.sprite.height}px`);
             this.sprite.anchor.set(0.5);
-            this.entity.addChild(this.sprite);
+            this.entity.addChild(this.sprite); // add to the gameobject container
         } else {
             this.sprite = {
                 x: localX,

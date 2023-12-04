@@ -72,15 +72,10 @@ export class SecondScene extends Scene {
             this.engine.locale.translate('test2', { name: 'Lorenzo' })
         );
 
-        let triggerBox = new Graphics();
-        triggerBox.beginFill(0xff0000);
-        triggerBox.drawRect(500, 0, 300, 100);
-
         this.testTrigger = new Trigger(
             'test-trigger',
-            triggerBox,
+            { x: 500, y: 0, width: 300, height: 100 },
             () => console.log('Trigger has been fired', this));
-        this.testTrigger.sync(500, 0); // TODO: update trigger container position
     }
 
     update(delta: number) {

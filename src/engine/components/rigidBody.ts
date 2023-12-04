@@ -9,6 +9,7 @@ import { ComponentNames } from '../models/component-names.enum';
 import { Graphics, Sprite } from 'pixi.js';
 import { RigidBodyOptions } from '../models/rigid-body';
 import { GraphicsComponent } from './graphic';
+import { EngineError } from '../EngineError';
 
 export const GROUP = {
     DEFAULT: 0x0001,
@@ -23,7 +24,7 @@ export const GROUP = {
 
 export class RigidBodyComponent extends Component {
 
-    dependencies: string[] = [ComponentNames.Sprite];
+    dependencies: string[] = [ComponentNames.Sprite, ComponentNames.Graphics];   // TODO: check required components (OR / AND)
 
     public rigidBody!: Body;
 
@@ -36,19 +37,18 @@ export class RigidBodyComponent extends Component {
     private createRigidBody(options: RigidBodyOptions) {
         const { shape, isStatic } = options;
         let x, y, width, height;
+        let component;
         if (this.entity.hasComponent(ComponentNames.Sprite)) {
-            const spriteComp = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite
-            x = options.position?.x || 0;
-            y = options.position?.y || 0;
-            width = spriteComp.width;
-            height = spriteComp.height;
+            component = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite
         } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
-            const graphicsComp = this.entity?.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics as Graphics
-            x = options.position?.x || 0;
-            y = options.position?.y || 0;
-            width = graphicsComp.width;
-            height = graphicsComp.height;
+            component = this.entity?.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics as Graphics
+        } else {
+            throw new EngineError(`Required components not implemented for RigidBodyComponent in ${this.entity.name} gameObject.`);
         }
+        x = this.entity.x + options.position?.x || 0;
+        y = this.entity.y + options.position?.y || 0;
+        width = component.width;
+        height = component.height;
 
         const config = {
             isStatic,

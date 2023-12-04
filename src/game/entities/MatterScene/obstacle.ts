@@ -7,10 +7,12 @@ export class Obstacle extends GameObject {
 
     constructor(name: string, x: number, y: number, width: number, height: number) {
         super(name);
+        // setting the position of the GameObject container
+        this.setPosition(x, y)
 
         let obstacle = new Graphics();
         obstacle.beginFill(0xff0000);
-        obstacle.drawRect(x, y, width, height);
+        obstacle.drawRect(0, 0, width, height);
 
         this.addComponent(new GraphicsComponent(this, obstacle));
         this.addComponent(new RigidBodyComponent(this, {
