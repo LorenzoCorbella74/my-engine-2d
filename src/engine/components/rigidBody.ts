@@ -40,13 +40,15 @@ export class RigidBodyComponent extends Component {
         let component;
         if (this.entity.hasComponent(ComponentNames.Sprite)) {
             component = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite
+            x = this.entity.x + options.position?.x || 0;
+            y = this.entity.y + options.position?.y || 0;
         } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
             component = this.entity?.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics as Graphics
+            x = this.entity.x + this.entity.width/2 + options.position?.x || 0;
+            y = this.entity.y + this.entity.height/2 + options.position?.y || 0;
         } else {
             throw new EngineError(`Required components not implemented for RigidBodyComponent in ${this.entity.name} gameObject.`);
         }
-        x = this.entity.x + options.position?.x || 0;
-        y = this.entity.y + options.position?.y || 0;
         width = component.width;
         height = component.height;
 
