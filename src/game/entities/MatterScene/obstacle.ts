@@ -2,7 +2,9 @@ import { Graphics } from "pixi.js";
 import { GameObject } from "../../../engine/GameObject";
 import { GraphicsComponent } from "../../../engine/components/graphic";
 import { GROUP, RigidBodyComponent } from "../../../engine/components/rigidBody";
+import { GameNode } from "../../../engine/decorators";
 
+@GameNode()
 export class Obstacle extends GameObject {
 
     constructor(name: string, x: number, y: number, width: number, height: number) {
@@ -23,8 +25,8 @@ export class Obstacle extends GameObject {
                 mask: GROUP.PLAYER | GROUP.PROJECTILE | GROUP.ENEMY
             },
             position: {
-                x: x,
-                y: y
+                x: 0,
+                y: 0
             }
         }))
     }

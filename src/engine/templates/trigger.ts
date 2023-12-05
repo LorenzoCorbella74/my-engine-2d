@@ -3,7 +3,6 @@ import { GameObject } from "../GameObject";
 import { BoundingBoxComponent } from "../components/bounding-box";
 import { GraphicsComponent } from "../components/graphic";
 import { RigidBodyComponent, GROUP } from "../components/rigidBody";
-import { ComponentNames } from "../models/component-names.enum";
 import { GameNode } from "../decorators";
 
 @GameNode({ groupName: 'trigger' })
@@ -41,10 +40,6 @@ export class Trigger extends GameObject {
                 }
             }))
         this.addComponent(new BoundingBoxComponent(this));
-    }
-
-    sync(x: number, y: number) {
-        this.setPosition(x, y)
     }
 
     reset() {
