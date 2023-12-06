@@ -28,6 +28,6 @@ export class Enemy extends GameObject {
         const enemySprite = this.getComponents<SpriteComponent>('Sprite')[0]
         // set sprite dimension
         enemySprite.setWidthAndHeight(32, 32);
-        enemySprite.setAnchor(0.5)
+        // enemySprite.setAnchor(0.5)
     }
 }

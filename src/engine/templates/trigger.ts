@@ -30,7 +30,7 @@ export class Trigger extends GameObject {
                 shape: 'rectangle',
                 isStatic: true,
                 collisionFilter: {
-                    category: GROUP.TRIGGER,
+                    category: GROUP.DEFAULT,
                     mask: GROUP.PLAYER
                 },
                 //  inizial position in local coordinates

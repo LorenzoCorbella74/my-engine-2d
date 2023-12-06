@@ -40,15 +40,13 @@ export class RigidBodyComponent extends Component {
         let component;
         if (this.entity.hasComponent(ComponentNames.Sprite)) {
             component = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite
-            x = this.entity.x + options.position?.x || 0;
-            y = this.entity.y + options.position?.y || 0;
         } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
             component = this.entity?.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics as Graphics
-            x = this.entity.x + this.entity.width/2 + options.position?.x || 0;
-            y = this.entity.y + this.entity.height/2 + options.position?.y || 0;
         } else {
             throw new EngineError(`Required components not implemented for RigidBodyComponent in ${this.entity.name} gameObject.`);
         }
+        x = this.entity.x + options.position?.x || 0;
+        y = this.entity.y + options.position?.y || 0;
         width = component.width;
         height = component.height;
 
@@ -80,8 +78,13 @@ export class RigidBodyComponent extends Component {
      * Sync the entity position/rotation with the rigid body
      */
     update() {
-        this.entity.x = this.rigidBody.position.x
-        this.entity.y = this.rigidBody.position.y
+        if (this.entity.hasComponent(ComponentNames.Sprite)) {
+            this.entity.x = this.rigidBody.position.x
+            this.entity.y = this.rigidBody.position.y
+        } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
+            this.entity.x = this.rigidBody.position.x - this.entity.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics.width / 2
+            this.entity.y = this.rigidBody.position.y - this.entity.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics.height / 2
+        }
         this.entity.rotation = this.rigidBody.angle;
     }
 

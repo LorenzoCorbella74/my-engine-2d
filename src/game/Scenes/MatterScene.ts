@@ -6,7 +6,6 @@ import { GameObject } from '../../engine/GameObject';
 
 import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
 import { Obstacle } from '../entities/MatterScene/obstacle';
-import { KeyMapping } from '../../engine/models/key-mapping';
 
 export class MatterScene extends Scene {
 
@@ -85,12 +84,12 @@ export class MatterScene extends Scene {
         const { x: xp, y: yp } = this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody.position
         this.textCoord.x = Math.ceil(xp)
         this.textCoord.y = Math.ceil(yp) - 32
-        this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y + 32}`
+        this.textCoord.text = `x:${Math.ceil(xp)} - y:${Math.ceil(yp)}`
 
-
-        this.engine.time.runOnFrameNum([1, 30], (frameNumber: number) => {
-            this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
-        })
+        // TODO: test hasLineOfSight
+        // this.engine.time.runOnFrameNum([1, 30], (frameNumber: number) => {
+        //     this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
+        // })
 
 
         if (this.engine.keyboard.iskeyDownOnce('O')) {

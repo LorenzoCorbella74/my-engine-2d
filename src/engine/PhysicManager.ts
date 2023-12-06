@@ -62,7 +62,7 @@ export class PhysicManager {
 
         // TO BE TESTED:!!!!
         if ((document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display !== "none") {
-            (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.engine.camera.target?.x}px ${this.engine.camera.target?.y}px`;
+            (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.engine.app.screen.width / 2 - (this.engine.camera.target.x * this.engine.camera.zoomLevel)}px ${this.engine.app.screen.height / 2 - (this.engine.camera.target.y * this.engine.camera.zoomLevel)}px`;
         }
     }
 
