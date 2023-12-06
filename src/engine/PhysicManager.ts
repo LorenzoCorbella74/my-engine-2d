@@ -2,38 +2,35 @@ import { Body, Query, Engine, Events, Composite, Render } from 'matter-js';
 import { MyEngine2D } from './Engine'
 import { GameEvent } from './EventManager';
 import { GameObject } from './GameObject';
-import { Graphics } from 'pixi.js';
 import { GROUP, RigidBodyComponent } from './components/rigidBody';
 import { BaseEventType, BasePayload } from './models/events';
 import { Trigger } from './templates/trigger';
 
-export type GraphicsWithPhisics = Graphics & {
-    rigidBody: Body
-}
-
 export class PhysicManager {
 
     physicsEngine!: Engine;
-    render: Render;
+    render!: Render;
 
     constructor(public engine: typeof MyEngine2D) {
 
         this.physicsEngine = Engine.create()
 
-        this.render = Render.create({
-            element: document.querySelector('#phisic-debugger') as HTMLCanvasElement,
-            engine: this.physicsEngine,
-            options: {
-                width: this.engine.app.view.width,
-                height: this.engine.app.view.height,
-                wireframes: true,
-                background: 'transparent',
-                wireframeBackground: 'transparent'
-            }
-        });
-        Render.run(this.render);
+        if (import.meta.env.DEV) {
+            this.render = Render.create({
+                element: document.querySelector('#phisic-debugger') as HTMLCanvasElement,
+                engine: this.physicsEngine,
+                options: {
+                    width: this.engine.app.view.width,
+                    height: this.engine.app.view.height,
+                    wireframes: true,
+                    background: 'transparent',
+                    wireframeBackground: 'transparent'
+                }
+            });
+            Render.run(this.render);
+        }
 
-        this.physicsEngine.gravity.y = 0; // default is 0 as TOP DOWN SHHOTER
+        this.physicsEngine.gravity.y = 0; // default is 0 as for a TOP DOWN SHOOTER Gane
 
         Events.on(this.physicsEngine, 'collisionStart', (event) => this.onCollisionStart(event))
         Events.on(this.physicsEngine, 'collisionEnd', (event) => this.onCollisionEnd(event))
@@ -46,12 +43,13 @@ export class PhysicManager {
 
     /* ---------------------- DEBUG ---------------------- */
     showPhisicsCanvas() {
+        if (!import.meta.env.DEV) return;
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "block";
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.zIndex = '100';
-        /*  (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.app.view.width / 2}px ${this.app.view.height / 2}px`; */
     }
 
     hidePhisicsCanvas() {
+        if (!import.meta.env.DEV) return;
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "none";
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.zIndex = '-1';
     }
@@ -59,24 +57,22 @@ export class PhysicManager {
     /* --------------------------------------------------- */
     update() {
         Engine.update(this.physicsEngine, 1000 / 60) // this.app.ticker.maxFPS
-
-        // TO BE TESTED:!!!!
-        if ((document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display !== "none") {
-            (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.engine.app.screen.width / 2 - (this.engine.camera.target.x * this.engine.camera.zoomLevel)}px ${this.engine.app.screen.height / 2 - (this.engine.camera.target.y * this.engine.camera.zoomLevel)}px`;
+        // Show phisics simulation in development
+        if (import.meta.env.DEV && (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display !== "none" && this.engine.camera.target) {
+            (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.engine.app.screen.width / 2 - (this.engine.camera.target?.x * this.engine.camera.zoomLevel)}px ${this.engine.app.screen.height / 2 - (this.engine.camera.target.y * this.engine.camera.zoomLevel)}px`;
         }
     }
 
     /**
-     * Remove temporarily a body from the physics engine
+     * Remove temporarily a body from the physics engine by setting the group to 0
      * @param body 
      */
     disableCollisions(body: Body) {
-        // Imposta il gruppo su zero per disabilitare temporaneamente le collisioni
         body.collisionFilter.category = GROUP.DEFAULT;
     }
 
     /**
-     * Restore the rigid body to a Body
+     * Restore the rigid body to a Body by setting the appropriate collision groups
      * @param body 
      * @param groups 
      */
@@ -89,6 +85,8 @@ export class PhysicManager {
         let [bodyA, bodyB] = [collision.bodyA, collision.bodyB]
         MyEngine2D.log(`${bodyA.label} starts collision with ${bodyB.label}.`, bodyA, bodyB)
         if (bodyB.label.includes('trigger')) {
+            // disable rigid body
+            this.disableCollisions(bodyB)
             // RUN TRIGGER Callback only once
             const trigger = MyEngine2D.getObjectByName(bodyB.label) as Trigger
             if (!trigger.fired) {
@@ -96,7 +94,7 @@ export class PhysicManager {
                 trigger.callback();
             }
         } else {
-            // SEND EVENT TO TARGET
+            // SEND EVENT TO TARGET TODO: only if of a specific type (walls do not send collision events...)
             const colisionEvent = new GameEvent<BasePayload, BaseEventType>(
                 MyEngine2D.config.events?.Collision,
                 MyEngine2D.getObjectByName(bodyA.label)!,
@@ -127,7 +125,7 @@ export class PhysicManager {
      */
     hasLineOfSight(fromObj: GameObject, toObj: GameObject): boolean {
         const from = fromObj.getComponents<RigidBodyComponent>('RigidBody')[0];
-        const to = fromObj.getComponents<RigidBodyComponent>('RigidBody')[0];
+        const to = toObj.getComponents<RigidBodyComponent>('RigidBody')[0];
         if (from.rigidBody && to.rigidBody) {
             let collisions = Query.ray(
                 Composite.allBodies(MyEngine2D.physics.physicsEngine.world),

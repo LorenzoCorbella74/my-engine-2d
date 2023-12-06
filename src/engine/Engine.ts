@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 
 // Managers
+import AssetManager from "./AssetManager";
 import { SoundManager } from './SoundManager';
 import { TimeManager } from './TimeManager';
 import { StorageDB } from './StorageManager';
@@ -17,8 +18,7 @@ import { EventManager } from "./EventManager";
 import { PhysicManager } from './PhysicManager'
 import { CrossHairManager } from './CrossHairManager'
 import { FiltersManager } from './FiltersManager'
-import AssetManager from "./AssetManager";
-import { Debug2UIManager } from "./DebugManager";
+import { Debug2UIManager } from "./Debug2UIManager";
 import { ParticleManager } from "./ParticleManager";
 import * as math from "./utils/math";
 

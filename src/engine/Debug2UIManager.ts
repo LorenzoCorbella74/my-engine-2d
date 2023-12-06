@@ -17,6 +17,10 @@ export class Debug2UIManager {
         app.stage.addChild(this.debugText);
     }
 
+    setPosition(x: number, y: number) {
+        this.debugText.position.set(x, y);
+    }
+
     log2Screen(message: string) {
         this.messageQueue.push(message);
         if (!this.displayTimer) {
