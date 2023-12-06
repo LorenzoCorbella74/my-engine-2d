@@ -20,7 +20,7 @@ import { CrossHairManager } from './CrossHairManager'
 import { FiltersManager } from './FiltersManager'
 import { Debug2UIManager } from "./Debug2UIManager";
 import { ParticleManager } from "./ParticleManager";
-import * as math from "./utils/math";
+import { math } from "./utils/math";
 
 import { GameObject } from "./GameObject";
 import { State } from "./models/engine-state";
@@ -168,6 +168,7 @@ export class Engine {
             // clear mouse state
             this.mouse.clear();
         });
+
     }
 
     /* -------------------------- LOOP -------------------------- */
