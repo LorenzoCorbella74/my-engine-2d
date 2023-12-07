@@ -2,10 +2,13 @@ import { GameObject } from './GameObject'
 
 export class GameObjectRepo {
 
-    public gameObjectsIdMap = new Map<string, GameObject>();
-    public gameObjectsNameMap = new Map<string, GameObject>();
-    public gameObjectsIdNameMap = new Map<string, string>();
-    public gameObjectsGroups: { [key: string]: GameObject[] } = {};
+    private gameObjectsIdMap!: Map<string, GameObject>;
+    private gameObjectsNameMap!: Map<string, GameObject>;
+    private gameObjectsGroups!: { [key: string]: GameObject[] };
+
+    constructor() {
+        this.createDefaults()
+    }
 
     /**
      * Take the object from the gameObjects store
@@ -40,5 +43,11 @@ export class GameObjectRepo {
             return this.gameObjectsGroups[name]
         }
         return null
+    }
+
+    createDefaults() {
+        this.gameObjectsIdMap = new Map<string, GameObject>();
+        this.gameObjectsNameMap = new Map<string, GameObject>();
+        this.gameObjectsGroups = {};
     }
 }

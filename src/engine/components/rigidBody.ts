@@ -66,7 +66,7 @@ export class RigidBodyComponent extends Component {
         if (shape === 'rectangle' && width && height && x !== undefined && y !== undefined) {
             this.rigidBody = Bodies.rectangle(x + width / 2, y + height / 2, width, height, config) as Body;
         } else if (shape === 'circle' && width && height && x !== undefined && y !== undefined) {
-            this.rigidBody = Bodies.circle(x + width / 2, y + height / 2, width, config) as Body; // TODO
+            this.rigidBody = Bodies.circle(x, y, width, config) as Body; // TODO
         } else if (shape === 'polygon') {
             // TODO: poligon
         }
@@ -104,6 +104,27 @@ export class RigidBodyComponent extends Component {
 
     setRotation(angle: number) {
         this.rigidBody.angle = angle
+    }
+
+    /**
+ * Sets the torque of the rigid body.(how mush rotational force is acting on a body)
+ *
+ * @param {number} torque - The torque to set. Defaults to 0.002.
+ */
+    setTorque(torque: number = 0) {
+        this.rigidBody.torque = torque
+    }
+
+
+    /**
+ * Applies a force to the rigid body at a given angle and power.
+ *
+ * @param {number} angle - The angle at which the force should be applied.. Defaults to Math.PI / 2.
+ * @param {number} power - The power of the force to be applied. Defaults to 0.02.
+ */
+    applyForce(angle: number = Math.PI / 2, power: number = 0.02) {
+        let force = { x: Math.cos(angle) * power, y: Math.sin(angle) * power }
+        Body.applyForce(this.rigidBody, this.rigidBody.position, force)
     }
 }
 

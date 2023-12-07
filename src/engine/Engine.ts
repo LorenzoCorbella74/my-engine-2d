@@ -65,10 +65,10 @@ export class Engine {
         this.app.renderer.resize(window.innerWidth, window.innerHeight);
         if (this.app.view) {
             // TODO: resize event listener
-            /* this.app.view.addEventListener('resize', (ev: Event) => {
-               const { innerWidth, innerHeight } = ev.target as Window;
-               this.scenes.currentScene?.onResize?.(innerWidth, innerHeight);
-           }); */
+            /*  this.app.view.addEventListener('resize', (ev: Event) => {
+                const { innerWidth, innerHeight } = ev.target as Window;
+                this.scenes.currentScene?.onResize?.(innerWidth, innerHeight);
+            }); */
         }
     }
 

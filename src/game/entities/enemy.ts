@@ -26,7 +26,12 @@ export class Enemy extends GameObject {
             }
         }))
         const enemySprite = this.getComponents<SpriteComponent>('Sprite')[0]
+        const enemyRigidBody = this.getComponents<RigidBodyComponent>('RigidBody')[0]
         // set sprite dimension (and update rigidbody...)
         enemySprite.setWidthAndHeight(32, 32);
+        enemySprite.setInteractive(true)
+        enemySprite.sprite.on("mousedown", (e) => {
+            enemyRigidBody.applyForce()
+        })
     }
 }
