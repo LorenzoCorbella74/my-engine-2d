@@ -56,7 +56,7 @@ export class SecondScene extends Scene {
         this.player.setPosition(300, 100); // update player container position
 
         // Focus on PLayer
-        this.engine.camera.focusOn(this.player, this)
+        this.engine.camera.lockTo(this.player, this)
 
         // ENEMY 1
         this.enemy1 = new Enemy('Nemico1', 'color1')
@@ -78,7 +78,7 @@ export class SecondScene extends Scene {
             { x: 500, y: 0, width: 300, height: 100 },
             () => console.log('Trigger has been fired', this));
 
-        
+
     }
 
     update(delta: number) {
@@ -128,7 +128,7 @@ export class SecondScene extends Scene {
         // test change camera target
         if (this.engine.keyboard.iskeyDownOnce('O')) {
             const target = this.engine.camera.target?.name === 'Player' ? this.enemy1 : this.player
-            this.engine.camera.focusOn(target, this)
+            this.engine.camera.lockTo(target, this)
         }
 
         // test event to single entity

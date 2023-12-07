@@ -16,7 +16,7 @@ export class GraphicScene extends Scene {
 
     async init() {
         // center on the middle of the screen
-        this.engine.camera.focusOn(null, this)
+        this.engine.camera.lockTo(null, this)
 
         let timer: any;
         // test GameGraphics
@@ -72,11 +72,11 @@ export class GraphicScene extends Scene {
 
 
         // TEST MOUSE
-        if(this.engine.mouse.isMouseButton1Down()){
+        if (this.engine.mouse.isMouseButton1Down()) {
             this.engine.log('mouse.isMouseButton1Down')
         }
-        if(this.engine.mouse.isMouseButton1Pressed()) {
+        if (this.engine.mouse.isMouseButton1Pressed()) {
             this.engine.log('mouse.isMouseButton1Pressed')
         }
-    }   
+    }
 }

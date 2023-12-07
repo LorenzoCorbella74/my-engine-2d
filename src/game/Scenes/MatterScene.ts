@@ -6,6 +6,7 @@ import { GameObject } from '../../engine/GameObject';
 
 import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
 import { Obstacle } from '../entities/MatterScene/obstacle';
+import { createTestCrosshair } from '../entities/crosshair';
 
 export class MatterScene extends Scene {
 
@@ -40,20 +41,12 @@ export class MatterScene extends Scene {
 
         // si definisce il player
         this.player = new Player('Player', 'player')
-        // this.player.position.set(window.innerWidth / 2, window.innerHeight / 2 - 100)
+
         // focus della camera sul player
-        this.engine.camera.focusOn(this.player, this)
+        this.engine.camera.lockTo(this.player, this)
 
         // crosshair
-        this.crosshair = new Graphics();
-        this.crosshair.lineStyle(2, 0xFFFFFF, 1);
-        this.crosshair.moveTo(-15, 0);
-        this.crosshair.lineTo(15, 0);
-        this.crosshair.moveTo(0, -15);
-        this.crosshair.lineTo(0, 15);
-        this.crosshair.position.set(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2);
-
-        this.crosshair = this.engine.crosshair.activateOnCurrentScene(this, this.crosshair);
+        this.crosshair = this.engine.crosshair.activateOnCurrentScene(this, createTestCrosshair(this.engine));
 
         this.textCoord = new Text("Coord:", {
             fontSize: 12,
@@ -73,7 +66,7 @@ export class MatterScene extends Scene {
 
         // update gameObjects
         super.update(delta)
-        
+
         // update player and rigidBody rotation
         const { x, y } = this.engine.mouse.getMouse();
         const playerRigidBody = this.player.getComponents<RigidBodyComponent>('RigidBody')[0]
@@ -131,7 +124,7 @@ export class MatterScene extends Scene {
             this.engine.crosshair.toggle()
         }
         if (this.engine.keyboard.iskeyDownOnce('N')) {
-           
+
         }
     }
 }

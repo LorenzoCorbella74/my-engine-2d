@@ -6,10 +6,13 @@ import { Scene } from "./Scene";
 import { MyEngine2D } from "./Engine";
 import { Point } from "./models/vectors";
 
+export type CameraLock = 'both' | 'horizontal' | 'vertical';
+
 export class Camera {
 
     app: PIXI.Application<PIXI.ICanvas>;
     target: GameObject | null;
+    lockMode: CameraLock;
     container!: PIXI.Container<PIXI.DisplayObject>;
 
     zoomLevel: number;
@@ -25,6 +28,7 @@ export class Camera {
         this.app = engine.app;
 
         this.target = null; // The FOCUS of the camera
+        this.lockMode = 'both';
         this.zoomLevel = 1;
 
         this.shakeDuration = 0;
@@ -36,7 +40,7 @@ export class Camera {
         this.ease = ease;
     }
 
-    focusOn(element: GameObject | null, currentScene: Scene) {
+    lockTo(element: GameObject | null, currentScene: Scene, mode: CameraLock = 'both') {
         this.app.stage.removeChild(this.container);
         // se non passato focus al centro dello schermo
         if (!element) {
@@ -46,6 +50,7 @@ export class Camera {
         }
         this.container = currentScene;
         this.target = element;
+        this.lockMode = mode;
         this.app.stage.addChild(this.container);
     }
 
@@ -69,13 +74,16 @@ export class Camera {
             this.shakeDuration = 0;
         }
         // to have a "delay" in tracking the target
-        let newX = this.engine.math.mix(this.app.screen.width/2, this.target.x, this.ease);
-        let newY = this.engine.math.mix(this.app.screen.height / 2 , this.target.y, this.ease);
+        let newX = this.engine.math.mix(this.app.screen.width / 2, this.target.x, this.ease);
+        let newY = this.engine.math.mix(this.app.screen.height / 2, this.target.y, this.ease);
 
-        // TODO: Aggiorna la posizione della telecamera in base al target
-        this.container.position.x = this.app.screen.width / 2 - (newX * this.zoomLevel);
-        this.container.position.y = this.app.screen.height / 2 - (newY * this.zoomLevel);
-
+        // Aggiorna la posizione della telecamera in base al target
+        if (this.lockMode === 'horizontal' || this.lockMode === 'both') {
+            this.container.position.x = this.app.screen.width / 2 - (newX * this.zoomLevel);
+        }
+        if (this.lockMode === 'vertical' || this.lockMode === 'both') {
+            this.container.position.y = this.app.screen.height / 2 - (newY * this.zoomLevel);
+        }
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel);
     }
@@ -124,7 +132,7 @@ export class Camera {
             }
         }
         this.defaultCamera?.position.set(origin.x, origin.y);
-        this.focusOn(this.defaultCamera, this.engine.scenes.currentScene);
+        this.lockTo(this.defaultCamera, this.engine.scenes.currentScene);
     }
 
 

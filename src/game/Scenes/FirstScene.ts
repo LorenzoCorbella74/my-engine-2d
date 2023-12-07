@@ -38,7 +38,7 @@ export class FirstScene extends Scene {
 
         this.bg = new Background('Background', 'bg');
 
-        this.engine.camera.focusOn(null, this)
+        this.engine.camera.lockTo(null, this)
 
         this.bunny = new Button('Bunny', 'bunny', 100, 100, 64, 64, () => this.engine.scenes.changeScene('SecondScene'));
 
