@@ -1,12 +1,12 @@
 import { GameObject } from '../../engine/GameObject';
-import { GameNode } from '../../engine/decorators';
+import { Entity } from '../../engine/decorators';
 import { SpriteComponent } from '../../engine/components/sprite';
 import { HealthComponent } from '../../engine/components/health';
 import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
 import { InputController } from '../../engine/components/input-controller';
 import { BoundingBoxComponent } from '../../engine/components/bounding-box';
 
-@GameNode()
+@Entity()
 export class Player extends GameObject {
 
     constructor(name: string, spriteName: string) {

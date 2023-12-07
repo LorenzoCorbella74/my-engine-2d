@@ -2,9 +2,9 @@ import { Graphics } from "pixi.js";
 import { GameObject } from "../../../engine/GameObject";
 import { GraphicsComponent } from "../../../engine/components/graphic";
 import { GROUP, RigidBodyComponent } from "../../../engine/components/rigidBody";
-import { GameNode } from "../../../engine/decorators";
+import { Entity } from "../../../engine/decorators";
 
-@GameNode()
+@Entity()
 export class Obstacle extends GameObject {
 
     constructor(name: string, x: number, y: number, width: number, height: number) {

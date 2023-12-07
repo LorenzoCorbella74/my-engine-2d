@@ -3,9 +3,9 @@ import { GameObject } from "../GameObject";
 import { BoundingBoxComponent } from "../components/bounding-box";
 import { GraphicsComponent } from "../components/graphic";
 import { RigidBodyComponent, GROUP } from "../components/rigidBody";
-import { GameNode } from "../decorators";
+import { Entity } from "../decorators";
 
-@GameNode({ groupName: 'trigger' })
+@Entity({ groupName: 'trigger' })
 export class Trigger extends GameObject {
 
     fired: boolean = false

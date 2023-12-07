@@ -41,7 +41,7 @@ export class Engine {
     public mouse!: InputMouseManager;
     public camera!: Camera
     public logic!: GameLogic;
-    public repo: GameObjectRepo = new GameObjectRepo();
+    private repo: GameObjectRepo = new GameObjectRepo();
     public events!: EventManager;
     public physics!: PhysicManager
     public crosshair!: CrossHairManager
@@ -219,6 +219,8 @@ export class Engine {
         console.error(this.engineLogPrefix + message, ...other)
     }
 
+    /* -------------------------- LOGS TO UI -------------------------- */
+
     log2UI(message: string) {
         if (!import.meta.env.DEV) return;
         this.debug2UI.log2Screen(message)
@@ -239,6 +241,12 @@ export class Engine {
         return resource
     }
 
+    /**
+     * Retrieves the pre-loaded texture associated with the specified key.
+     *
+     * @param {string} key - The key of the texture to retrieve.
+     * @return {*} The texture associated with the specified key.
+     */
     getTexture(key: string) {
         return this.loader.resources[key]
     }
@@ -261,8 +269,24 @@ export class Engine {
         return this.repo.getObjectById(id)
     }
 
-    getGroup(name: string) {
+    /**
+    * Retrieves a group by name.
+    *
+    * @param {string} name - The name of the group to retrieve.
+    * @return {any} The group object.
+    */
+    getGroup(name: string): GameObject[] | null {
         return this.repo.getGroup(name)
+    }
+
+    /**
+    * Retrieves objects from the game repository based on tags.
+    *
+    * @param {string | string[]} tags - The tags to filter the objects by.
+    * @return {GameObject[]} An array of game objects that match the specified tags.
+    */
+    getObjectsByTags(tags: string | string[]): GameObject[] {
+        return this.repo.getObjectByTags(tags)
     }
 }
 

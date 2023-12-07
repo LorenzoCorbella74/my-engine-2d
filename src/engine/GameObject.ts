@@ -11,6 +11,8 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
 
   private _id!: string;
   private _name: string;
+  private _tags: Set<string> = new Set();
+
   private components: { [key: string]: Component[] } = {};
 
   engine: typeof MyEngine2D;
@@ -39,6 +41,10 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
 
   get name(): string {
     return this._name;
+  }
+
+  get tags(): Set<string> {
+    return this._tags;
   }
 
   /**
@@ -147,5 +153,54 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
       return components.some((component) => component.enabled);
     }
     return false;
+  }
+
+
+  /* -------------------- TAGS --------------------- */
+
+  private evaluateSingleInput(input: string) {
+    if (input.startsWith("!")) {
+      return !this._tags.has(input.substr(1));
+    } else {
+      return this._tags.has(input);
+    }
+  }
+
+
+  addTag(input: string | string[]) {
+    if (Array.isArray(input)) {
+      for (let a = 0; a < input.length; a++) {
+        this._tags.add(input[a]);
+      }
+    } else {
+      this._tags.add(input);
+    }
+  }
+
+
+  queryTag(input: string | string[], mode = "AND") {
+    if (Array.isArray(input)) {
+      if (mode === "AND") {
+        return input.every(e => this.evaluateSingleInput(e));
+      } else if (mode === "OR") {
+        return input.some(e => this.evaluateSingleInput(e));
+      }
+    } else {
+      return this.evaluateSingleInput(input);
+    }
+  }
+
+  deleteTag(input: string | string[]) {
+    if (Array.isArray(input)) {
+      for (let a = 0; a < input.length; a++) {
+        this._tags.delete(input[a]);
+      }
+    } else {
+      this._tags.delete(input);
+    }
+  }
+
+  clearTags() {
+    this._tags.clear();
   }
 }

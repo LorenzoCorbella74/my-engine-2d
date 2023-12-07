@@ -17,7 +17,7 @@ export class LocalizationManager {
     private defaultLanguage: string;
     private currentLanguage: string;
 
-    constructor(public engine: typeof MyEngine2D) { 
+    constructor(public engine: typeof MyEngine2D) {
         this.defaultLanguage = this.engine.config.defaultLocale || 'en';
         this.currentLanguage = this.defaultLanguage;
     }
@@ -27,7 +27,7 @@ export class LocalizationManager {
         if (this.localizations[language]) {
             this.currentLanguage = language;
         } else {
-            console.warn(`Traduzioni per la lingua ${language} non trovate. Utilizzando la lingua predefinita.`);
+            console.warn(`Translation for language ${language} not found!. Using the default language.`);
             this.currentLanguage = this.defaultLanguage;
         }
     }

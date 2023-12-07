@@ -1,8 +1,8 @@
 import { GameObject } from "../../../engine/GameObject";
 import { SpriteComponent } from "../../../engine/components/sprite";
-import { GameNode } from "../../../engine/decorators";
+import { Entity } from "../../../engine/decorators";
 
-@GameNode()
+@Entity()
 export class Background extends GameObject {
 
     constructor(name: string, spriteName: string) {

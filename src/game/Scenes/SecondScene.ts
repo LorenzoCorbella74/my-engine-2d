@@ -11,6 +11,7 @@ import { RigidBodyComponent } from '../../engine/components/rigidBody';
 import { Power2 } from 'gsap'
 import { GameGraphics } from '../../engine/GameGraphics';
 import { Trigger } from '../../engine/templates/trigger';
+import { SpriteComponent } from '../../engine/components/sprite';
 
 export class SecondScene extends Scene {
 
@@ -76,6 +77,8 @@ export class SecondScene extends Scene {
             'test-trigger',
             { x: 500, y: 0, width: 300, height: 100 },
             () => console.log('Trigger has been fired', this));
+
+        
     }
 
     update(delta: number) {

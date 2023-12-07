@@ -2,9 +2,9 @@
 import { GameObject } from "../../engine/GameObject"
 import { GROUP, RigidBodyComponent } from "../../engine/components/rigidBody";
 import { SpriteComponent } from "../../engine/components/sprite";
-import { GameNode } from '../../engine/decorators';
+import { Entity } from '../../engine/decorators';
 
-@GameNode({
+@Entity({
     groupName: 'Enemy',
 })
 export class Enemy extends GameObject {
@@ -30,9 +30,12 @@ export class Enemy extends GameObject {
         // set sprite dimension (and update rigidbody...)
         enemySprite.setWidthAndHeight(32, 32);
         enemySprite.setInteractive(true)
+
+        // test for applyforce
         enemySprite.sprite.on("mousedown", (e) => {
             let power = this.engine.math.distance(this, { x: e.clientX, y: e.clientY }) * 10;
-            enemyRigidBody.applyForce(undefined, power);
+            let angle = this.engine.math.angle(this, { x: e.clientX, y: e.clientY });
+            enemyRigidBody.applyForce(angle, power);
         })
     }
 }

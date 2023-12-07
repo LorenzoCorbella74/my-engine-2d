@@ -10,7 +10,7 @@ export class Debug2UIManager {
         this.displayDuration = displayDuration;
 
         this.debugText = new Text('', {
-            fontSize: 16,
+            fontSize: 14,
             fill: 0xffffff,
         });
         this.debugText.position.set(150, 32);

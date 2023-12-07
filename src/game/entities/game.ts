@@ -1,9 +1,9 @@
 
 import { GameObject } from "../../engine/GameObject"
-import { GameNode } from '../../engine/decorators';
+import { Entity } from '../../engine/decorators';
 import { ScriptComponent } from "../custom-component/script-one";
 
-@GameNode()
+@Entity()
 export class Game extends GameObject {
 
     constructor(name: string) {

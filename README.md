@@ -2,7 +2,7 @@
 
 I have always been fascinated by video game engines and my-engine-2d is my effort in typescript and WebGL to make my own ...ultra ligth version. To not reinvent the wheel the engine is based on the following technologies:
 
-- [Pixijs v.7.2](https://pixijs.com/) for rendering,
+- [Pixijs v.7.2](https://pixijs.com/) for rendering 2D assets,
 - [Pixi Sounds v.5](https://pixijs.io/sound/examples/index.html) for sounds,
 - [Pixi Particle Emitter v.5.0.8](https://github.com/pixijs/particle-emitter) for particles,
 - [GSAP V3 + pixiPlugin](https://greensock.com/docs/v3/Plugins/PixiPlugin) for animations,
@@ -17,8 +17,9 @@ The engine provides a series of classes, contained in the `engine` folder, that 
 ## Asset Manager
 
 It is possible to load asincronously the resources placed in the assets folder and subdivided in group folder. Each folder can contain specific scene resources organised in ther following mandatory sub folders:
-- `audio` for audio files, 
-- `img` for textures, 
+
+- `audio` for audio files,
+- `img` for textures,
 - `data` for json data and translations.
 
 ```typescript
@@ -31,17 +32,36 @@ this.engine.getAsset("rocket-launcher"); // use as asset name the name of the fi
 
 ## GameObject Architecture and ECS
 
-Thanks to the `GameNode` decorator it is possible to instanciate game entities with an unique id, add them automatically to the current scene and be retrievable by name or id via the `getObjectByName`, `getObjectById` and `getGroup` methods.
+Thanks to the `Entity` decorator it is possible to instanciate Gameobject with an unique id and add them automatically to the current scene.
 
-The "Gameobject" extends the PIXI.Container, and being the "Entity" is composed of components. The engine provides out of the box:
+The engine provides several methods to search for objects and query the game world:
+
+- `getObjectByName(game:string)`,
+- `getObjectById(id:number)`
+- `getGroup(name: string)` to retrieve a list of GameObjects belonging to the relevant group.
+
+It's possible to decorate GameObjects with tags and retrieve a list of GameObject instances that match the given tags with the `getObjectsByTags(tags: string | string[], condition: 'AND' | 'OR' = 'AND')` methods (to invert use "!" before the tag):
+
+```typescript
+@Entity({
+  group:'enemy'
+  tags:["soldier", "robot", '!friend']
+})
+export class EnemyCommander extends GameObject {
+
+  // code here..
+}
+```
+
+The "Gameobject" class extends the PIXI.Container, and being the "Entity" is composed of components. The engine provides out of the box:
 
 - sprite component
-- rigidbody component to manage collision of rigid bodies
+- rigidbody component to manage collision of rigid bodies via the library [Matter-js](https://github.com/liabru/matter-js/tree/master)
 - script component to manage custom logic
 - input-controller component to manage the entity via user inputs
 
 ```typescript
-@GameNode()
+@Entity()
 export class Player extends GameObject {
   constructor(name: string, spriteName: string) {
     super(name);
@@ -53,7 +73,12 @@ export class Player extends GameObject {
         isStatic: false,
         collisionFilter: {
           category: GROUP.PLAYER,
-          mask: GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM | GROUP.TRIGGER,
+          mask:
+            GROUP.ENEMY |
+            GROUP.PROJECTILE |
+            GROUP.WALL |
+            GROUP.ITEM |
+            GROUP.TRIGGER,
         },
         position: {
           x: 0,
@@ -67,18 +92,22 @@ export class Player extends GameObject {
 ```
 
 ### Gameobject Templates
+
 The engine provides the following template objects:
-- [X] Trigger
+
+- [x] Trigger
 - [ ] TODO...
 
 ## Sound Manager
 
 A map of all the .mp3 resources is available after pre loading and sounds are managed with the following methods:
 
-- `playSound(<soundName>)`
-- `stopSound(<soundName>)`
-- `toggleSound(<soundName>)`
-- `playRandomSound(<soundName>s)`.
+- `playSound(name:string)`
+- `stopSound(name:string)`
+- `toggleSound(name:string)`
+- `playRandomSound(keys: string[])`.
+- `fadeInSound(name: string, duration: number = 1)`.
+- `fadeOutSound(name: string, volume: number = 0, duration: number = 1)`.
 
 ### Scene manager
 
@@ -108,6 +137,8 @@ export class Scene extends Container {
   onResize(width: number, height: number) {}
 }
 ```
+
+The engine provide methods to change scenes with gsap transitions.
 
 ## Keyboard Input Manager
 
@@ -163,9 +194,10 @@ The engine provide a sinple class to manage locale translations. Put in the asse
 - [x] PIXI Particles in dedicated class
 
 ## Debug
+
 It is possible to use the Chrome Extension [Pixijs Devtools](https://chromewebstore.google.com/detail/pixijs-devtools/aamddddknhcagpehecnhphigffljadon?pli=1) and check the engine object as window.$PE.
 
-To test physics use the 2d visualisation of the matter-js world by running in the browser devtools the function `window.$PE.physics.showPhisicsCanvas()` to show (or `window.$PE.physics.hidePhisicsCanvas()` to hide).
+To test physics use the 2d visualisation of the matter-js world by running in the browser devtools the function `window.$PE.physics.showPhisicsCanvas()` to show (and `window.$PE.physics.hidePhisicsCanvas()` to hide).
 
 # Usage
 

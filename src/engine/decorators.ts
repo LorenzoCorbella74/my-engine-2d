@@ -9,7 +9,7 @@ import { DecoratorOptions } from './models/decorator-option';
  *  Set the id for the GameObject and put in the current scene and inside the repos for quick access 
  * @param options DecoratorOptions
  */
-export function GameNode(options?: DecoratorOptions) {
+export function Entity(options?: DecoratorOptions) {
 
     return function (target: any) {
         const original = target;
@@ -20,20 +20,16 @@ export function GameNode(options?: DecoratorOptions) {
             const instance = new original(...args);
 
             instance.id = options?.id || Math.random().toString(36).substring(2, 15); // `${Date.now()}${Math.random()*1000000}`;
+
+            if (options?.tags) {
+                instance._tags = options.tags;
+            }
             // si registra nel objects repository
             MyEngine2D.repo.gameObjectsIdMap.set(instance.id, instance);
             MyEngine2D.repo.gameObjectsNameMap.set(instance.name, instance);
-            MyEngine2D.repo.gameObjectsIdNameMap.set(instance.id, instance.name);
+
             // si mette nella scena corrente
             MyEngine2D.scenes.currentScene.addChild(instance);
-
-            if (options?.groupName) {
-                // si registra nel objects repository
-                if (!MyEngine2D.repo.gameObjectsGroups[options.groupName]) {
-                    MyEngine2D.repo.gameObjectsGroups[options.groupName] = [];
-                }
-                MyEngine2D.repo.gameObjectsGroups[options.groupName].push(instance);
-            }
 
             // ritorna l'istanza
             return instance;

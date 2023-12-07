@@ -2,9 +2,9 @@ import { GameObject } from './GameObject'
 
 export class GameObjectRepo {
 
-    private gameObjectsIdMap!: Map<string, GameObject>;
-    private gameObjectsNameMap!: Map<string, GameObject>;
-    private gameObjectsGroups!: { [key: string]: GameObject[] };
+    gameObjectsIdMap!: Map<string, GameObject>;
+    gameObjectsNameMap!: Map<string, GameObject>;
+    gameObjectsGroups!: { [key: string]: GameObject[] };
 
     constructor() {
         this.createDefaults()
@@ -34,8 +34,20 @@ export class GameObjectRepo {
         return null
     }
 
-    getObjectByTag(tags: string[]) {
-        // TODO: implementare i tag
+    /**
+ * Retrieves an array of `GameObject` instances that match the given tags.
+ *
+ * @param {string | string[]} tags - The tag or tags to search for.
+ * @return {GameObject[]} An array of `GameObject` instances that match the given tags.
+ */
+    getObjectByTags(tags: string | string[], condition: 'AND' | 'OR' = 'AND'): GameObject[] {
+        let found = []
+        for (let obj of this.gameObjectsIdMap.values()) {
+            if (obj.queryTag(tags, condition)) {
+                found.push(obj)
+            }
+        }
+        return found
     }
 
     getGroup(name: string) {

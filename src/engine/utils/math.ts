@@ -10,6 +10,14 @@ function angle(a: Point, b: Point) {
   return angle;
 }
 
+function degreesToRadians(degrees: number) {
+  return (degrees * Math.PI) / 180;;
+}
+
+function radiansToDegrees(radians: number) {
+  return (radians * 180) / Math.PI;
+}
+
 /**
  * Clamps a value between a minimum and maximum value.
  * meaning that if x is less than min, it returns min, and if x is greater than max, it returns max.
@@ -148,6 +156,8 @@ const ease = {
 
 export const math = {
   angle,
+  radiansToDegrees,
+  degreesToRadians,
   clamp,
   distance,
   ease,
