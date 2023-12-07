@@ -31,7 +31,8 @@ export class Enemy extends GameObject {
         enemySprite.setWidthAndHeight(32, 32);
         enemySprite.setInteractive(true)
         enemySprite.sprite.on("mousedown", (e) => {
-            enemyRigidBody.applyForce()
+            let power = this.engine.math.distance(this, { x: e.clientX, y: e.clientY }) * 10;
+            enemyRigidBody.applyForce(undefined, power);
         })
     }
 }
