@@ -21,7 +21,7 @@ export class Camera {
 
     defaultCamera = new GameObject('camera-default')
 
-    constructor(public engine: typeof MyEngine2D, public sceneManager: SceneManager, private ease: number = 0.1) {
+    constructor(public engine: typeof MyEngine2D, public sceneManager: SceneManager, private ease: number = 0.85) {
         this.app = engine.app;
 
         this.target = null; // The FOCUS of the camera
@@ -69,10 +69,10 @@ export class Camera {
             this.shakeDuration = 0;
         }
         // to have a "delay" in tracking the target
-        let newX = this.engine.math.mix(this.container.position.x, this.target.x, this.ease);
-        let newY = this.engine.math.mix(this.container.position.y, this.target.y, this.ease);
+        let newX = this.engine.math.mix(this.app.screen.width/2, this.target.x, this.ease);
+        let newY = this.engine.math.mix(this.app.screen.height / 2 , this.target.y, this.ease);
 
-        // Aggiorna la posizione della telecamera in base al target
+        // TODO: Aggiorna la posizione della telecamera in base al target
         this.container.position.x = this.app.screen.width / 2 - (newX * this.zoomLevel);
         this.container.position.y = this.app.screen.height / 2 - (newY * this.zoomLevel);
 
