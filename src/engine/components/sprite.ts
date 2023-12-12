@@ -23,7 +23,6 @@ export class SpriteComponent extends Component {
         // if we have a sprite we put in the scene
         if (this.sprite) {
             console.log(`Sprite name for ${spriteName}: width ${this.sprite.width}px and height ${this.sprite.height}px`);
-            // TODO: in base al width e height settarli sul container !!!!!
             this.sprite.anchor.set(0.5);
             this.entity.addChild(this.sprite); // add to the gameobject container
         } else {

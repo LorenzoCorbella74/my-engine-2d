@@ -1,9 +1,10 @@
 export enum ComponentNames {
-    Sprite = 'Sprite',
-    Graphics = 'Graphics',
-    RigidBody = 'RigidBody',
-    Health = 'Health',
+    Sprite = 'SpriteComponent',
+    Graphics = 'GraphicsComponent',
+    RigidBody = 'RigidBodyComponent',
+    Health = 'HealthComponent',
     InputController = 'InputController',
-    BoundingBox='BoundingBox',
-    Script = 'Script'
+    BoundingBox = 'BoundingBoxComponent',
+    Script = 'ScriptComponent',
+    Behaviour = 'BehaviourComponent'
 }

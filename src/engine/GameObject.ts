@@ -6,6 +6,15 @@ import { IGameConditionEntity } from './models/condition-logic';
 import { BaseEventType, BasePayload, IGameObjectEventHandler } from './models/events';
 import { ComponentNames } from './models/component-names.enum';
 import { RigidBodyComponent } from './components/rigidBody';
+import { SpriteComponent } from './components/sprite';
+
+// https://stackoverflow.com/a/73467859
+/* declare global {
+  interface Map<K, V> {
+    has<P extends K>(key: P): this is { get(key: P): V } & this
+    // funny thing: `& this` is the final piece of the puzzle
+  }
+} */
 
 export class GameObject extends Container implements IGameConditionEntity, IGameObjectEventHandler {
 
@@ -58,8 +67,11 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     if (this.hasComponent(ComponentNames.RigidBody)) {
       this.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.removeRigidBody();
     }
+    if (this.hasComponent(ComponentNames.Sprite)) {
+      this.getComponent<SpriteComponent>(ComponentNames.Sprite)?.destroy();
+    }
     this.components = new Map();
-    this.destroy()
+    this.destroy({ children: true });
   }
 
   /**
@@ -86,8 +98,6 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
       c.update(deltaTime);
     }
   }
-
-
 
   /* -------------------- COMPONENTS --------------------- */
 

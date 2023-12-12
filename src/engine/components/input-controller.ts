@@ -4,7 +4,7 @@ import { GameObject } from '../GameObject';
 import { ComponentNames } from '../models/component-names.enum';
 import { RigidBodyComponent } from './rigidBody';
 
-export class InputController extends Component {
+export class InputControllerComponent extends Component {
 
     dependencies: string[] = [ComponentNames.RigidBody];
 

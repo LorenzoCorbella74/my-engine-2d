@@ -3,7 +3,7 @@ import { Entity } from '../../engine/decorators';
 import { SpriteComponent } from '../../engine/components/sprite';
 import { HealthComponent } from '../../engine/components/health';
 import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
-import { InputController } from '../../engine/components/input-controller';
+import { InputControllerComponent } from '../../engine/components/input-controller';
 import { BoundingBoxComponent } from '../../engine/components/bounding-box';
 
 @Entity()
@@ -26,7 +26,7 @@ export class Player extends GameObject {
                 y: 0
             }
         }))
-        this.addComponent(new InputController(this, 150));
+        this.addComponent(new InputControllerComponent(this, 150));
         this.addComponent(new BoundingBoxComponent(this));
     }
 }

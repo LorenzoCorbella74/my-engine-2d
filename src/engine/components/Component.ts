@@ -21,7 +21,7 @@ export class Component {
     }
 
     /**
-     * Enable /Disable the component.
+     * Enable / Disable the component.
      * @param enabled 
      */
     setEnabled(enabled: boolean) {

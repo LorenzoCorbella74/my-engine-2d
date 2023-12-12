@@ -15,11 +15,14 @@ export class GraphicsComponent extends Component {
      * @param {number} localX - The local x-coordinate of the component.
      * @param {number} localY - The local y-coordinate of the component.
      */
-    constructor(gameObject: GameObject, public graphics: Graphics) {
+    constructor(gameObject: GameObject, public graphics: Graphics, localX = 0, localY = 0) {
         super(gameObject, ComponentNames.Graphics);
         // if we have a sprite we put in the scene
         console.log(`Graphics: width ${this.graphics.width}px and height ${this.graphics.height}px - x:${this.entity.x}px y:${this.entity.y}px`);
         this.entity.addChild(graphics);
+        if (localX && localY) {
+            this.setPosition(localX, localY);
+        }
     }
 
     /**
