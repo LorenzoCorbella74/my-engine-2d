@@ -228,4 +228,7 @@ export class Camera {
         return true;
     }
 
+
+    // TODO: animate on a path https://codepen.io/GreenSock/pen/JjWqMQG
+
 }

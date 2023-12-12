@@ -48,6 +48,21 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   }
 
   /**
+ * Deletes the object from the engine repository and removes its associated components.
+ *
+ * @return {void} 
+ */
+  kill() {
+    this.engine.repo.gameObjectsIdMap.delete(this.id);
+    this.engine.repo.gameObjectsNameMap.delete(this.name);
+    if (this.hasComponent(ComponentNames.RigidBody)) {
+      this.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].removeRigidBody();
+    }
+    this.components = {};
+    this.destroy()
+  }
+
+  /**
    * Update container position or, if present the rigidbody
    * @param x 
    * @param y 

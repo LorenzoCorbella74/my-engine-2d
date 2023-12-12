@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { Texture, Application, ICanvas } from "pixi.js";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
+import Stats from 'stats.js';
 
 // Managers
 import AssetManager from "./AssetManager";
@@ -27,6 +28,8 @@ import { State } from "./models/engine-state";
 import { GameConfig } from "./models/config";
 import { AnimationManager } from "./AnimationManager";
 import { LocalizationManager } from "./LocalizationManager";
+
+const stats = new Stats();
 
 export class Engine {
     app!: Application<ICanvas>;
@@ -109,6 +112,11 @@ export class Engine {
 
         document.body.appendChild(this.app.view as HTMLCanvasElement);
 
+        if (import.meta.env.DEV) {
+            stats.showPanel(1); // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.body.appendChild(stats.dom);
+        }
+
         // @ts-expect-error Set PIXI app to global window object for the PIXI Inspector
         globalThis.__PIXI_APP__ = this.app; // PIXI DEVTOOLS
         window.$PE = MyEngine2D             // debug
@@ -154,6 +162,7 @@ export class Engine {
         this.app.ticker.maxFPS = 60;
         this.app.ticker.minFPS = 30;
         this.app.ticker.add((delta) => {                    // delta is close to 1
+            stats.begin();
             this.time.update()                              // updating timers
             this.emitter.update(this.time.getDeltaTime())   // updating particles
             this.physics.update()                           // updating Matter-js 
@@ -167,6 +176,7 @@ export class Engine {
             })
             // clear mouse state
             this.mouse.clear();
+            stats.end();
         });
 
     }
