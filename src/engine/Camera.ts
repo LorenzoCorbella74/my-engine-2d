@@ -230,5 +230,40 @@ export class Camera {
 
 
     // TODO: animate on a path https://codepen.io/GreenSock/pen/JjWqMQG
+    followPath(graphics: PIXI.Graphics, duration: number = 1, callback: () => void = () => { }) {
+        /*      let graphics = new PIXI.Graphics()
+                 .lineStyle(2, 0xaaaaaa, 1)
+                 .moveTo(200, 20)
+                 .lineTo(200, 200)
+                 .arcTo(350, 200, 450, 900, 100)
+                 .lineTo(200, 500)
+                 .lineTo(700, 100)
+                 .bezierCurveTo(700, 100, 700, 400, 100, 100)
+                 .endFill(); */
+        this.engine.scenes.currentScene.addChild(graphics);
+        graphics.visible = false
+
+        let points = graphics.geometry.graphicsData[0].shape.points;
+        let values = [];
+
+        for (let i = 0; i < points.length; i += 2) {
+            values.push({ x: points[i], y: points[i + 1] });
+        }
+
+        gsap.to(this.target, {
+            duration,
+            motionPath: {
+                path: values,
+                curviness: 0,
+                fromCurrent: false
+            },
+            onUpdate: () => {
+                graphics.visible = this.engine.debug;
+            },
+            onComplete: () => {
+                callback();
+            }
+        });
+    }
 
 }
