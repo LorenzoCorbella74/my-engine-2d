@@ -22,7 +22,7 @@ export class BoundingBoxComponent extends Component {
         const hasSprite = this.entity.hasComponent(ComponentNames.Sprite)
         const hasGraphics = this.entity.hasComponent(ComponentNames.Graphics)
         if (hasSprite || hasGraphics) {
-            this.source = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)?.[0]?.sprite as Sprite || this.entity?.getComponents<GraphicsComponent>(ComponentNames.Graphics)?.[0]?.graphics as Graphics
+            this.source = this.entity?.getComponent<SpriteComponent>(ComponentNames.Sprite)?.sprite as Sprite || this.entity?.getComponent<GraphicsComponent>(ComponentNames.Graphics)?.graphics as Graphics
             const { x, y, width, height, anchor } = this.source;
             this.bb.lineStyle(2.5, 0xFF0000);
             this.bb.drawRect(x - anchor?.x * width, y - anchor?.y * height, width, height);

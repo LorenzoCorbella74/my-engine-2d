@@ -36,10 +36,11 @@ export class InputController extends Component {
             if (this.entity.engine.keyboard.isKeyDown('LEFT')) {
                 this.dx -= this.speed * dt;
             }
-
-            // set velocity
-            Body.setVelocity(this.entity.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].rigidBody, { x: this.dx, y: this.dy })
+            const rb = this.entity.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.rigidBody
+            if (rb) {
+                // set velocity
+                Body.setVelocity(rb, { x: this.dx, y: this.dy })
+            }
         }
-
     }
 }

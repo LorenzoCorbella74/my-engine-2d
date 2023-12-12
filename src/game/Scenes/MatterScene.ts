@@ -69,12 +69,12 @@ export class MatterScene extends Scene {
 
         // update player and rigidBody rotation
         const { x, y } = this.engine.mouse.getMouse();
-        const playerRigidBody = this.player.getComponents<RigidBodyComponent>('RigidBody')[0]
+        const playerRigidBody = this.player.getComponent<RigidBodyComponent>('RigidBody')!
         const angle = Math.atan2(y - this.player.y, x - this.player.x);
         this.player.rotation = angle;
         playerRigidBody.setRotation(angle)
 
-        const { x: xp, y: yp } = this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody.position
+        const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>('RigidBody')!.rigidBody.position
         this.textCoord.x = Math.ceil(xp)
         this.textCoord.y = Math.ceil(yp) - 32
         this.textCoord.text = `x:${Math.ceil(xp)} - y:${Math.ceil(yp)}`
@@ -111,12 +111,12 @@ export class MatterScene extends Scene {
         }
         // TEST enable/disable COLLISION
         if (this.engine.keyboard.iskeyDownOnce('Z')) {
-            this.engine.physics.disableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody)
+            this.engine.physics.disableCollisions(this.player.getComponent<RigidBodyComponent>('RigidBody')!.rigidBody)
         }
 
         if (this.engine.keyboard.iskeyDownOnce('X')) {
             const categoriesToCollideWith = GROUP.ENEMY | GROUP.PROJECTILE | GROUP.WALL | GROUP.ITEM | GROUP.TRIGGER;
-            this.engine.physics.enableCollisions(this.player.getComponents<RigidBodyComponent>('RigidBody')[0].rigidBody, categoriesToCollideWith)
+            this.engine.physics.enableCollisions(this.player.getComponent<RigidBodyComponent>('RigidBody')!.rigidBody, categoriesToCollideWith)
         }
 
         /* test crosshair */

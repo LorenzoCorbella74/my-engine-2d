@@ -44,7 +44,7 @@ export class FirstScene extends Scene {
 
         // Timeline for complex animation
         this.bunny2 = new Button('Bunny2', 'bunny', 200, 200, 128, 128, () => { timeline.play(); });
-        const bunny2Sprite = this.bunny2.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite
+        const bunny2Sprite = this.bunny2.getComponent<SpriteComponent>(ComponentNames.Sprite)!.sprite
         const timeline = createTimelineAnimation(bunny2Sprite);
         this.timeline = timeline;
         timeline.pause()

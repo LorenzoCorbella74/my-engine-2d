@@ -8,7 +8,7 @@ export class Background extends GameObject {
     constructor(name: string, spriteName: string) {
         super(name);
         this.addComponent(new SpriteComponent(this, spriteName, 0, 0));
-        const spriteComp = this.getComponents<SpriteComponent>('Sprite')[0]
+        const spriteComp = this.getComponent<SpriteComponent>('Sprite')!
         spriteComp.setInteractive(true)
         spriteComp.setAnchor(0);
         spriteComp.setWidthAndHeight(window.innerWidth, window.innerHeight);

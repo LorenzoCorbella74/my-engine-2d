@@ -1,6 +1,6 @@
 # MY-ENGINE-2D
 
-I have always been fascinated by video game engines and my-engine-2d is my effort in typescript and WebGL to make my own ...ultra ligth version. To not reinvent the wheel the engine is based on the following technologies:
+I have always been fascinated by video game engines and my-engine-2d is my effort in typescript and WebGL to learn how to build one. To not reinvent the wheel the engine is based on the following technologies:
 
 - [Pixijs v.7.2](https://pixijs.com/) for rendering 2D assets,
 - [Pixi Sounds v.5](https://pixijs.io/sound/examples/index.html) for sounds,
@@ -16,18 +16,20 @@ The engine provides a series of classes, contained in the `engine` folder, that 
 
 ## Asset Manager
 
-It is possible to load asincronously the resources placed in the assets folder and subdivided in group folder. Each folder can contain specific scene resources organised in ther following mandatory sub folders:
+It is possible to load asincronously the resources placed in the assets folder and subdivided in group folder. Each folder can contain specific scene resources organised in the following mandatory sub folders:
 
 - `audio` for audio files,
 - `img` for textures,
 - `data` for json data and translations.
 
 ```typescript
-// load in the init() fn of your scene
-await this.engine.loader.loadAssetsGroup("sceneOne"); // "sceneOne" is the name of the folder in /assets
+// after loading resources in the init() fn of your scene...
+// ("sceneOne" is the name of the folder in /assets)
+await this.engine.loader.loadAssetsGroup("sceneOne");
 
-// get the sprite
-this.engine.getAsset("rocket-launcher"); // use as asset name the name of the file without the extension
+// ... you can get the sprite by using the name
+//  of the file without the extension
+this.engine.getAsset("rocket-launcher");
 ```
 
 ## GameObject Architecture and ECS
@@ -186,6 +188,7 @@ The engine provide a sinple class to manage locale translations. Put in the asse
 
 ### Utils
 
+- [x] math functions for random
 - [x] Object pool
 - [x] Storage in localstorage
 - [x] Basic Game Logic class for win/lose conditions

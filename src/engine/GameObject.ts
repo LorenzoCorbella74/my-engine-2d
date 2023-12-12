@@ -13,7 +13,7 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   private _name: string;
   private _tags: Set<string> = new Set();
 
-  private components: { [key: string]: Component[] } = {};
+  private components: Map<string, Component> = new Map();
 
   engine: typeof MyEngine2D;
 
@@ -53,12 +53,12 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
  * @return {void} 
  */
   kill() {
-    this.engine.repo.gameObjectsIdMap.delete(this.id);
-    this.engine.repo.gameObjectsNameMap.delete(this.name);
+    this.engine.getRepos().gameObjectsIdMap.delete(this.id);
+    this.engine.getRepos().gameObjectsNameMap.delete(this.name);
     if (this.hasComponent(ComponentNames.RigidBody)) {
-      this.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].removeRigidBody();
+      this.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.removeRigidBody();
     }
-    this.components = {};
+    this.components = new Map();
     this.destroy()
   }
 
@@ -69,7 +69,7 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
    */
   setPosition(x: number, y: number) {
     if (this.hasComponent(ComponentNames.RigidBody)) {
-      this.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].updatePosition(x, y);
+      this.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updatePosition(x, y);
     } else {
       // update container position
       this.x = x;
@@ -82,93 +82,70 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
    * @param deltaTime 
    */
   update(deltaTime: number) {
-    for (const key in this.components) {
-      if (Object.prototype.hasOwnProperty.call(this.components, key)) {
-        const components = this.components[key];
-        components.forEach(component => {
-          component.update(deltaTime);
-        })
-      }
+    for (const c of this.components.values()) {
+      c.update(deltaTime);
     }
   }
 
 
-  addComponent(component: Component) {
-    const componentName = component.name;
 
-    if (!this.components[componentName]) {
-      this.components[componentName] = [];
-    }
-    this.components[componentName].push(component);
-    // Verifica le dipendenze e abilita i componenti necessari se non sono già abilitati.
-    for (const dependency of component.dependencies) {
-      if (!this.isComponentEnabled(dependency)) {
-        this.setComponentEnabled(dependency, true);
-      }
-    }
+  /* -------------------- COMPONENTS --------------------- */
 
-    return this;
-  }
-
-  // Rimuoviamo un componente dall'entità.
-  removeComponent(component: Component) {
-    const componentName = component.name;
-    if (this.components[componentName]) {
-      const index = this.components[componentName].indexOf(component);
-      if (index !== -1) {
-        this.components[componentName].splice(index, 1);
-      }
+  addComponent<T extends Component>(component: T): void {
+    // check component requirements
+    if (this.checkDependencies(component)) {
+      this.components.set(component.constructor.name, component);
+    } else {
+      console.error(`Impossibile aggiungere il componente ${component.name} a causa di dipendenze mancanti.`);
     }
   }
 
   hasComponent(componentName: string): boolean {
-    return componentName in this.components;
+    return this.components.has(componentName) && !!this.components.get(componentName);
   }
 
-  hasRequiredComponents(dependencies: string[]): boolean {
-    for (const dependency of dependencies) {
-      if (!this.hasComponent(dependency)) {
-        return false;
+  // Abilita un componente
+  enableComponent(componentName: string): void {
+    const component = this.getComponent(componentName);
+    if (component) {
+      component.enabled = true;
+    }
+  }
+
+  // Disabilita un componente
+  disableComponent(componentName: string): void {
+    const component = this.getComponent(componentName);
+    if (component) {
+      component.enabled = false;
+    }
+  }
+
+  // Rimuove un componente dall'entità
+  removeComponent(componentName: string): void {
+    this.components.delete(componentName);
+    // Puoi fare ulteriori azioni qui, se necessario
+  }
+
+  // Restituisce il componente associato a un tipo specifico
+  getComponent<T extends Component>(componentName: string): T | undefined {
+    return this.components.get(componentName) as T;
+  }
+
+  // Verifica le dipendenze obbligatorie del componente
+  checkDependencies(component: Component): boolean {
+    const requirements: (string | { name: string; type: 'AND' | 'OR' })[] = (component as Component).dependencies || [];
+    let requiredComponent;
+    return requirements.every((requirement) => {
+      if (typeof requirement === 'string') {
+        requiredComponent = this.components.get(requirement);
+        return !!requiredComponent;
+      } else {
+        requiredComponent = this.components.get(requirement.name);
+        return (requirement.type === 'AND' && requiredComponent) || (requirement.type === 'OR' && !!requiredComponent);
       }
-    }
-    return true;
+    });
   }
 
-  /**
-   * Ottieni tutti i componenti ENABLED di un tipo specifico associati a questa entità.
-   *  */
-  getComponents<T extends Component>(componentName: string): T[] {
-    return (this.components[componentName] as T[] || []).filter((component) => component.enabled);
-  }
-
-  // Abilita o disabilita i componenti specificati nel parametro componentsState.
-  setComponentsEnabled(componentsState: { [componentName: string]: boolean }) {
-    for (const componentName in componentsState) {
-      if (componentsState.hasOwnProperty(componentName)) {
-        const enabled = componentsState[componentName];
-        this.setComponentEnabled(componentName, enabled);
-      }
-    }
-  }
-
-  // Abilita o disabilita un componente specifico.
-  setComponentEnabled(componentName: string, enabled: boolean) {
-    const components = this.components[componentName] as Component[];
-    if (components) {
-      for (const component of components) {
-        component.enabled = enabled;
-      }
-    }
-  }
-
-  // Verifica se un componente specifico è abilitato.
-  isComponentEnabled(componentName: string): boolean {
-    const components = this.components[componentName] as Component[];
-    if (components) {
-      return components.some((component) => component.enabled);
-    }
-    return false;
-  }
 
 
   /* -------------------- TAGS --------------------- */

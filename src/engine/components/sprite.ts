@@ -65,7 +65,7 @@ export class SpriteComponent extends Component {
         this.sprite.width = width;
         this.sprite.height = height;
         if (this.entity.hasComponent(ComponentNames.RigidBody)) {
-            this.entity?.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].updateSize();
+            this.entity?.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updateSize();
         }
     }
 

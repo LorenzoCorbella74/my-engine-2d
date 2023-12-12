@@ -25,7 +25,7 @@ export class Button extends GameObject {
         this.pressed = false;
         this.addComponent(new SpriteComponent(this, spriteName, 0, 0));
 
-        const spriteComp = this.getComponents<SpriteComponent>('Sprite')[0]
+        const spriteComp = this.getComponent<SpriteComponent>('Sprite')!
         spriteComp.setInteractive(true)
         spriteComp.setWidthAndHeight(width, height);
         spriteComp.sprite.on("mousedown", (e) => {

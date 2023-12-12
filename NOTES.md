@@ -14,3 +14,7 @@
 - [ ] resize della game area
 - [ ] al Component InputController si dovrebbe passare una funzione per gestire l'effetto dell'user input
 - [ ] UI: usare [Pixi Layout](https://pixijs.io/layout/) o andare con soluzione custom?? -> meglio HTML?
+
+## NB
+
+- [ ] se ad un container si aggiunge un figlio con n componenti tra cui anche un rigidbody si deve sincronizzare con le coordinate globali del container + quelle locali delcfiglio.

@@ -39,9 +39,9 @@ export class RigidBodyComponent extends Component {
         let x, y, width, height;
         let component;
         if (this.entity.hasComponent(ComponentNames.Sprite)) {
-            component = this.entity?.getComponents<SpriteComponent>(ComponentNames.Sprite)[0].sprite as Sprite
+            component = this.entity?.getComponent<SpriteComponent>(ComponentNames.Sprite)?.sprite as Sprite
         } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
-            component = this.entity?.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics as Graphics
+            component = this.entity?.getComponent<GraphicsComponent>(ComponentNames.Graphics)?.graphics as Graphics
         } else {
             throw new EngineError(`Required components not implemented for RigidBodyComponent in ${this.entity.name} gameObject.`);
         }
@@ -82,8 +82,9 @@ export class RigidBodyComponent extends Component {
             this.entity.x = this.rigidBody.position.x
             this.entity.y = this.rigidBody.position.y
         } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
-            this.entity.x = this.rigidBody.position.x - this.entity.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics.width / 2
-            this.entity.y = this.rigidBody.position.y - this.entity.getComponents<GraphicsComponent>(ComponentNames.Graphics)[0].graphics.height / 2
+            const rb = this.entity.getComponent<GraphicsComponent>(ComponentNames.Graphics)!
+            this.entity.x = this.rigidBody.position.x - rb.graphics.width / 2
+            this.entity.y = this.rigidBody.position.y - rb.graphics.height / 2
         }
         this.entity.rotation = this.rigidBody.angle;
     }
@@ -107,21 +108,21 @@ export class RigidBodyComponent extends Component {
     }
 
     /**
- * Sets the torque of the rigid body.(how mush rotational force is acting on a body)
- *
- * @param {number} torque - The torque to set. Defaults to 0.002.
- */
+     * Sets the torque of the rigid body.(how mush rotational force is acting on a body)
+     * 
+     * @param {number} torque - The torque to set. Defaults to 0.002.
+     */
     setTorque(torque: number = 0) {
         this.rigidBody.torque = torque
     }
 
 
     /**
- * Applies a force to the rigid body at a given angle and power.
- *
- * @param {number} angle - The angle at which the force should be applied.. Defaults to Math.PI / 2.
- * @param {number} power - The power of the force to be applied. Defaults to 0.02.
- */
+     * Applies a force to the rigid body at a given angle and power.
+     *
+     * @param {number} angle - The angle at which the force should be applied.. Defaults to Math.PI / 2.
+     * @param {number} power - The power of the force to be applied. Defaults to 0.02.
+     */
     applyForce(angle: number = Math.PI / 2, power: number = 0.02) {
         let force = { x: Math.cos(angle) * power, y: Math.sin(angle) * power }
         Body.applyForce(this.rigidBody, this.rigidBody.position, force)

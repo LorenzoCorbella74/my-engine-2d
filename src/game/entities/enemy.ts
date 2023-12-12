@@ -25,8 +25,8 @@ export class Enemy extends GameObject {
                 y: 500
             }
         }))
-        const enemySprite = this.getComponents<SpriteComponent>('Sprite')[0]
-        const enemyRigidBody = this.getComponents<RigidBodyComponent>('RigidBody')[0]
+        const enemySprite = this.getComponent<SpriteComponent>('Sprite')!
+        const enemyRigidBody = this.getComponent<RigidBodyComponent>('RigidBody')!
         // set sprite dimension (and update rigidbody...)
         enemySprite.setWidthAndHeight(32, 32);
         enemySprite.setInteractive(true)

@@ -34,8 +34,7 @@ export class Scene extends Container {
         // remove rigidbody
         (this.children as GameObject[]).forEach(child => {
             if (child instanceof GameObject && child.hasComponent(ComponentNames.RigidBody)) {
-                let rigidBody = child.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0]
-                rigidBody.removeRigidBody()
+                child.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.removeRigidBody()
             }
         })
         // destroy scene and game object

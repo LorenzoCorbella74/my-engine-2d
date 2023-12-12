@@ -243,7 +243,7 @@ export class Camera {
         this.engine.scenes.currentScene.addChild(graphics);
         graphics.visible = false
 
-        let points = graphics.geometry.graphicsData[0].shape.points;
+        let points = (graphics.geometry.graphicsData[0].shape as PIXI.Polygon).points;
         let values = [];
 
         for (let i = 0; i < points.length; i += 2) {

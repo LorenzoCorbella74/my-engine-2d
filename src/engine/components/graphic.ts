@@ -46,7 +46,7 @@ export class GraphicsComponent extends Component {
         this.graphics.width = width;
         this.graphics.height = height;
         if (this.entity.hasComponent(ComponentNames.RigidBody)) {
-            this.entity?.getComponents<RigidBodyComponent>(ComponentNames.RigidBody)[0].updateSize();
+            this.entity?.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updateSize();
         }
     }
 

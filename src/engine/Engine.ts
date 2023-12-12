@@ -90,6 +90,10 @@ export class Engine {
         }
     }
 
+    getRepos() {
+        return this.repo;
+    }
+
     async run(config: GameConfig) {
         gsap.registerPlugin(PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);

@@ -125,9 +125,9 @@ export class PhysicManager {
      * @returns 
      */
     hasLineOfSight(fromObj: GameObject, toObj: GameObject): boolean {
-        const from = fromObj.getComponents<RigidBodyComponent>('RigidBody')[0];
-        const to = toObj.getComponents<RigidBodyComponent>('RigidBody')[0];
-        if (from.rigidBody && to.rigidBody) {
+        const from = fromObj.getComponent<RigidBodyComponent>('RigidBody');
+        const to = toObj.getComponent<RigidBodyComponent>('RigidBody');
+        if (from?.rigidBody && to?.rigidBody) {
             let collisions = Query.ray(
                 Composite.allBodies(MyEngine2D.physics.physicsEngine.world),
                 from.rigidBody.position,

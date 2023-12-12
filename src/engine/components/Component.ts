@@ -5,7 +5,7 @@ import { MyEngine2D } from '../Engine';
 export class Component {
 
     entity!: GameObject;
-    dependencies: string[] = [];         // mandatory components
+    dependencies: (string | { name: string, type: 'OR' | 'AND' })[] = [];         // mandatory components or a list of optional cpomponents
     enabled: boolean = true;             // enabled by default
     engine: typeof MyEngine2D;
 
@@ -15,7 +15,7 @@ export class Component {
     }
 
     checkRequiredComponents() {
-        if (!this.entity.hasRequiredComponents(this.dependencies)) {
+        if (!this.entity.checkDependencies(this)) {
             throw new EngineError(`Required components not implemented for ${name} in ${this.entity.name} gameObject.`);
         }
     }
