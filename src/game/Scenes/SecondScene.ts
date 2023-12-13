@@ -12,6 +12,7 @@ import { Power2 } from 'gsap'
 import { GameGraphics } from '../../engine/GameGraphics';
 import { Trigger } from '../../engine/templates/trigger';
 import { SpriteComponent } from '../../engine/components/sprite';
+import { ComponentNames } from '../../engine/models/component-names.enum';
 
 export class SecondScene extends Scene {
 
@@ -85,7 +86,7 @@ export class SecondScene extends Scene {
         this.text.x = Math.sin(this.engine.time.getElapsedTime()) * window.innerWidth / 8;
 
         // UI
-        const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>('RigidBody')!.rigidBody.position
+        const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)!.rigidBody.position
         this.textCoord.x = Math.ceil(xp)
         this.textCoord.y = Math.ceil(yp) - 32
         this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y + 32}`

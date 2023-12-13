@@ -24,7 +24,10 @@ export const GROUP = {
 
 export class RigidBodyComponent extends Component {
 
-    dependencies: string[] = [ComponentNames.Sprite, ComponentNames.Graphics];   // TODO: check required components (OR / AND)
+    dependencies: (string | { name: string; type: 'AND' | 'OR' })[] = [
+        {name:ComponentNames.Sprite, type:"OR"}, 
+        {name:ComponentNames.Graphics, type:"OR"}, 
+    ];
 
     public rigidBody!: Body;
 

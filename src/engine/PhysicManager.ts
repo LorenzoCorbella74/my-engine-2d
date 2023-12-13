@@ -68,8 +68,10 @@ export class PhysicManager {
      * Remove temporarily a body from the physics engine by setting the group to 0
      * @param body 
      */
-    disableCollisions(body: Body) {
-        body.collisionFilter.category = GROUP.DEFAULT;
+    disableCollisions(body: Body | undefined) {
+        if(body){
+            body.collisionFilter.category = GROUP.DEFAULT;
+        }    
     }
 
     /**
@@ -77,8 +79,10 @@ export class PhysicManager {
      * @param body 
      * @param groups 
      */
-    enableCollisions(body: Body, groups: number) {
-        body.collisionFilter.category = groups;
+    enableCollisions(body: Body|undefined, groups: number) {
+        if(body){
+            body.collisionFilter.category = groups;
+        }
     }
 
     onCollisionStart(event: Matter.IEventCollision<Matter.Engine>) {
