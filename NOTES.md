@@ -22,4 +22,4 @@
 
 ## NB
 
-- [ ] se ad un container si aggiunge un figlio con n componenti tra cui anche un rigidbody si deve sincronizzare con le coordinate globali del container + quelle locali delcfiglio.
+- [ ] se ad un container si aggiunge un figlio con n componenti tra cui anche un rigidbody si deve sincronizzare con le coordinate globali del container + quelle locali del figlio.

@@ -29,8 +29,15 @@ export class Component {
     }
 
     /**
-     * Update function to update the component functionality
+     * Update the component functionality
      * @param delta 
      */
     update(delta: number) { }
+
+    /**
+     * Resize the component
+     * @param width 
+     * @param height 
+     */
+    resize(width: number, height: number) { }
 }

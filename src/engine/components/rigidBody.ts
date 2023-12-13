@@ -127,6 +127,13 @@ export class RigidBodyComponent extends Component {
         let force = { x: Math.cos(angle) * power, y: Math.sin(angle) * power }
         Body.applyForce(this.rigidBody, this.rigidBody.position, force)
     }
+
+
+    // TODO: on resize
+    resize(width: number, height: number): void {
+        this.removeRigidBody()
+        this.createRigidBody(this.options);
+    }
 }
 
 

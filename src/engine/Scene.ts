@@ -42,7 +42,12 @@ export class Scene extends Container {
     }
 
     onResize(width: number, height: number) {
-        console.log(this.constructor.name + '  resizing...', width, height)
+        console.log(this.constructor.name + '  resizing...', width, height);
         // resize each gameObject if window is resized
+        (this.children as GameObject[]).forEach(child => {
+            if (child instanceof GameObject) {
+                child.resize(width, height);
+            }
+        })
     }
 }

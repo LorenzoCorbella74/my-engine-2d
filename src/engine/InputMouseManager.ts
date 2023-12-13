@@ -98,10 +98,10 @@ export class InputMouseManager {
      * @return {void} This function does not return any value.
      */
     blockMouseVertically(): void {
-        this.mouseLimits.y = {
+        /* this.mouseLimits.y = {
             min: 0,
             max: this.app.screen.height
-        };
+        }; */
         this.mouseLimits.x = {
             min: this.app.screen.width / 2,
             max: this.app.screen.width / 2
@@ -114,10 +114,10 @@ export class InputMouseManager {
      * @return {void} This function does not return anything.
      */
     blockMouseHorizontally(): void {
-        this.mouseLimits.x = {
+        /* this.mouseLimits.x = {
             min: 0,
             max: this.app.screen.width
-        };
+        }; */
         this.mouseLimits.y = {
             min: this.app.screen.height / 2,
             max: this.app.screen.height / 2

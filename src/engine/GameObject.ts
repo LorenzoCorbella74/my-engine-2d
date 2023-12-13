@@ -99,6 +99,12 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     }
   }
 
+  resize(width: number, height: number) {
+    for (const c of this.components.values()) {
+      c.resize(width, height);
+    }
+  }
+
   /* -------------------- COMPONENTS --------------------- */
 
   addComponent<T extends Component>(component: T): void {

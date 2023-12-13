@@ -44,6 +44,10 @@ export class SpriteComponent extends Component {
     setPosition(x: number, y: number) {
         this.sprite.x = x
         this.sprite.y = y
+        // TODO: update rigidbody....
+        if (this.entity.hasComponent(ComponentNames.RigidBody)) {
+            this.entity?.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updatePosition(this.entity.x + x, this.entity.y + y); // TESTARE !!
+        }
     }
 
     setAnchor(val: number) {
@@ -82,6 +86,18 @@ export class SpriteComponent extends Component {
 
     destroy() {
         this.sprite.destroy();
+    }
+
+    resize(width: number, height: number): void {
+        /* 
+        
+        TODO: si aggiorna in base alle dimensioni di gioco
+        this.sprite.width = width;
+        this.sprite.height = height; 
+        */
+        if (this.entity.hasComponent(ComponentNames.RigidBody)) {
+            this.entity?.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updateSize();
+        }
     }
 
 }
