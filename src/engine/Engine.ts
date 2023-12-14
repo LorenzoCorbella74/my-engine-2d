@@ -68,10 +68,10 @@ export class Engine {
         this.app.renderer.resize(window.innerWidth, window.innerHeight);
         if (this.app.view) {
             // TODO: resize event listener
-            /*  this.app.view.addEventListener('resize', (ev: Event) => {
-                const { innerWidth, innerHeight } = ev.target as Window;
-                this.scenes.currentScene?.onResize?.(innerWidth, innerHeight);
-            }); */
+             /* this.app.view */document.addEventListener('resize', (ev: Event) => {
+            const { innerWidth, innerHeight } = ev.target as Window;
+            this.scenes.currentScene?.onResize?.(innerWidth, innerHeight);
+        });
         }
     }
 
@@ -105,7 +105,7 @@ export class Engine {
 
         this.app = new PIXI.Application({
             // backgroundAlpha: 0, // transparent
-            resizeTo: window,
+            resizeTo: window, // FUNZIONA ?????
             autoStart: false,
             // antialias: true, performance !!!
             autoDensity: true,
