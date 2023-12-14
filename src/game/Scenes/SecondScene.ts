@@ -122,8 +122,12 @@ export class SecondScene extends Scene {
         // test zoomTo
         if (this.engine.keyboard.iskeyDownOnce('M')) {
             const ease = Power2.easeOut; // "bounce.out", "expo.out"  "elastic.out(1, 0.3)" 
-            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? this.engine.camera.zoomLevel - 0.5 : this.engine.camera.zoomLevel + 0.5,
-                2, ease);
+            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? 
+                this.engine.camera.zoomLevel - 0.5 : 
+                this.engine.camera.zoomLevel + 0.5,
+                2, ease, () => {
+                    console.log('camera.zoomTo done!', this.engine.camera.zoomLevel);
+                });
         }
 
         // test change camera target

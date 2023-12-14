@@ -58,9 +58,10 @@ export class PhysicManager {
     update() {
         Engine.update(this.physicsEngine, 1000 / 60) // this.app.ticker.maxFPS
         // Show phisics simulation in development
-        if (import.meta.env.DEV && (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display !== "none" && this.engine.camera.target) {
+        const simulation = (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement)
+        if (import.meta.env.DEV && simulation.style.display === "block" && this.engine.camera.target) {
             this.engine.camera.zoomLevel = 1;
-            (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.translate = `${this.engine.app.screen.width / 2 - (this.engine.camera.target?.x * this.engine.camera.zoomLevel)}px ${this.engine.app.screen.height / 2 - (this.engine.camera.target.y * this.engine.camera.zoomLevel)}px`;
+            simulation.style.translate = `${this.engine.app.screen.width / 2 - (this.engine.camera.target?.x * this.engine.camera.zoomLevel)}px ${this.engine.app.screen.height / 2 - (this.engine.camera.target.y * this.engine.camera.zoomLevel)}px`;
         }
     }
 

@@ -22,7 +22,7 @@ export class Trigger extends GameObject {
         let triggerBox = new Graphics();
         triggerBox.beginFill(0xff0000);
         triggerBox.drawRect(0, 0, rectangle.width, rectangle.height);
-        // triggerBox.visible = false;  // TODO: check!!!
+        triggerBox.visible = false;  // TODO: check!!!
 
         this.addComponent(new GraphicsComponent(this, triggerBox))
         this.addComponent(
@@ -30,7 +30,7 @@ export class Trigger extends GameObject {
                 shape: 'rectangle',
                 isStatic: true,
                 collisionFilter: {
-                    category: GROUP.DEFAULT,
+                    category: GROUP.TRIGGER,
                     mask: GROUP.PLAYER
                 },
                 //  inizial position in local coordinates

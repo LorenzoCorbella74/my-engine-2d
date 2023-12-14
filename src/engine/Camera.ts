@@ -6,6 +6,8 @@ import { Scene } from "./Scene";
 import { MyEngine2D } from "./Engine";
 import { Point } from "./models/vectors";
 
+import { gsap } from "gsap";
+
 export type CameraLock = 'both' | 'horizontal' | 'vertical';
 
 export class Camera {
@@ -74,70 +76,35 @@ export class Camera {
             this.shakeDuration = 0;
         }
         /* 
-        // to have a "delay" in tracking the target
-        let newX = this.engine.math.mix(this.app.screen.width / 2, this.target.x, this.ease);
-        let newY = this.engine.math.mix(this.app.screen.height / 2, this.target.y, this.ease);
-
         // Aggiorna la posizione della telecamera in base al target
         if (this.lockMode === 'horizontal' || this.lockMode === 'both') {
-            this.container.position.x = this.app.screen.width / 2 - (newX * this.zoomLevel);
+            this.container.position.x = this.app.screen.width / 2 - (this.target.x * this.zoomLevel);
         }
         if (this.lockMode === 'vertical' || this.lockMode === 'both') {
-            this.container.position.y = this.app.screen.height / 2 - (newY * this.zoomLevel);
+            this.container.position.y = this.app.screen.height / 2 - (this.target.y * this.zoomLevel);
         }
         this.engine.log(`Camera: ${this.container.position.x}, ${this.container.position.y}`);
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel); 
         */
 
-        const screenWidth = this.app.screen.width;
+         const screenWidth = this.app.screen.width;
         const screenHeight = this.app.screen.height;
 
-        // Calcolare la posizione della camera in modo che il giocatore sia centrato, considerando il livello di zoom
-        const cameraX = (this.target.x - screenWidth / 2) * this.zoomLevel;
-        const cameraY = (this.target.y - screenHeight / 2) * this.zoomLevel;
+        // Calcolare la posizione desiderata della camera in modo che il target sia centrato, considerando il livello di zoom
+        const cameraX = (this.target.x * this.zoomLevel - screenWidth / 2);
+        const cameraY = (this.target.y * this.zoomLevel - screenHeight / 2);
 
         // Limitare la posizione della camera per evitare di visualizzare aree vuote oltre i bordi della scena
-        const maxX = this.container.width * this.zoomLevel - screenWidth;
-        const maxY = this.container.height * this.zoomLevel - screenHeight;
+        const maxX = (this.container.width - screenWidth / 15);
+        const maxY = (this.container.height - screenHeight / 15);
 
-        this.container.x = Math.max(0, Math.min(cameraX, maxX));
-        this.container.y = Math.max(0, Math.min(cameraY, maxY));
-
-        // Applicare il livello di zoomLevel al contenitore
-        this.container.scale.set(this.zoomLevel);
-
-        /* 
-        const damping = 0.1
-        const screenWidth = this.app.screen.width;
-        const screenHeight = this.app.screen.height;
-
-        // Calcolare la posizione desiderata della camera in modo che il giocatore sia centrato, considerando il livello di zoom
-        const targetX = (this.target.x - screenWidth / 2) * this.zoomLevel;
-        const targetY = (this.target.y - screenHeight / 2) * this.zoomLevel;
-
-        // Calcolare la differenza tra la posizione corrente della camera e la posizione desiderata
-        const dx = targetX - this.container.x;
-        const dy = targetY - this.container.y;
-
-        // Applicare lo smorzamento alla differenza
-        const deltaX = dx * damping;
-        const deltaY = dy * damping;
-
-        // Aggiornare la posizione della camera
-        this.container.x += deltaX;
-        this.container.y += deltaY;
-
-        // Limitare la posizione della camera per evitare di visualizzare aree vuote oltre i bordi della scena
-        const maxX = this.container.width * this.zoomLevel - screenWidth;
-        const maxY = this.container.height * this.zoomLevel - screenHeight;
-
-        this.container.x = Math.max(0, Math.min(this.container.x, maxX));
-        this.container.y = Math.max(0, Math.min(this.container.y, maxY));
+        this.container.x = -Math.max(0, Math.min(cameraX, maxX));
+        this.container.y = -Math.max(0, Math.min(cameraY, maxY));
 
         // Applicare il livello di zoomLevel al contenitore
         this.container.scale.set(this.zoomLevel); 
-        */
+
     }
 
     shake(duration: number, amplitude: number) {
@@ -156,6 +123,7 @@ export class Camera {
      */
     zoomTo(targetZoom: number, duration: number = 1, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
         this.engine.animation.aminateOneObjectProperty('camera-zoom', this, { "zoomLevel": targetZoom }, duration, ease, callback);
+
     }
 
     /**
