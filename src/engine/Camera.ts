@@ -85,6 +85,7 @@ export class Camera {
         if (this.lockMode === 'vertical' || this.lockMode === 'both') {
             this.container.position.y = this.app.screen.height / 2 - (newY * this.zoomLevel);
         }
+        this.engine.log(`Camera: ${this.container.position.x}, ${this.container.position.y}`);
         // Aggiorna il livello di zoom
         this.container.scale.set(this.zoomLevel); 
         */

@@ -149,7 +149,7 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
 
   // Verifica le dipendenze obbligatorie del componente
   checkDependencies(component: Component): boolean {
-    const requirements: (string | { name: string; type: 'AND' | 'OR' })[] = (component as Component).dependencies || [];
+    /* const requirements: (string | { name: string; type: 'AND' | 'OR' })[] = (component as Component).dependencies || [];
     let requiredComponent;
     return requirements.every((requirement) => {
       if (typeof requirement === 'string') {
@@ -157,9 +157,11 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
         return !!requiredComponent;
       } else {
         requiredComponent = this.components.get(requirement.name);
-        return (requirement.type === 'AND' && requiredComponent) || (requirement.type === 'OR' && !!requiredComponent);
+        return (requirement.type === 'AND' && requiredComponent) || (requirement.type === 'OR' && requiredComponent);
       }
-    });
+    }); */
+    // FIXME: questo non funziona
+    return true
   }
 
 
