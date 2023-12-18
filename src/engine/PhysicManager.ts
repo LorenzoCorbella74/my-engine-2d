@@ -5,6 +5,7 @@ import { GameObject } from './GameObject';
 import { GROUP, RigidBodyComponent } from './components/rigidBody';
 import { BaseEventType, BasePayload } from './models/events';
 import { Trigger } from './templates/trigger';
+import { ComponentNames } from './models/component-names.enum';
 
 export class PhysicManager {
 
@@ -61,7 +62,8 @@ export class PhysicManager {
         const simulation = (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement)
         if (import.meta.env.DEV && simulation.style.display === "block" && this.engine.camera.target) {
             this.engine.camera.zoomLevel = 1;
-            simulation.style.translate = `${this.engine.app.screen.width / 2 - (this.engine.camera.target?.x * this.engine.camera.zoomLevel)}px ${this.engine.app.screen.height / 2 - (this.engine.camera.target.y * this.engine.camera.zoomLevel)}px`;
+            // simulation.style.translate = `${this.engine.app.screen.width / 2 - (this.engine.camera.target?.x * this.engine.camera.zoomLevel)}px ${this.engine.app.screen.height / 2 - (this.engine.camera.target.y * this.engine.camera.zoomLevel)}px`;
+            simulation.style.translate = `${this.engine.camera.container.x}px ${this.engine.camera.container.y}px`;
         }
     }
 
@@ -130,8 +132,8 @@ export class PhysicManager {
      * @returns 
      */
     hasLineOfSight(fromObj: GameObject, toObj: GameObject): boolean {
-        const from = fromObj.getComponent<RigidBodyComponent>('RigidBody');
-        const to = toObj.getComponent<RigidBodyComponent>('RigidBody');
+        const from = fromObj.getComponent<RigidBodyComponent>(ComponentNames.RigidBody);
+        const to = toObj.getComponent<RigidBodyComponent>(ComponentNames.RigidBody);
         if (from?.rigidBody && to?.rigidBody) {
             let collisions = Query.ray(
                 Composite.allBodies(MyEngine2D.physics.physicsEngine.world),

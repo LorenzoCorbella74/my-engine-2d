@@ -5,6 +5,7 @@
 # TODO:
 
 - [x] controllo in matter-js di [width ed height dello sprite component](https://github.com/pixijs/pixijs/wiki/v4-Gotchas) ????)
+- [ ] rotazione del player successivamente ad una collizione (il rigidbody )
 - [x] aggiunstare la camera della simulazione di matter-js
 - [x] update trigger (al primo contatto disabilitare il rigidbody)
 - [ ] Vedere esempi dalla libreria ECS per query [Geotic](https://github.com/ddmills/geotic-example/tree/master)

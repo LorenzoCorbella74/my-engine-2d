@@ -7,6 +7,8 @@ import { MyEngine2D } from "./Engine";
 import { Point } from "./models/vectors";
 
 import { gsap } from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
+import { ComponentNames } from "./models/component-names.enum";
 
 export type CameraLock = 'both' | 'horizontal' | 'vertical';
 
@@ -26,7 +28,11 @@ export class Camera {
 
     defaultCamera = new GameObject('camera-default')
 
-    constructor(public engine: typeof MyEngine2D, public sceneManager: SceneManager, private ease: number = 0.85) {
+    constructor(
+        public engine: typeof MyEngine2D,
+        public sceneManager: SceneManager,
+        private ease: number = 1 // .965
+    ) {
         this.app = engine.app;
 
         this.target = null; // The FOCUS of the camera
@@ -36,6 +42,9 @@ export class Camera {
         this.shakeDuration = 0;
         this.shakeAmplitude = 0;
         this.shakeStartTime = 0;
+
+        gsap.registerPlugin(PixiPlugin);
+        PixiPlugin.registerPIXI(PIXI);
     }
 
     setEase(ease: number) {
@@ -75,36 +84,33 @@ export class Camera {
         } else {
             this.shakeDuration = 0;
         }
-        /* 
-        // Aggiorna la posizione della telecamera in base al target
-        if (this.lockMode === 'horizontal' || this.lockMode === 'both') {
-            this.container.position.x = this.app.screen.width / 2 - (this.target.x * this.zoomLevel);
-        }
-        if (this.lockMode === 'vertical' || this.lockMode === 'both') {
-            this.container.position.y = this.app.screen.height / 2 - (this.target.y * this.zoomLevel);
-        }
-        this.engine.log(`Camera: ${this.container.position.x}, ${this.container.position.y}`);
-        // Aggiorna il livello di zoom
-        this.container.scale.set(this.zoomLevel); 
-        */
 
-         const screenWidth = this.app.screen.width;
+        const screenWidth = this.app.screen.width;
         const screenHeight = this.app.screen.height;
 
         // Calcolare la posizione desiderata della camera in modo che il target sia centrato, considerando il livello di zoom
         const cameraX = (this.target.x * this.zoomLevel - screenWidth / 2);
         const cameraY = (this.target.y * this.zoomLevel - screenHeight / 2);
 
-        // Limitare la posizione della camera per evitare di visualizzare aree vuote oltre i bordi della scena
-        const maxX = (this.container.width - screenWidth / 15);
-        const maxY = (this.container.height - screenHeight / 15);
+        // Limitare la posizione della camera per evitare di visualizzare 
+        // aree vuote oltre i bordi della scena -> TODO: mettere dimenbsioni mappa di giuoco ????
+        const maxX = (this.container.width - screenWidth / 4);
+        const maxY = (this.container.height - screenHeight / 4);
 
-        this.container.x = -Math.max(0, Math.min(cameraX, maxX));
-        this.container.y = -Math.max(0, Math.min(cameraY, maxY));
+        // console.log(`maxX: ${maxX}', 'maxY: ${maxY}`)
+
+        // la scena si muove in direzione opposta al target
+        if (this.lockMode === 'horizontal' || this.lockMode === 'both') {
+            let futureX = Math.max(0, Math.min(cameraX, maxX));
+            this.container.x = - this.engine.math.mix(this.container.x, futureX, this.ease);
+        }
+        if (this.lockMode === 'vertical' || this.lockMode === 'both') {
+            let futureY = Math.max(0, Math.min(cameraY, maxY));
+            this.container.y = - this.engine.math.mix(this.container.y, futureY, this.ease);
+        }
 
         // Applicare il livello di zoomLevel al contenitore
-        this.container.scale.set(this.zoomLevel); 
-
+        this.container.scale.set(this.zoomLevel);
     }
 
     shake(duration: number, amplitude: number) {
@@ -247,25 +253,22 @@ export class Camera {
 
 
     // TODO: animate on a path https://codepen.io/GreenSock/pen/JjWqMQG
-    followPath(graphics: PIXI.Graphics, duration: number = 1, callback: () => void = () => { }) {
-        /*      let graphics = new PIXI.Graphics()
-                 .lineStyle(2, 0xaaaaaa, 1)
-                 .moveTo(200, 20)
-                 .lineTo(200, 200)
-                 .arcTo(350, 200, 450, 900, 100)
-                 .lineTo(200, 500)
-                 .lineTo(700, 100)
-                 .bezierCurveTo(700, 100, 700, 400, 100, 100)
-                 .endFill(); */
+    followPath(
+        graphics: PIXI.Graphics, 
+        duration: number = 1, 
+        callback: () => void = () => { }
+        ) {
         this.engine.scenes.currentScene.addChild(graphics);
-        graphics.visible = false
-
+        graphics.visible = true
+        
         let points = (graphics.geometry.graphicsData[0].shape as PIXI.Polygon).points;
         let values = [];
-
+        
         for (let i = 0; i < points.length; i += 2) {
             values.push({ x: points[i], y: points[i + 1] });
         }
+        console.log(values);
+        this.resetToDefaultCamera(values[0]);
 
         gsap.to(this.target, {
             duration,
@@ -275,7 +278,7 @@ export class Camera {
                 fromCurrent: false
             },
             onUpdate: () => {
-                graphics.visible = this.engine.debug;
+                // graphics.visible = this.engine.debug;
             },
             onComplete: () => {
                 callback();
