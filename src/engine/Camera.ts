@@ -88,23 +88,22 @@ export class Camera {
         this.container.scale.set(this.zoomLevel); 
         */
 
-         const screenWidth = this.app.screen.width;
+        const screenWidth = this.app.screen.width;
         const screenHeight = this.app.screen.height;
 
         // Calcolare la posizione desiderata della camera in modo che il target sia centrato, considerando il livello di zoom
-        const cameraX = (this.target.x * this.zoomLevel - screenWidth / 2);
-        const cameraY = (this.target.y * this.zoomLevel - screenHeight / 2);
+        const cameraX = this.target.x * this.zoomLevel - screenWidth / 2;
+        const cameraY = this.target.y * this.zoomLevel - screenHeight / 2;
 
         // Limitare la posizione della camera per evitare di visualizzare aree vuote oltre i bordi della scena
         const maxX = (this.container.width - screenWidth / 15);
         const maxY = (this.container.height - screenHeight / 15);
 
-        this.container.x = -Math.max(0, Math.min(cameraX, maxX));
-        this.container.y = -Math.max(0, Math.min(cameraY, maxY));
+        this.container.x = - Math.max(0, Math.min(cameraX, maxX));
+        this.container.y = - Math.max(0, Math.min(cameraY, maxY));
 
         // Applicare il livello di zoomLevel al contenitore
-        this.container.scale.set(this.zoomLevel); 
-
+        this.container.scale.set(this.zoomLevel);
     }
 
     shake(duration: number, amplitude: number) {
@@ -122,8 +121,14 @@ export class Camera {
      * @param {() => void} callback - The callback function to be called after the zoom animation is complete. Defaults to an empty function.
      */
     zoomTo(targetZoom: number, duration: number = 1, ease: string | gsap.EaseFunction = "none", callback: () => void = () => { }) {
-        this.engine.animation.aminateOneObjectProperty('camera-zoom', this, { "zoomLevel": targetZoom }, duration, ease, callback);
-
+        this.engine.animation.aminateOneObjectProperty(
+            'camera-zoom',
+            this,
+            { "zoomLevel": targetZoom },
+            duration,
+            ease,
+            callback
+        );
     }
 
     /**

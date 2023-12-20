@@ -9,6 +9,7 @@ import { GameObject } from "../../engine/GameObject";
 import { Button } from "../entities/FirstScene/button";
 import { ComponentNames } from "../../engine/models/component-names.enum";
 import { SpriteComponent } from "../../engine/components/sprite";
+import { UITextExample } from "../entities/FirstScene/UItest";
 
 export class FirstScene extends Scene {
 
@@ -31,7 +32,10 @@ export class FirstScene extends Scene {
 
         this.game = new Game('Game')
 
-        // si applica il filtro a tutta la scena
+        // add UI element
+        this.engine.ui.addUIElement(new UITextExample('UItest', 'Testo in UI: XxX'));
+
+        // si applica il filtro a tutta la scena (tranne all'UI) ...
         const blurFilter = new BlurFilter();
         blurFilter.blur = 10;
         this.engine.filters.addFilter(this.engine.scenes.currentScene, blurFilter);

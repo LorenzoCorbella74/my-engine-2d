@@ -18,6 +18,7 @@ export class SceneManager {
 
     async setupNewScene(sceneName: string, animate: boolean = true) {
         this.currentScene = this.scenes[sceneName];
+        this.currentScene.zIndex = 1; // default for all scenes (Ui elements have a zIndex of 2)
         this.app.stage.addChild(this.currentScene);
         MyEngine2D.state = 'loading';
         await this.currentScene.init();

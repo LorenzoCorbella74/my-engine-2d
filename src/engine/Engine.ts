@@ -28,6 +28,7 @@ import { State } from "./models/engine-state";
 import { GameConfig } from "./models/config";
 import { AnimationManager } from "./AnimationManager";
 import { LocalizationManager } from "./LocalizationManager";
+import { UIManager } from "./UIManager";
 
 const stats = new Stats();
 
@@ -53,6 +54,7 @@ export class Engine {
     public emitter!: ParticleManager;
     public animation!: AnimationManager;
     public locale!: LocalizationManager;
+    public ui!: UIManager;
     public math!: typeof math;
 
     private _state: State = 'idle';
@@ -142,6 +144,7 @@ export class Engine {
         this.emitter = new ParticleManager(this.app);
         this.crosshair = new CrossHairManager(this);
         this.filters = new FiltersManager();
+        this.ui = new UIManager(this.app);
         this.keyboard = new InputKeyboardManager({
             // DEFAULTS
             ...{

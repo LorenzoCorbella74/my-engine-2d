@@ -6,5 +6,6 @@ export enum ComponentNames {
     InputController = 'InputController',
     BoundingBox = 'BoundingBoxComponent',
     Script = 'ScriptComponent',
-    Behaviour = 'BehaviourComponent'
+    Behaviour = 'BehaviourComponent',
+    Text = 'TextComponent'
 }

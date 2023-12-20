@@ -3,7 +3,9 @@ import { GameObject } from '../GameObject';
 import { ComponentNames } from '../models/component-names.enum';
 import { Action } from '../actions/model';
 
-
+/**
+ * Provide a base class for basic AI behaviours.
+ */
 export class BehaviourComponent extends Component {
 
     constructor(

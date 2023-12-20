@@ -1,7 +1,7 @@
 import { Player } from '../entities/player';
 import { Enemy } from '../entities/enemy';
 
-import { Graphics, Text } from "pixi.js";
+import { Text } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
@@ -9,9 +9,7 @@ import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
 import { RigidBodyComponent } from '../../engine/components/rigidBody';
 
 import { Power2 } from 'gsap'
-import { GameGraphics } from '../../engine/GameGraphics';
 import { Trigger } from '../../engine/templates/trigger';
-import { SpriteComponent } from '../../engine/components/sprite';
 import { ComponentNames } from '../../engine/models/component-names.enum';
 
 export class SecondScene extends Scene {
@@ -122,8 +120,8 @@ export class SecondScene extends Scene {
         // test zoomTo
         if (this.engine.keyboard.iskeyDownOnce('M')) {
             const ease = Power2.easeOut; // "bounce.out", "expo.out"  "elastic.out(1, 0.3)" 
-            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ? 
-                this.engine.camera.zoomLevel - 0.5 : 
+            this.engine.camera.zoomTo(this.engine.camera.zoomLevel > 1 ?
+                this.engine.camera.zoomLevel - 0.5 :
                 this.engine.camera.zoomLevel + 0.5,
                 2, ease, () => {
                     console.log('camera.zoomTo done!', this.engine.camera.zoomLevel);
