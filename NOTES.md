@@ -21,6 +21,8 @@
 
 - [x] limiting mouse movement to vertical axis, horizonthal axis ed ad un area specifica rettangolare.
 
+- [ ] vedere se si può ottimizzare il config.js in base ai [defaults dei settings di PIXI](https://pixijs.download/dev/docs/PIXI.settings.html)
+
 ## NB
 
 - [ ] se ad un container si aggiunge un figlio con n componenti tra cui anche un rigidbody si deve sincronizzare con le coordinate globali del container + quelle locali del figlio.

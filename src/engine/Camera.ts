@@ -8,7 +8,6 @@ import { Point } from "./models/vectors";
 
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
-import { ComponentNames } from "./models/component-names.enum";
 
 export type CameraLock = 'both' | 'horizontal' | 'vertical';
 

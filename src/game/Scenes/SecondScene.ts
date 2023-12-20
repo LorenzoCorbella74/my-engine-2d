@@ -29,6 +29,8 @@ export class SecondScene extends Scene {
     async init() {
         await this.engine.loader.loadAssetsFolder('group2')
 
+        this.engine.ui.hide() // test UI
+
         // testing second load...
         const textFormat = this.engine.getAsset('text-format');
         // for text see https://codesandbox.io/s/8q7hs?file=/src/Scene.js:218-312

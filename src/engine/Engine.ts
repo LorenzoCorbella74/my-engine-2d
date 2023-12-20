@@ -168,11 +168,10 @@ export class Engine {
         if (locales) {
             this.locale.setLanguage(this.config?.defaultLocale || navigator.language)
         }
-
-        this.scenes.startDefaultScene();
-
         // initialize UI
         this.ui = new UIManager(this.app);
+        this.app.stage.sortableChildren = true;     // to make zIndex work...
+        this.scenes.startDefaultScene();
 
         // the loop starts when startLoop is called
         this.app.ticker.maxFPS = 60;

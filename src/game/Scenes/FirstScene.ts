@@ -32,8 +32,7 @@ export class FirstScene extends Scene {
 
         this.game = new Game('Game')
 
-        // add UI element
-        this.engine.ui.addUIElement(new UITextExample('UItest', 'Testo in UI: XxX'));
+ 
 
         // si applica il filtro a tutta la scena (tranne all'UI) ...
         const blurFilter = new BlurFilter();
@@ -75,6 +74,10 @@ export class FirstScene extends Scene {
 
         // test Storage
         this.engine.storage.save('test-engine', { lore: 'is ok!' })
+
+
+               // add UI element
+               this.engine.ui.addUIElement(new UITextExample('UItest', 'Testo in UI: XxX'));
     }
 
     update(dt: number) {
