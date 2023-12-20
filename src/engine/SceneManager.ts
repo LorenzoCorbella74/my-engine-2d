@@ -16,7 +16,7 @@ export class SceneManager {
         });
     }
 
-    async setupNewScene(sceneName: string, animate: boolean = true) {
+    async setupNewScene(sceneName: string, animate: boolean = true, duration: number = 1) { // TODO: mettere constanti
         this.currentScene = this.scenes[sceneName];
         this.currentScene.zIndex = 1; // default for all scenes (Ui elements have a zIndex of 2)
         this.app.stage.addChild(this.currentScene);
@@ -28,7 +28,7 @@ export class SceneManager {
             this.currentScene.alpha = 0;
             gsap.to(this.currentScene, {
                 alpha: 1,
-                duration: 1 // TODO: CONSTANT
+                duration
             })
         }
     }
