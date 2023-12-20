@@ -8,9 +8,13 @@ import { RigidBodyComponent } from "./components/rigidBody";
 export class Scene extends Container {
     constructor(public engine: Engine) {
         super();
-        // TODO: give a dimension to scene
-        this.width = engine.app.screen.width *4 ;
-        this.height = engine.app.screen.height *4;
+
+        /*
+
+        The width and height of a container is 0 
+        if it has no children or empty.
+
+        */
     }
 
     /**

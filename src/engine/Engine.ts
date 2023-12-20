@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { Texture, Application, ICanvas } from "pixi.js";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Stats from 'stats.js';
 
 // Managers
@@ -97,7 +98,9 @@ export class Engine {
     }
 
     async run(config: GameConfig) {
-        gsap.registerPlugin(PixiPlugin);
+        console.clear();
+
+        gsap.registerPlugin(MotionPathPlugin,PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
 
         document.title = config.name || 'MY-ENGINE-2D';                         // name of the game
@@ -120,6 +123,9 @@ export class Engine {
 
         if (import.meta.env.DEV) {
             stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+            stats.dom.style.position = 'absolute';
+            stats.dom.style.left = '48px';
+            stats.dom.style.top = '32px';
             document.body.appendChild(stats.dom);
         }
 

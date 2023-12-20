@@ -14,6 +14,7 @@ export class MatterScene extends Scene {
     player!: GameObject;
     obstacle!: GameObject;
     obstacle2!: GameObject;
+    obstacle3!: GameObject;
     crosshair!: Graphics | Sprite;
 
     tilingSprite!: TilingSprite;
@@ -29,8 +30,7 @@ export class MatterScene extends Scene {
         const texture = MyEngine2D.getTexture('tile')
         this.tilingSprite = new TilingSprite(
             texture,
-            MyEngine2D.app.screen.width,
-            MyEngine2D.app.screen.height,
+            this.engine.app.screen.width * 4, this.engine.app.screen.height * 4,  //this.engine.app.screen.width, this.engine.app.screen.height,
         );
         this.tilingSprite.tileScale.x = 0.05 /* texture.width / MyEngine2D.app.screen.width */
         this.tilingSprite.tileScale.y = 0.05 /* texture.height / MyEngine2D.app.screen.width */
@@ -39,11 +39,12 @@ export class MatterScene extends Scene {
         // test MATTER-JS
         this.obstacle = new Obstacle('Obstacle', 100, 50, 200, 100);
         this.obstacle2 = new Obstacle('Obstacle2', 300, 450, 200, 100);
+        this.obstacle3 = new Obstacle('Obstacle3', 1200, 150, 50, 300);
 
         // si definisce il player
         this.player = new Player('Player', 'player')
 
-        // focus della camera sul player
+        // focus della camera sul player nella scena corrente
         this.engine.camera.lockTo(this.player, this)
 
         // crosshair
@@ -65,14 +66,22 @@ export class MatterScene extends Scene {
 
     update(delta: number) {
 
+        // titling sprite as fized background
+        this.tilingSprite.tilePosition.x = -this.x;
+        this.tilingSprite.tilePosition.y = -this.y;
+        // https://github.com/pixijs/pixijs/issues/5235 TILEPRITE ISSUE ???
+        this.tilingSprite.tilePosition.x %= this.tilingSprite.texture.width;
+        this.tilingSprite.tilePosition.y %= this.tilingSprite.texture.height;
+
         // update gameObjects
         super.update(delta)
 
         // update player and rigidBody rotation
         const { x, y } = this.engine.mouse.getMouse();
         const playerRigidBody = this.player.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)!
+        // const playerSprite = this.player.getComponent<SpriteComponent>(ComponentNames.Sprite)!
         const angle = Math.atan2(y - this.player.y, x - this.player.x);
-        this.player.rotation = angle;
+        // playerSprite.setRotation(angle);
         playerRigidBody.setRotation(angle)
 
         const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)!.rigidBody.position
@@ -81,9 +90,10 @@ export class MatterScene extends Scene {
         this.textCoord.text = `x:${Math.ceil(xp)} - y:${Math.ceil(yp)}`
 
         // TODO: test hasLineOfSight
-        // this.engine.time.runOnFrameNum([1, 30], (frameNumber: number) => {
-        //     this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
-        // })
+        this.engine.time.runOnFrameNum([30], (frameNumber: number) => {
+            this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
+        })
+
 
 
         if (this.engine.keyboard.iskeyDownOnce('O')) {

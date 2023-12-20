@@ -1,7 +1,7 @@
 import { Player } from '../entities/player';
 import { Enemy } from '../entities/enemy';
 
-import { Text } from "pixi.js";
+import { Graphics, Text } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
@@ -105,11 +105,28 @@ export class SecondScene extends Scene {
             })
         }
 
-        if (this.engine.keyboard.iskeyDownOnce('B')) {
+        /* if (this.engine.keyboard.iskeyDownOnce('B')) {
             console.time('camera.animateOnBezierCurve')
             this.engine.camera.animateOnBezierCurve(this.player, { x: 100, y: 400 }, { x: 300, y: 200 }, { x: 300, y: 400 }, 3, () => {
                 console.timeEnd('camera.animateOnBezierCurve')
                 console.log('camera.animateOnBezierCurve done!')
+            })
+        } */
+
+        if (this.engine.keyboard.iskeyDownOnce('B')) {
+            console.time('camera.followPath')
+            let graphics = new Graphics()
+                .lineStyle(2, 0xaaaaaa, 1)
+                .moveTo(200, 20)
+                .lineTo(200, 200)
+                .arcTo(350, 200, 450, 900, 100)
+                .lineTo(200, 500)
+                .lineTo(700, 100)
+                .bezierCurveTo(700, 100, 700, 400, 100, 100)
+                .endFill();
+            this.engine.camera.followPath(graphics, 3, () => {
+                console.timeEnd('camera.followPath')
+                console.log('camera.followPath done!')
             })
         }
 
