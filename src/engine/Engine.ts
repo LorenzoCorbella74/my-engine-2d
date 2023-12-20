@@ -100,7 +100,7 @@ export class Engine {
     async run(config: GameConfig) {
         console.clear();
 
-        gsap.registerPlugin(MotionPathPlugin,PixiPlugin);
+        gsap.registerPlugin(MotionPathPlugin, PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
 
         document.title = config.name || 'MY-ENGINE-2D';                         // name of the game
@@ -150,7 +150,7 @@ export class Engine {
         this.emitter = new ParticleManager(this.app);
         this.crosshair = new CrossHairManager(this);
         this.filters = new FiltersManager();
-        this.ui = new UIManager(this.app);
+
         this.keyboard = new InputKeyboardManager({
             // DEFAULTS
             ...{
@@ -170,6 +170,9 @@ export class Engine {
         }
 
         this.scenes.startDefaultScene();
+
+        // initialize UI
+        this.ui = new UIManager(this.app);
 
         // the loop starts when startLoop is called
         this.app.ticker.maxFPS = 60;
