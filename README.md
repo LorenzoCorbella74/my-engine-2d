@@ -12,7 +12,7 @@ I have always been fascinated by video game engines and my-engine-2d is my effor
 
 # Features
 
-The engine provides a series of classes, contained in the `engine` folder, that allow you to speed up the creation of a 2D game.
+The engine provides a series of abstractions, contained in the `engine` folder, that allow to speed up the creation of a 2D game.
 
 ## Asset Manager
 
@@ -38,21 +38,23 @@ Thanks to the `Entity` decorator it is possible to instanciate Gameobject with a
 
 The engine provides several methods to search for objects and query the game world:
 
-- `getObjectByName(game:string)`,
-- `getObjectById(id:number)`
-- `getGroup(name: string)` to retrieve a list of GameObjects belonging to the relevant group.
+- `getEntitytByName(game:string)`,
+- `getEntitytById(id:number)`
+- `getEntityGroup(name: string)` to retrieve a list of GameObjects belonging to the relevant group.
 
-It's possible to decorate GameObjects with tags and retrieve a list of GameObject instances that match the given tags with the `getObjectsByTags(tags: string | string[], condition: 'AND' | 'OR' = 'AND')` methods (to invert use "!" before the tag):
+It's possible to decorate GameObjects with tags and retrieve a list of GameObject instances that match the given tags with the `getEntitiesByTags(tags: string | string[], condition: 'AND' | 'OR' = 'AND')` methods:
 
 ```typescript
 @Entity({
   group:'enemy'
-  tags:["soldier", "robot", '!friend']
+  tags:["soldier", "robot"]
 })
 export class EnemyCommander extends GameObject {
-
   // code here..
 }
+
+// in a game scene to search for entities
+const enemies = this.engine.getObjectsByTags(['soldier','!friend']) // to invert use "!" before the tag => soldier NOT friend :-(
 ```
 
 The "Gameobject" class extends the PIXI.Container, and being the "Entity" is composed of components. The engine provides out of the box:
@@ -95,9 +97,10 @@ export class Player extends GameObject {
 
 ### Gameobject Templates
 
-The engine provides the following template objects:
+The engine provides the following template entities:
 
-- [x] Trigger
+- [x] Trigger: invisible, one time, box to fire events
+- [x] Positional Sound Emitter: volume is based on the distance with the player...
 - [ ] TODO...
 
 ## Sound Manager

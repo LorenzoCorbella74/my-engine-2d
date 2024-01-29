@@ -5,7 +5,7 @@ import { MyEngine2D } from '../Engine';
 import { SpriteComponent } from './sprite';
 import { GameObject } from '../GameObject';
 
-import { ComponentNames } from '../models/component-names.enum';
+import { DefaultComponentNames } from '../models/component-names.enum';
 import { Graphics, Sprite } from 'pixi.js';
 import { RigidBodyOptions } from '../models/rigid-body';
 import { GraphicsComponent } from './graphic';
@@ -25,14 +25,14 @@ export const GROUP = {
 export class RigidBodyComponent extends Component {
 
     dependencies: (string | { name: string; type: 'AND' | 'OR' })[] = [
-        {name:ComponentNames.Sprite, type:"OR"}, 
-        {name:ComponentNames.Graphics, type:"OR"}, 
+        { name: DefaultComponentNames.Sprite, type: "OR" },
+        { name: DefaultComponentNames.Graphics, type: "OR" },
     ];
 
     public rigidBody!: Body;
 
     constructor(gameObject: GameObject, public options: RigidBodyOptions) {
-        super(gameObject, ComponentNames.RigidBody);
+        super(gameObject, DefaultComponentNames.RigidBody);
 
         this.createRigidBody(options);
     }
@@ -41,10 +41,10 @@ export class RigidBodyComponent extends Component {
         const { shape, isStatic } = options;
         let x, y, width, height;
         let component;
-        if (this.entity.hasComponent(ComponentNames.Sprite)) {
-            component = this.entity?.getComponent<SpriteComponent>(ComponentNames.Sprite)?.sprite as Sprite
-        } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
-            component = this.entity?.getComponent<GraphicsComponent>(ComponentNames.Graphics)?.graphics as Graphics
+        if (this.entity.hasComponent(DefaultComponentNames.Sprite)) {
+            component = this.entity?.getComponent<SpriteComponent>(DefaultComponentNames.Sprite)?.sprite as Sprite
+        } else if (this.entity.hasComponent(DefaultComponentNames.Graphics)) {
+            component = this.entity?.getComponent<GraphicsComponent>(DefaultComponentNames.Graphics)?.graphics as Graphics
         } else {
             throw new EngineError(`Required components not implemented for RigidBodyComponent in ${this.entity.name} gameObject.`);
         }
@@ -81,11 +81,11 @@ export class RigidBodyComponent extends Component {
      * Sync the entity position/rotation with the rigid body
      */
     update() {
-        if (this.entity.hasComponent(ComponentNames.Sprite)) {
+        if (this.entity.hasComponent(DefaultComponentNames.Sprite)) {
             this.entity.x = this.rigidBody.position.x
             this.entity.y = this.rigidBody.position.y
-        } else if (this.entity.hasComponent(ComponentNames.Graphics)) {
-            const rb = this.entity.getComponent<GraphicsComponent>(ComponentNames.Graphics)!
+        } else if (this.entity.hasComponent(DefaultComponentNames.Graphics)) {
+            const rb = this.entity.getComponent<GraphicsComponent>(DefaultComponentNames.Graphics)!
             this.entity.x = this.rigidBody.position.x - rb.graphics.width / 2
             this.entity.y = this.rigidBody.position.y - rb.graphics.height / 2
         }

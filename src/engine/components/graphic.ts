@@ -2,7 +2,7 @@ import { Graphics } from 'pixi.js';
 import { Component } from './Component';
 import { RigidBodyComponent } from './rigidBody';
 import { GameObject } from '../GameObject';
-import { ComponentNames } from '../models/component-names.enum';
+import { DefaultComponentNames } from '../models/component-names.enum';
 
 export class GraphicsComponent extends Component {
 
@@ -16,7 +16,7 @@ export class GraphicsComponent extends Component {
      * @param {number} localY - The local y-coordinate of the component.
      */
     constructor(gameObject: GameObject, public graphics: Graphics, localX = 0, localY = 0) {
-        super(gameObject, ComponentNames.Graphics);
+        super(gameObject, DefaultComponentNames.Graphics);
         // if we have a sprite we put in the scene
         console.log(`Graphics: width ${this.graphics.width}px and height ${this.graphics.height}px - x:${this.entity.x}px y:${this.entity.y}px`);
         this.entity.addChild(graphics);
@@ -48,8 +48,8 @@ export class GraphicsComponent extends Component {
     setWidthAndHeight(width: number, height: number) {
         this.graphics.width = width;
         this.graphics.height = height;
-        if (this.entity.hasComponent(ComponentNames.RigidBody)) {
-            this.entity?.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updateSize();
+        if (this.entity.hasComponent(DefaultComponentNames.RigidBody)) {
+            this.entity?.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)?.updateSize();
         }
     }
 

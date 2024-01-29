@@ -45,13 +45,13 @@ export class SceneManager {
         }
     }
 
-    changeScene(sceneName: string, destroyScene: boolean = true, animate: boolean = true) {
+    changeScene(sceneName: string, destroyScene: boolean = true, animate: boolean = true, duration: number = .5) {
         if (sceneName in this.scenes) {
             if (this.currentScene) {
                 if (animate) {
                     gsap.to(this.currentScene, {
-                        alpha: 0, // Valore di opacità finale
-                        duration: 0.5,         // in  secondi, ODO: CONSTANT
+                        alpha: 0, // final value
+                        duration,
                         onComplete: () => {
                             this.removeOldScene(this.currentScene.constructor.name, destroyScene);
                             this.setupNewScene(sceneName);

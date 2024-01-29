@@ -1,12 +1,12 @@
 import { Body } from 'matter-js';
 import { Component } from './Component';
 import { GameObject } from '../GameObject';
-import { ComponentNames } from '../models/component-names.enum';
+import { DefaultComponentNames } from '../models/component-names.enum';
 import { RigidBodyComponent } from './rigidBody';
 
 export class InputControllerComponent extends Component {
 
-    dependencies: string[] = [ComponentNames.RigidBody];
+    dependencies: string[] = [DefaultComponentNames.RigidBody];
 
     // px/sec
     private speed: number;
@@ -15,14 +15,14 @@ export class InputControllerComponent extends Component {
     private dy: number = 0;
 
     constructor(gameObject: GameObject, speed: number) {
-        super(gameObject, ComponentNames.InputController);
+        super(gameObject, DefaultComponentNames.InputController);
         this.speed = speed;
     }
 
     update(dt: number) {
         this.dx = 0;
         this.dy = 0;
-        if (this.entity && this.entity?.hasComponent(ComponentNames.RigidBody)) {
+        if (this.entity && this.entity?.hasComponent(DefaultComponentNames.RigidBody)) {
             // PLayer movement
             if (this.entity.engine.keyboard.isKeyDown('UP')) {
                 this.dy -= this.speed * dt;
@@ -36,7 +36,7 @@ export class InputControllerComponent extends Component {
             if (this.entity.engine.keyboard.isKeyDown('LEFT')) {
                 this.dx -= this.speed * dt;
             }
-            const rb = this.entity.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.rigidBody
+            const rb = this.entity.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)?.rigidBody
             if (rb) {
                 // set velocity
                 Body.setVelocity(rb, { x: this.dx, y: this.dy })

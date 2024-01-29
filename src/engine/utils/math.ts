@@ -1,3 +1,4 @@
+import { ObservablePoint } from "pixi.js";
 import { Point } from "../models/vectors";
 
 let random = Math.random;
@@ -31,11 +32,14 @@ function clamp(x: number, min = 0, max = 1) {
   return Math.max(min, Math.min(x, max));
 }
 
-function distance(a: Point, b: Point) {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
-
-  return Math.sqrt(dx * dx + dy * dy);
+function distance(a: ObservablePoint<any> | undefined, b: ObservablePoint<any> | undefined) {
+  if (a && b) {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  } else {
+    return 0;
+  }
 }
 
 /**

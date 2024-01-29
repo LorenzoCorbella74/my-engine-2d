@@ -19,6 +19,12 @@ export class Debug2UIManager {
 
     setPosition(x: number, y: number) {
         this.debugText.position.set(x, y);
+        return this;
+    }
+
+    setDisplayDuration(duration: number) {
+        this.displayDuration = duration;
+        return this;
     }
 
     log2Screen(message: string) {

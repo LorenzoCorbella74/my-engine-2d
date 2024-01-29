@@ -182,7 +182,9 @@ export class Engine {
             this.emitter.update(this.time.getDeltaTime())   // updating particles
             this.physics.update()                           // updating Matter-js 
 
+            this.scenes.currentScene.beForeUpdate();
             this.scenes.currentScene.update(this.time.getDeltaTime());
+            this.scenes.currentScene.afterUpdate();
             this.events.processEvents()                     // dispatching events
             this.camera.update();                           // updating camera
 
@@ -281,7 +283,7 @@ export class Engine {
      * @param name the name of the object
      * @returns the object
      */
-    getObjectByName(name: string): GameObject | null | undefined {
+    getEntityByName(name: string): GameObject | null | undefined {
         return this.repo.getObjectByName(name)
     }
 
@@ -290,7 +292,7 @@ export class Engine {
      * @param id the id of the object
      * @returns the object
      */
-    getObjectById(id: string): GameObject | null | undefined {
+    getEntityById(id: string): GameObject | null | undefined {
         return this.repo.getObjectById(id)
     }
 
@@ -300,7 +302,7 @@ export class Engine {
     * @param {string} name - The name of the group to retrieve.
     * @return {any} The group object.
     */
-    getGroup(name: string): GameObject[] | null {
+    getEntityGroup(name: string): GameObject[] | null {
         return this.repo.getGroup(name)
     }
 
@@ -310,7 +312,7 @@ export class Engine {
     * @param {string | string[]} tags - The tags to filter the objects by.
     * @return {GameObject[]} An array of game objects that match the specified tags.
     */
-    getObjectsByTags(tags: string | string[]): GameObject[] {
+    getEntitiesByTags(tags: string | string[]): GameObject[] {
         return this.repo.getObjectByTags(tags)
     }
 }

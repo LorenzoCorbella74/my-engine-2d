@@ -2,27 +2,27 @@ import { Component } from './Component';
 import { SpriteComponent } from './sprite';
 import { GameObject } from '../GameObject';
 
-import { ComponentNames } from '../models/component-names.enum';
+import { DefaultComponentNames } from '../models/component-names.enum';
 import { Graphics, Sprite } from 'pixi.js';
 import { GraphicsComponent } from './graphic';
 
 export class BoundingBoxComponent extends Component {
 
-    dependencies: string[] = [ComponentNames.Sprite];
+    dependencies: string[] = [DefaultComponentNames.Sprite];
     source!: Sprite | Graphics;
 
     public bb: Graphics = new Graphics();
 
     constructor(gameObject: GameObject) {
-        super(gameObject, ComponentNames.BoundingBox);
+        super(gameObject, DefaultComponentNames.BoundingBox);
         this.createBB();
     }
 
     private createBB() {
-        const hasSprite = this.entity.hasComponent(ComponentNames.Sprite)
-        const hasGraphics = this.entity.hasComponent(ComponentNames.Graphics)
+        const hasSprite = this.entity.hasComponent(DefaultComponentNames.Sprite)
+        const hasGraphics = this.entity.hasComponent(DefaultComponentNames.Graphics)
         if (hasSprite || hasGraphics) {
-            this.source = this.entity?.getComponent<SpriteComponent>(ComponentNames.Sprite)?.sprite as Sprite || this.entity?.getComponent<GraphicsComponent>(ComponentNames.Graphics)?.graphics as Graphics
+            this.source = this.entity?.getComponent<SpriteComponent>(DefaultComponentNames.Sprite)?.sprite as Sprite || this.entity?.getComponent<GraphicsComponent>(DefaultComponentNames.Graphics)?.graphics as Graphics
             const { x, y, width, height, anchor } = this.source;
             this.bb.lineStyle(2.5, 0xFF0000);
             this.bb.drawRect(x - anchor?.x * width, y - anchor?.y * height, width, height);

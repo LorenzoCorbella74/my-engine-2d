@@ -5,7 +5,7 @@ import { GameObject } from './GameObject';
 import { GROUP, RigidBodyComponent } from './components/rigidBody';
 import { BaseEventType, BasePayload } from './models/events';
 import { Trigger } from './templates/trigger';
-import { ComponentNames } from './models/component-names.enum';
+import { DefaultComponentNames } from './models/component-names.enum';
 
 export class PhysicManager {
 
@@ -72,9 +72,9 @@ export class PhysicManager {
      * @param body 
      */
     disableCollisions(body: Body | undefined) {
-        if(body){
+        if (body) {
             body.collisionFilter.category = GROUP.DEFAULT;
-        }    
+        }
     }
 
     /**
@@ -82,8 +82,8 @@ export class PhysicManager {
      * @param body 
      * @param groups 
      */
-    enableCollisions(body: Body|undefined, groups: number) {
-        if(body){
+    enableCollisions(body: Body | undefined, groups: number) {
+        if (body) {
             body.collisionFilter.category = groups;
         }
     }
@@ -96,7 +96,7 @@ export class PhysicManager {
             // disable rigid body
             this.disableCollisions(bodyB)
             // RUN TRIGGER Callback only once
-            const trigger = MyEngine2D.getObjectByName(bodyB.label) as Trigger
+            const trigger = MyEngine2D.getEntityByName(bodyB.label) as Trigger
             if (!trigger.fired) {
                 trigger.fired = true;
                 trigger.callback();
@@ -105,8 +105,8 @@ export class PhysicManager {
             // SEND EVENT TO TARGET TODO: only if of a specific type (walls do not send collision events...)
             const colisionEvent = new GameEvent<BasePayload, BaseEventType>(
                 MyEngine2D.config.events?.Collision,
-                MyEngine2D.getObjectByName(bodyA.label)!,
-                MyEngine2D.getObjectByName(bodyB.label)!,
+                MyEngine2D.getEntityByName(bodyA.label)!,
+                MyEngine2D.getEntityByName(bodyB.label)!,
                 { empty: true },
             );
             MyEngine2D.events.sendEvent(colisionEvent);
@@ -132,8 +132,8 @@ export class PhysicManager {
      * @returns 
      */
     hasLineOfSight(fromObj: GameObject, toObj: GameObject): boolean {
-        const from = fromObj.getComponent<RigidBodyComponent>(ComponentNames.RigidBody);
-        const to = toObj.getComponent<RigidBodyComponent>(ComponentNames.RigidBody);
+        const from = fromObj.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody);
+        const to = toObj.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody);
         if (from?.rigidBody && to?.rigidBody) {
             let collisions = Query.ray(
                 Composite.allBodies(MyEngine2D.physics.physicsEngine.world),

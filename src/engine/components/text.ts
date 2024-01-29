@@ -1,7 +1,7 @@
 import { Text } from 'pixi.js';
 import { Component } from './Component';
 import { GameObject } from '../GameObject';
-import { ComponentNames } from '../models/component-names.enum';
+import { DefaultComponentNames } from '../models/component-names.enum';
 
 export class TextComponent extends Component {
 
@@ -14,7 +14,7 @@ export class TextComponent extends Component {
      * @param {number} localY - the local y coordinate (default: 0)
      */
     constructor(gameObject: GameObject, public text: Text, localX = 0, localY = 0) {
-        super(gameObject, ComponentNames.Text);
+        super(gameObject, DefaultComponentNames.Text);
         this.entity.addChild(this.text); // add to the gameobject container
     }
 

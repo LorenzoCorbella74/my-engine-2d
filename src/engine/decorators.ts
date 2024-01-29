@@ -25,8 +25,8 @@ export function Entity(options?: DecoratorOptions) {
                 instance._tags = options.tags;
             }
             // si registra nel objects repository
-            MyEngine2D.repo.gameObjectsIdMap.set(instance.id, instance);
-            MyEngine2D.repo.gameObjectsNameMap.set(instance.name, instance);
+            MyEngine2D.getRepos().gameObjectsIdMap.set(instance.id, instance);
+            MyEngine2D.getRepos().gameObjectsNameMap.set(instance.name, instance);
 
             // si mette nella scena corrente
             MyEngine2D.scenes.currentScene.addChild(instance);
@@ -91,7 +91,7 @@ export function updateUI(entitiesName: string[]) {
                 // Invia l'evento a ciascuna delle entità specificate nella lista
                 for (const name of entitiesName) {
                     // events are sent to GameObject only !
-                    MyEngine2D.events.sendEvent(new GameEvent(MyEngine2D.config.events?.UpdateForUI, origin, MyEngine2D.getObjectByName(name)!, {
+                    MyEngine2D.events.sendEvent(new GameEvent(MyEngine2D.config.events?.UpdateForUI, origin, MyEngine2D.getEntityByName(name)!, {
                         [propertyKey]: newVal
                     }));
                 }

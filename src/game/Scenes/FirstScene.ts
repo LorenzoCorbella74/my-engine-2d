@@ -7,7 +7,7 @@ import { createTimelineAnimation } from './animations/timeline';
 import { Background } from "../entities/FirstScene/background";
 import { GameObject } from "../../engine/GameObject";
 import { Button } from "../entities/FirstScene/button";
-import { ComponentNames } from "../../engine/models/component-names.enum";
+import { DefaultComponentNames } from "../../engine/models/component-names.enum";
 import { SpriteComponent } from "../../engine/components/sprite";
 import { UITextExample } from "../entities/FirstScene/UItest";
 
@@ -32,7 +32,7 @@ export class FirstScene extends Scene {
 
         this.game = new Game('Game')
 
- 
+
 
         // si applica il filtro a tutta la scena (tranne all'UI) ...
         const blurFilter = new BlurFilter();
@@ -47,7 +47,7 @@ export class FirstScene extends Scene {
 
         // Timeline for complex animation
         this.bunny2 = new Button('Bunny2', 'bunny', 200, 200, 128, 128, () => { timeline.play(); });
-        const bunny2Sprite = this.bunny2.getComponent<SpriteComponent>(ComponentNames.Sprite)!.sprite
+        const bunny2Sprite = this.bunny2.getComponent<SpriteComponent>(DefaultComponentNames.Sprite)!.sprite
         const timeline = createTimelineAnimation(bunny2Sprite);
         this.timeline = timeline;
         timeline.pause()
@@ -76,8 +76,8 @@ export class FirstScene extends Scene {
         this.engine.storage.save('test-engine', { lore: 'is ok!' })
 
 
-               // add UI element
-               this.engine.ui.addUIElement(new UITextExample('UItest', 'Testo in UI: XxX'));
+        // add UI element
+        this.engine.ui.addUIElement(new UITextExample('UItest', 'Testo in UI: XxX'));
     }
 
     update(dt: number) {

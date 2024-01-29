@@ -45,7 +45,7 @@ export class EventManager {
             if (event) {
                 // group
                 if (event instanceof GameEventForGroup) {
-                    const group = this.engine.repo.gameObjectsGroups[event.groupName];
+                    const group = this.engine.getRepos().gameObjectsGroups[event.groupName];
                     if (group) {
                         for (const receiver of group) {
                             receiver.onEventHandler(event);
@@ -53,7 +53,7 @@ export class EventManager {
                     }
                 } else {
                     // single entity
-                    const receiver = this.engine.repo.getObjectById(event.receiver?.id);
+                    const receiver = this.engine.getRepos().getObjectById(event.receiver?.id);
                     if (receiver) {
                         receiver.onEventHandler(event);
                     }

@@ -3,7 +3,7 @@ import { Component } from './Component';
 import { MyEngine2D } from '../Engine';
 import { RigidBodyComponent } from './rigidBody';
 import { GameObject } from '../GameObject';
-import { ComponentNames } from '../models/component-names.enum';
+import { DefaultComponentNames } from '../models/component-names.enum';
 
 export class SpriteComponent extends Component {
 
@@ -18,7 +18,7 @@ export class SpriteComponent extends Component {
      * @param {number} localY - the local y coordinate (default: 0)
      */
     constructor(gameObject: GameObject, spriteName: string, localX = 0, localY = 0) {
-        super(gameObject, ComponentNames.Sprite);
+        super(gameObject, DefaultComponentNames.Sprite);
         this.sprite = MyEngine2D.getAsset(spriteName);
         // if we have a sprite we put in the scene
         if (this.sprite) {
@@ -45,8 +45,8 @@ export class SpriteComponent extends Component {
         this.sprite.x = x
         this.sprite.y = y
         // TODO: update rigidbody....
-        if (this.entity.hasComponent(ComponentNames.RigidBody)) {
-            this.entity?.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updatePosition(this.entity.x + x, this.entity.y + y); // TESTARE !!
+        if (this.entity.hasComponent(DefaultComponentNames.RigidBody)) {
+            this.entity?.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)?.updatePosition(this.entity.x + x, this.entity.y + y); // TESTARE !!
         }
     }
 
@@ -67,8 +67,8 @@ export class SpriteComponent extends Component {
     setWidthAndHeight(width: number, height: number) {
         this.sprite.width = width;
         this.sprite.height = height;
-        if (this.entity.hasComponent(ComponentNames.RigidBody)) {
-            this.entity?.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updateSize();
+        if (this.entity.hasComponent(DefaultComponentNames.RigidBody)) {
+            this.entity?.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)?.updateSize();
         }
     }
 
@@ -95,8 +95,8 @@ export class SpriteComponent extends Component {
         this.sprite.width = width;
         this.sprite.height = height; 
         */
-        if (this.entity.hasComponent(ComponentNames.RigidBody)) {
-            this.entity?.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updateSize();
+        if (this.entity.hasComponent(DefaultComponentNames.RigidBody)) {
+            this.entity?.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)?.updateSize();
         }
     }
 

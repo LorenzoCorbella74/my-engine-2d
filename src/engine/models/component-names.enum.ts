@@ -1,4 +1,4 @@
-export enum ComponentNames {
+export enum DefaultComponentNames {
     Sprite = 'SpriteComponent',
     Graphics = 'GraphicsComponent',
     RigidBody = 'RigidBodyComponent',
@@ -7,5 +7,6 @@ export enum ComponentNames {
     BoundingBox = 'BoundingBoxComponent',
     Script = 'ScriptComponent',
     Behaviour = 'BehaviourComponent',
-    Text = 'TextComponent'
+    Text = 'TextComponent',
+    PositionalSoundEmitter = "PositionalSoundEmitter",
 }

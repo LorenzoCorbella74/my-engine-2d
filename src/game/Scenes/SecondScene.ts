@@ -10,7 +10,7 @@ import { RigidBodyComponent } from '../../engine/components/rigidBody';
 
 import { Power2 } from 'gsap'
 import { Trigger } from '../../engine/templates/trigger';
-import { ComponentNames } from '../../engine/models/component-names.enum';
+import { DefaultComponentNames } from '../../engine/models/component-names.enum';
 
 export class SecondScene extends Scene {
 
@@ -64,8 +64,8 @@ export class SecondScene extends Scene {
         this.enemy1.setPosition(300, 300);
 
         // get the reference of the objecty in the gameObjects repository
-        this.engine.log('Test getObjectByName: ', this.engine.getObjectByName('Player'));
-        this.engine.log('Test getGroup: ', this.engine.getGroup('Enemy'));
+        this.engine.log('Test getObjectByName: ', this.engine.getEntityByName('Player'));
+        this.engine.log('Test getGroup: ', this.engine.getEntityGroup('Enemy'));
 
         // Test engine.locale
         this.engine.log('Test engine.locale: ',
@@ -86,7 +86,7 @@ export class SecondScene extends Scene {
         this.text.x = Math.sin(this.engine.time.getElapsedTime()) * window.innerWidth / 8;
 
         // UI
-        const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)!.rigidBody.position
+        const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)!.rigidBody.position
         this.textCoord.x = Math.ceil(xp)
         this.textCoord.y = Math.ceil(yp) - 32
         this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y + 32}`

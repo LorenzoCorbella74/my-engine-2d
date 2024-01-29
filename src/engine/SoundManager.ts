@@ -23,15 +23,19 @@ export class SoundManager {
         this.sounds.set(name, soundObj);
     }
 
-    playSound(name: string) {
+    playSound(name: string, volume?: number) {
         if (this.sounds.has(name)) {
-            this.sounds.get(name)!.play({ volume: this.globalVolume });
+            const sound = this.sounds.get(name)!;
+            sound.play({ volume: this.globalVolume || volume });
+            return sound;
         }
     }
 
     stopSound(name: string) {
         if (this.sounds.has(name)) {
-            this.sounds.get(name)!.stop();
+            const sound = this.sounds.get(name)!;
+            sound.stop();
+            return sound;
         }
     }
 

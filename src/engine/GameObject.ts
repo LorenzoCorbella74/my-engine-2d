@@ -4,7 +4,7 @@ import { GameEvent, GameEventForGroup, } from './EventManager'
 import { Container } from 'pixi.js';
 import { IGameConditionEntity } from './models/condition-logic';
 import { BaseEventType, BasePayload, IGameObjectEventHandler } from './models/events';
-import { ComponentNames } from './models/component-names.enum';
+import { DefaultComponentNames } from './models/component-names.enum';
 import { RigidBodyComponent } from './components/rigidBody';
 import { SpriteComponent } from './components/sprite';
 
@@ -64,11 +64,11 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   kill() {
     this.engine.getRepos().gameObjectsIdMap.delete(this.id);
     this.engine.getRepos().gameObjectsNameMap.delete(this.name);
-    if (this.hasComponent(ComponentNames.RigidBody)) {
-      this.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.removeRigidBody();
+    if (this.hasComponent(DefaultComponentNames.RigidBody)) {
+      this.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)?.removeRigidBody();
     }
-    if (this.hasComponent(ComponentNames.Sprite)) {
-      this.getComponent<SpriteComponent>(ComponentNames.Sprite)?.destroy();
+    if (this.hasComponent(DefaultComponentNames.Sprite)) {
+      this.getComponent<SpriteComponent>(DefaultComponentNames.Sprite)?.destroy();
     }
     this.components = new Map();
     this.destroy({ children: true });
@@ -80,8 +80,8 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
    * @param y 
    */
   setPosition(x: number, y: number) {
-    if (this.hasComponent(ComponentNames.RigidBody)) {
-      this.getComponent<RigidBodyComponent>(ComponentNames.RigidBody)?.updatePosition(x, y);
+    if (this.hasComponent(DefaultComponentNames.RigidBody)) {
+      this.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)?.updatePosition(x, y);
     } else {
       // update container position
       this.x = x;
