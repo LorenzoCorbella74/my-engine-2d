@@ -38,7 +38,9 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   }
 
   // check for game logic
-  isSatisfied(): boolean { return true }
+  satisfyWinGameCondition(): boolean { return true }
+  satisfyLoseGameCondition(): boolean { return true }
+  satisfyEventGameCondition(): GameEvent<BasePayload, BaseEventType> | null { return null }
 
   get id(): string {
     return this._id;

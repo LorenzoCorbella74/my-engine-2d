@@ -1,7 +1,6 @@
 import { BlurFilter } from "pixi.js";
 import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
-import { Game } from '../entities/game';
 
 import { createTimelineAnimation } from './animations/timeline';
 import { Background } from "../entities/FirstScene/background";
@@ -20,7 +19,6 @@ export class FirstScene extends Scene {
     bunny4!: GameObject;
 
     timeline!: GSAPTimeline
-    game!: Game;
 
     constructor() {
         super(MyEngine2D)
@@ -29,9 +27,6 @@ export class FirstScene extends Scene {
     async init() {
 
         await this.engine.loader.loadAssetsFolder('group1');
-
-        this.game = new Game('Game')
-
 
 
         // si applica il filtro a tutta la scena (tranne all'UI) ...

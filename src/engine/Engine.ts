@@ -30,6 +30,7 @@ import { GameConfig } from "./models/config";
 import { AnimationManager } from "./AnimationManager";
 import { LocalizationManager } from "./LocalizationManager";
 import { UIManager } from "./UIManager";
+import { GameRoot } from "./game-root";
 
 const stats = new Stats();
 
@@ -58,6 +59,8 @@ export class Engine {
     public ui!: UIManager;
     public math!: typeof math;
 
+    public game!: GameRoot;
+
     private _state: State = 'idle';
     private _debug: boolean = false;
 
@@ -73,7 +76,8 @@ export class Engine {
             // TODO: resize event listener
              /* this.app.view */document.addEventListener('resize', (ev: Event) => {
             const { innerWidth, innerHeight } = ev.target as Window;
-            this.scenes.currentScene?.onResize?.(innerWidth, innerHeight);
+            const scene = this.scenes.currentScene;
+            this.scenes.currentScene?.scale.set(/* renderer.width */ innerWidth / scene.width, /* renderer.height */ innerHeight / scene.height);
         });
         }
     }
@@ -138,7 +142,7 @@ export class Engine {
         this.sounds = new SoundManager();
         this.animation = new AnimationManager();
         this.time = new TimeManager(this);
-        this.logic = new GameLogic()
+        this.logic = new GameLogic(this)
         this.events = new EventManager(this);
         this.locale = new LocalizationManager(this);
         this.mouse = new InputMouseManager(this.app);
@@ -150,6 +154,7 @@ export class Engine {
         this.emitter = new ParticleManager(this.app);
         this.crosshair = new CrossHairManager(this);
         this.filters = new FiltersManager();
+        this.game = new GameRoot();     // root GameObject for the game TODO: 
 
         this.keyboard = new InputKeyboardManager({
             // DEFAULTS
@@ -182,7 +187,7 @@ export class Engine {
             this.emitter.update(this.time.getDeltaTime())   // updating particles
             this.physics.update()                           // updating Matter-js 
 
-            this.scenes.currentScene.beForeUpdate();
+            this.scenes.currentScene.beforeUpdate();
             this.scenes.currentScene.update(this.time.getDeltaTime());
             this.scenes.currentScene.afterUpdate();
             this.events.processEvents()                     // dispatching events
@@ -200,17 +205,26 @@ export class Engine {
 
     /* -------------------------- LOOP -------------------------- */
 
+    /**
+     * Start the loop by starting the app ticker and setting the state to 'running'.
+     */
     startLoop() {
         this.app.ticker.start();
         this.state = 'running';
     }
 
-
+    /**
+     * Stop the loop and set the state to 'paused'.
+     */
     stopLoop() {
         this.app.ticker.stop();
         this.state = 'paused';
     }
 
+    /**
+     * Toggles the loop based on the current state.
+     *
+     */
     toggleLoop() {
         if (this.state === 'running') {
             this.stopLoop();
@@ -225,6 +239,9 @@ export class Engine {
     get debug() {
         return this._debug
     }
+    /**
+     * toggles the debug mode.
+     */
     togleDebug() {
         this._debug = !this._debug
     }
@@ -248,6 +265,12 @@ export class Engine {
 
     /* -------------------------- LOGS TO UI -------------------------- */
 
+    /**
+     * Logs a message to the user interface.
+     *
+     * @param {string} message - the message to be logged
+     * @return {void} 
+     */
     log2UI(message: string) {
         if (!import.meta.env.DEV) return;
         this.debug2UI.log2Screen(message)

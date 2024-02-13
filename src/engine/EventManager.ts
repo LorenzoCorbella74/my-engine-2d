@@ -35,6 +35,11 @@ export class EventManager {
 
     constructor(public engine: typeof MyEngine2D) { }
 
+    /**
+     * Sends an event to the event queue.
+     *
+     * @param {GameEvent<BasePayload, BaseEventType> | GameEventForGroup<BasePayload, BaseEventType>} event - The event to be sent.
+     */
     sendEvent(event: GameEvent<BasePayload, BaseEventType> | GameEventForGroup<BasePayload, BaseEventType>) {
         this.eventQueue.push(event);
     }
