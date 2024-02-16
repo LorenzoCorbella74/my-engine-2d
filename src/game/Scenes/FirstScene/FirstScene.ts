@@ -1,14 +1,14 @@
 import { BlurFilter } from "pixi.js";
-import { MyEngine2D } from "../../engine/Engine";
-import { Scene } from "../../engine/Scene";
+import { MyEngine2D } from "../../../engine/Engine";
+import { Scene } from "../../../engine/Scene";
 
 import { createTimelineAnimation } from './animations/timeline';
-import { Background } from "../entities/FirstScene/background";
-import { GameObject } from "../../engine/GameObject";
-import { Button } from "../entities/FirstScene/button";
-import { DefaultComponentNames } from "../../engine/models/component-names.enum";
-import { SpriteComponent } from "../../engine/components/sprite";
-import { UITextExample } from "../entities/FirstScene/UItest";
+import { Background } from "./entities/background";
+import { GameObject } from "../../../engine/GameObject";
+import { Button } from "./entities/button";
+import { DefaultComponentNames } from "../../../engine/models/component-names.enum";
+import { SpriteComponent } from "../../../engine/components/sprite";
+import { UITextExample } from "./entities/UItest";
 
 export class FirstScene extends Scene {
 

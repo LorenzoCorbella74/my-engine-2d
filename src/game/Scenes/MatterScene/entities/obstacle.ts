@@ -1,8 +1,8 @@
 import { Graphics } from "pixi.js";
-import { GameObject } from "../../../engine/GameObject";
-import { GraphicsComponent } from "../../../engine/components/graphic";
-import { GROUP, RigidBodyComponent } from "../../../engine/components/rigidBody";
-import { Entity } from "../../../engine/decorators";
+import { GameObject } from "../../../../engine/GameObject";
+import { GraphicsComponent } from "../../../../engine/components/graphic";
+import { GROUP, RigidBodyComponent } from "../../../../engine/components/rigidBody";
+import { Entity } from "../../../../engine/decorators";
 
 @Entity()
 export class Obstacle extends GameObject {

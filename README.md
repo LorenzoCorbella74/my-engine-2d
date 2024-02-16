@@ -251,16 +251,16 @@ Here's an example of how to use it on a game scene:
 
 ```typescript
 // Add a new stat key
-this.engine.stats.addStatKey("score");
+this.engine.stats.addStatKey("killed-enemy");
 
 // Update the value of a stat key
-this.engine.stats.updateStatKey("score", 100);
+this.engine.stats.updateStatKey("killed-enemy", 100);
 
 // Delete a stat key
-this.engine.stats.deleteStatKey("score");
+this.engine.stats.deleteStatKey("killed-enemy");
 
 // Reset specified stat keys to zero
-this.engine.stats.cleanStatKeys(["score"]);
+this.engine.stats.cleanStatKeys(["killed-enemy"]);
 ```
 
 ## Storage Manager
@@ -281,7 +281,7 @@ this.engine.storage.save("player-score", { kills: 45, death: 12 });
 
 ## GameRoot Class
 
-The `GameRoot` class holds the current state of the game and provides methods to manipulate it and being a GameObject can receive GameEvents. It is used as a property of the main `Engine` class.
+The `GameRoot` class holds the current state of the game and provides methods to manipulate it and being a GameObject can receive GameEvents. It is used with the property `game` of the main `Engine` class.
 
 Here's an example of how to use its methods:
 
@@ -321,7 +321,7 @@ To test physics use the 2d visualisation of the matter-js world by running in th
 
 ## Game Logic
 
-The `GameLogic` class is responsible for managing the game's logic, checking the conditions that determine winning, losing, and triggering events in the game.
+The `GameLogic` class is responsible for managing the game's logic, checking the conditions that determine winning, losing, progression and triggering relevant events in the game.
 
 The `engine.logic.registerGameLogicConditions(obj: GameObject, condition: 'WIN' | 'LOSE' | 'EVENT' = 'WIN')` method is used to register game logic conditions for a specific GameObject. The condition parameter determines whether the object is checked for a win condition, lose condition, or event condition. By default, the condition is set to 'WIN'.
 

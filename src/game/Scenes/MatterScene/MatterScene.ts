@@ -1,13 +1,13 @@
-import { Player } from '../entities/player';
+import { Player } from '../../entities/player';
 import { Graphics, Sprite, TilingSprite, Text } from "pixi.js";
-import { MyEngine2D } from "../../engine/Engine";
-import { Scene } from "../../engine/Scene";
-import { GameObject } from '../../engine/GameObject';
+import { MyEngine2D } from "../../../engine/Engine";
+import { Scene } from "../../../engine/Scene";
+import { GameObject } from '../../../engine/GameObject';
 
-import { GROUP, RigidBodyComponent } from '../../engine/components/rigidBody';
-import { Obstacle } from '../entities/MatterScene/obstacle';
-import { createTestCrosshair } from '../entities/crosshair';
-import { DefaultComponentNames } from '../../engine/models/component-names.enum';
+import { GROUP, RigidBodyComponent } from '../../../engine/components/rigidBody';
+import { Obstacle } from './entities/obstacle';
+import { createTestCrosshair } from '../../entities/crosshair';
+import { DefaultComponentNames } from '../../../engine/models/component-names.enum';
 
 export class MatterScene extends Scene {
 

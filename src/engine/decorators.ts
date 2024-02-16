@@ -29,7 +29,7 @@ export function Entity(options?: DecoratorOptions) {
             MyEngine2D.getRepos().gameObjectsNameMap.set(instance.name, instance);
 
             // si mette nella scena corrente
-            MyEngine2D.scenes.currentScene.addChild(instance);
+            MyEngine2D.scenes.currentScene?.addChild(instance);
 
             // ritorna l'istanza
             return instance;

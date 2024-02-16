@@ -1,7 +1,7 @@
 // importing scenes
-import { FirstScene } from "./Scenes/FirstScene";
+import { FirstScene } from "./Scenes/FirstScene/FirstScene";
 import { SecondScene } from './Scenes/SecondScene';
-import { MatterScene } from './Scenes/MatterScene';
+import { MatterScene } from './Scenes/MatterScene/MatterScene';
 import { GraphicScene } from './Scenes/GraphicScene'
 
 import { GameConfig } from "../engine/models/config";

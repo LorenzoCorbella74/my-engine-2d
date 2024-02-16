@@ -1,6 +1,6 @@
-import { GameObject } from "../../../engine/GameObject";
-import { SpriteComponent } from "../../../engine/components/sprite";
-import { Entity } from "../../../engine/decorators";
+import { GameObject } from "../../../../engine/GameObject";
+import { SpriteComponent } from "../../../../engine/components/sprite";
+import { Entity } from "../../../../engine/decorators";
 
 @Entity()
 export class Button extends GameObject {

@@ -1,7 +1,7 @@
-import { GameObject } from "../../../engine/GameObject";
+import { GameObject } from "../../../../engine/GameObject";
 
 import { Text, TextStyle } from "pixi.js";
-import { TextComponent } from "../../../engine/components/text";
+import { TextComponent } from "../../../../engine/components/text";
 export class UITextExample extends GameObject {
 
     constructor(name: string, text: string) {

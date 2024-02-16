@@ -30,7 +30,7 @@ import { GameConfig } from "./models/config";
 import { AnimationManager } from "./AnimationManager";
 import { LocalizationManager } from "./LocalizationManager";
 import { UIManager } from "./UIManager";
-import { GameRoot } from "./game-root";
+import { GameRoot } from "./GameRoot";
 import { GameStats } from "./GameStats";
 
 const stats = new Stats();

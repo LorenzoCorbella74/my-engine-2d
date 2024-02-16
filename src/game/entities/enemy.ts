@@ -33,9 +33,9 @@ export class Enemy extends GameObject {
 
         // test for applyforce
         enemySprite.sprite.on("mousedown", (e) => {
-            let power = this.engine.math.distance(this, { x: e.clientX, y: e.clientY }) * 10;
+            // let power = this.engine.math.distance(this, { x: e.clientX, y: e.clientY }) * 10;
             let angle = this.engine.math.angle(this, { x: e.clientX, y: e.clientY });
-            enemyRigidBody.applyForce(angle, power);
+            enemyRigidBody.applyForce(angle, /* power */10);
         })
     }
 }
