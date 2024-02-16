@@ -38,7 +38,7 @@ export class FirstScene extends Scene {
 
         this.engine.camera.lockTo(null, this)
 
-        this.bunny = new Button('Bunny', 'bunny', 100, 100, 64, 64, () => this.engine.scenes.changeScene('SecondScene'));
+        this.bunny = new Button('Bunny', 'bunny', 100, 100, 64, 64, () => this.engine.scenes.goToScene('SecondScene'));
 
         // Timeline for complex animation
         this.bunny2 = new Button('Bunny2', 'bunny', 200, 200, 128, 128, () => { timeline.play(); });
@@ -50,14 +50,14 @@ export class FirstScene extends Scene {
         this.bunny3 = new Button('Bunny3', 'bunny', 300, 100, 64, 64, () => {
             this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2, { blur: 0 })
             this.engine.time.after(3, () => {
-                this.engine.scenes.changeScene('MatterScene')
+                this.engine.scenes.goToScene('MatterScene')
             })
         });
 
         this.bunny4 = new Button('Bunny4', 'bunny', 500, 100, 64, 64, () => {
             this.engine.filters.animateFilter(this.engine.scenes.currentScene, blurFilter, 2, { blur: 0 })
             this.engine.time.after(2, () => {
-                this.engine.scenes.changeScene('GraphicScene')
+                this.engine.scenes.goToScene('GraphicScene')
             })
         });
 

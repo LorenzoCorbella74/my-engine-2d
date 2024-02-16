@@ -16,8 +16,9 @@ export class MoveAction extends Action {
     }
 
     update(dt: number) {
-        if (this.entity.engine.math.distance(this.entity, this.targetPosition) < this.tolerance) {
+        // TODO: 
+        /* if (this.entity.engine.math.distance(this.entity.position, this.targetPosition) < this.tolerance) {
             this.finished = true;
-        }
+        } */
     }
 }

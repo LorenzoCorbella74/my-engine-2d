@@ -6,7 +6,10 @@ import { GraphicScene } from './Scenes/GraphicScene'
 
 import { GameConfig } from "../engine/models/config";
 
-export const Config: GameConfig = {
+
+
+
+export const Config: GameConfig<{ score: number }> = {
     name: 'My Game',
     scenes: [FirstScene, SecondScene, MatterScene, GraphicScene],  // the first is the startScene
     storagePrefix: 'MyGame_',
@@ -35,5 +38,11 @@ export const Config: GameConfig = {
         Pickup: 'Pickup',
         CustomEvent: 'CustomEvent',
         UpdateForUI: 'UpdateForUI',
-    }
+    },
+    // to manage game state as global object
+    state: {
+        score: 0
+    },
+    // run gameLogic each n frame
+    framesToCheckLogic: [1, 30]
 };

@@ -1,6 +1,9 @@
 import { Application } from "pixi.js";
 import { KeyMapping } from "./models/key-mapping";
 
+/**
+ * Manages keyboard input for the application.
+ */
 export class InputKeyboardManager {
 
     app: Application;

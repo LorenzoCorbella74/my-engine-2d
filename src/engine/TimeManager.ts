@@ -6,6 +6,9 @@ import { MyEngine2D } from "./Engine";
     TAKEN from https://hump.readthedocs.io/en/latest/timer.html
 */
 
+/**
+ * The TimeManager class manages time-related operations and functionalities.
+ */
 export class TimeManager {
     private elapsed: number;        // il trempo totale [in secondi]
     private dt: number;             // il dt, this.app.ticker.deltaMS [in secondi]

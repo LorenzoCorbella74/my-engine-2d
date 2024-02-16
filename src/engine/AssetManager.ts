@@ -52,6 +52,11 @@ export default class AssetManager {
         return Object.keys(assetFiles);
     }
 
+    /**
+     * Loads assets from a specified group.
+     * @param group - The group name of the assets to load.
+     * @returns A promise that resolves to the loaded resources, or null if no assets are found for the group.
+     */
     async loadAssetsFolder(group: string) {
         const groupAssets = this.list.filter((asset) => asset.group === group);
         if (groupAssets) {

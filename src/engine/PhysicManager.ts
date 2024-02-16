@@ -7,6 +7,9 @@ import { BaseEventType, BasePayload } from './models/events';
 import { Trigger } from './templates/trigger';
 import { DefaultComponentNames } from './models/component-names.enum';
 
+/**
+ * Manages the physics simulation for the game.
+ */
 export class PhysicManager {
 
     physicsEngine!: Engine;
@@ -38,17 +41,27 @@ export class PhysicManager {
         Events.on(this.physicsEngine, 'collisionActive', (event) => this.onCollisionStart(event))
     }
 
+    /**
+     * Sets the gravity value along the y-axis for the physics engine.
+     * @param y The gravity value along the y-axis.
+     */
     setGravity(y: number) {
         this.physicsEngine.gravity.y = y
     }
 
     /* ---------------------- DEBUG ---------------------- */
+    /**
+     * Shows the physics canvas if the environment is in development mode.
+     */
     showPhisicsCanvas() {
         if (!import.meta.env.DEV) return;
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "block";
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.zIndex = '100';
     }
 
+    /**
+     * Hides the physics canvas if the application is not in development mode.
+     */
     hidePhisicsCanvas() {
         if (!import.meta.env.DEV) return;
         (document.querySelector('#phisic-debugger canvas') as HTMLCanvasElement).style.display = "none";

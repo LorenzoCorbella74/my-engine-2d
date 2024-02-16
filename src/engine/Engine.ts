@@ -13,7 +13,7 @@ import { StorageDB } from './StorageManager';
 import { SceneManager } from './SceneManager';
 import { InputKeyboardManager } from './InputKeyboardManager';
 import { InputMouseManager } from './InputMouseManager';
-import { Camera } from './Camera';
+import Camera from './Camera';
 import { GameLogic } from './GameLogic';
 import { GameObjectRepo } from "./GameObjectRepo";
 import { EventManager } from "./EventManager";
@@ -31,12 +31,13 @@ import { AnimationManager } from "./AnimationManager";
 import { LocalizationManager } from "./LocalizationManager";
 import { UIManager } from "./UIManager";
 import { GameRoot } from "./game-root";
+import { GameStats } from "./GameStats";
 
 const stats = new Stats();
 
 export class Engine {
     app!: Application<ICanvas>;
-    config!: GameConfig;
+    config!: GameConfig<any>;
 
     public loader!: AssetManager;
     public sounds!: SoundManager;
@@ -58,8 +59,9 @@ export class Engine {
     public locale!: LocalizationManager;
     public ui!: UIManager;
     public math!: typeof math;
+    public stats: GameStats = new GameStats();
 
-    public game!: GameRoot;
+    public game!: GameRoot<any>;
 
     private _state: State = 'idle';
     private _debug: boolean = false;
@@ -101,14 +103,14 @@ export class Engine {
         return this.repo;
     }
 
-    async run(config: GameConfig) {
+    async run(config: GameConfig<any>) {
         console.clear();
 
         gsap.registerPlugin(MotionPathPlugin, PixiPlugin);
         PixiPlugin.registerPIXI(PIXI);
 
         document.title = config.name || 'MY-ENGINE-2D';                         // name of the game
-        this.engineLogPrefix = "[MY-ENGINE-2D]: " || config.engineLogPrefix;    // log prefix
+        this.engineLogPrefix = config.engineLogPrefix || "[MY-ENGINE-2D]: ";    // log prefix
 
         this.config = config;
 
@@ -154,7 +156,7 @@ export class Engine {
         this.emitter = new ParticleManager(this.app);
         this.crosshair = new CrossHairManager(this);
         this.filters = new FiltersManager();
-        this.game = new GameRoot();     // root GameObject for the game TODO: 
+        this.game = new GameRoot(config.state);     // root GameManager to manage game state
 
         this.keyboard = new InputKeyboardManager({
             // DEFAULTS
@@ -193,8 +195,9 @@ export class Engine {
             this.events.processEvents()                     // dispatching events
             this.camera.update();                           // updating camera
 
-            this.time.runOnFrameNum([1, 30], (frame: number) => {
-                this.logic.update()                         // check game logic
+            // check game logic on specific frames
+            this.time.runOnFrameNum(config.framesToCheckLogic, (frame: number) => {
+                this.logic.update()
             })
             // clear mouse state
             this.mouse.clear();

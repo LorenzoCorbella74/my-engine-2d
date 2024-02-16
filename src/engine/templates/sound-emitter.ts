@@ -1,4 +1,4 @@
-import { Component } from './Component';
+import { Component } from '../components/Component';
 import { GameObject } from '../GameObject';
 
 import { DefaultComponentNames } from '../models/component-names.enum';
@@ -22,7 +22,8 @@ export class PositionalSoundEmitterComponent extends Component {
         public minDistance = 750,
         public maxDistance = 350
     ) {
-        super(gameObject, DefaultComponentNames.PositionalSoundEmitter);
+        const randomSuffix = Math.floor(Math.random() * 1000000).toString();
+        super(gameObject, DefaultComponentNames.PositionalSoundEmitter + randomSuffix);
         this.createSound(soundKey);
     }
 

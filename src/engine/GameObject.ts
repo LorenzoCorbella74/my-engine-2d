@@ -54,6 +54,10 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     return this._name;
   }
 
+  set name(name: string) {
+    this._name = name;
+  }
+
   get tags(): Set<string> {
     return this._tags;
   }
@@ -101,6 +105,7 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     }
   }
 
+  // TODO:
   resize(width: number, height: number) {
     for (const c of this.components.values()) {
       c.resize(width, height);

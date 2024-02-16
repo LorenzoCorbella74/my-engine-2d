@@ -1,6 +1,9 @@
 import { Application } from "pixi.js";
 import { MouseLimit } from "./models/mouse-limits";
 
+/**
+ * The InputMouseManager class handles mouse input and provides methods to track mouse button states and mouse position.
+ */
 export class InputMouseManager {
 
     private mousePosition = {

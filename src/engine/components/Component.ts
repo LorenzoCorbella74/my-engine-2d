@@ -38,6 +38,8 @@ export class Component {
      * Resize the component
      * @param width 
      * @param height 
-     */
+     * */
+    // TODO: ?????
     resize(width: number, height: number) { }
+
 }

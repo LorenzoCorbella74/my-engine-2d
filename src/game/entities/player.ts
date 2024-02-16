@@ -29,4 +29,12 @@ export class Player extends GameObject {
         this.addComponent(new InputControllerComponent(this, 150));
         this.addComponent(new BoundingBoxComponent(this));
     }
+
+    satisfyLoseGameCondition(): boolean {
+        let healthC = this.getComponent<HealthComponent>('HealthComponent')
+        if (healthC?.alive) {
+            return healthC.health < 0;
+        };
+        return false
+    }
 }

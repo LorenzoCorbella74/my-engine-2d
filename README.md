@@ -12,7 +12,24 @@ I have always been fascinated by video game engines and my-engine-2d is my effor
 
 # Features
 
-The engine provides a series of abstractions, contained in the `engine` folder, that allow to speed up the creation of a 2D game.
+The engine provides a series of abstractions, contained in the `engine` folder, that allow to speed up the creation of a 2D game in WebGL.
+
+- [Asset Manager](#asset-manager)
+- [GameObject Architecture and ECS](#gameobject-architecture-and-ecs)
+- [Sound Manager](#sound-manager)
+- [Scene Manager](#scene-manager)
+- [Keyboard Input Manager](#keyboard-input-manager)
+- [Mouse Input Manager](#mouse-input-manager)
+- [Camera Manager](#camera-manager)
+- [Time Manager and Timers](#time-manager-and-timers)
+- [Event Manager](#event-manager)
+- [Localization](#localization)
+- [GameStats ](#gamestats-class)
+- [Storage Manager](#storage-manager)
+- [Utils](#utils)
+- [Debug](#debug)
+- [Game Logic](#game-logic)
+- [UIManager](#uimanager-class)
 
 ## Asset Manager
 
@@ -27,8 +44,7 @@ It is possible to load asincronously the resources placed in the assets folder a
 // ("sceneOne" is the name of the folder in /assets)
 await this.engine.loader.loadAssetsGroup("sceneOne");
 
-// ... you can get the sprite by using the name
-//  of the file without the extension
+// ... you can get the sprite by using the name of the file without the extension
 this.engine.getAsset("rocket-launcher");
 ```
 
@@ -95,27 +111,31 @@ export class Player extends GameObject {
 }
 ```
 
+For the time being Systems are not implemented but the engine provides a method to update all the components of the game world with the `update(dt: number, delta: number)` method of the GameObject class.
+
 ### Gameobject Templates
 
 The engine provides the following template entities:
 
-- [x] Trigger: invisible, one time, box to fire events
-- [x] Positional Sound Emitter: volume is based on the distance with the player...
+- [x] Trigger: invisible, one time box to fire events
+- [x] Positional Sound Emitter: volume is based on the distance with the player
 - [ ] TODO...
 
 ## Sound Manager
 
+The SoundManager class is responsible for managing sound resources in the game.It is used with the property `sounds` of the main `Engine` class.
 A map of all the .mp3 resources is available after pre loading and sounds are managed with the following methods:
 
-- `playSound(name:string)`
-- `stopSound(name:string)`
-- `toggleSound(name:string)`
-- `playRandomSound(keys: string[])`.
-- `fadeInSound(name: string, duration: number = 1)`.
-- `fadeOutSound(name: string, volume: number = 0, duration: number = 1)`.
+- `this.engine.sounds.playSound(name:string)` to play a sound
+- `this.engine.sounds.stopSound(name:string)` to stop a sound
+- `this.engine.sounds.toggleSound(name:string)` to toggle a sound
+- `this.engine.sounds.playRandomSound(keys: string[])`. to play a random sound from a list of keys
+- `this.engine.sounds.fadeInSound(name: string, duration: number = 1)` to fade in a sound
+- `this.engine.sounds.fadeOutSound(name: string, volume: number = 0, duration: number = 1)` to fade out a sound
 
 ### Scene manager
 
+It is possible to manage the game scenes with the `SceneManager` class. It is used with the property `scenes` of the main `Engine` class.
 Game scenes extend PIXI.Container and allow in the init method to load asincronously the required resources of the scene.
 
 ```typescript
@@ -145,31 +165,47 @@ export class Scene extends Container {
 
 The engine provide methods to change scenes with gsap transitions.
 
+```typescript
+this.engine.scenes.goToScene("DungeonOne");
+```
+
 ## Keyboard Input Manager
 
-Just track the user input with:
+It is possible to manage the user keyboard inputs with the property `keyboard` of the main `Engine` class:
 
 - `iskeyDown(key)` to check CONTINUOSLY if a key has been pressed
 - `iskeyDownOnce(key)` to check if a key has been pressed in the current frame (and was not pressed on the previous)
+  ```typescript
+  if (this.engine.keyboard.iskeyDownOnce("M")) {
+    // do something
+  }
+  ```
 
 ## Mouse Input Manager
 
-Just track the mouse inputs with:
+It is possible to manage the user mouse inputs with the the property `mouse` of the main `Engine` class.
 
 - `isMouseButton1Down()` to check CONTINUOSLY if mouse button One has been pressed
+  ```typescript
+  if (this.engine.input.isMouseButton1Down()) {
+    // do something
+  }
+  ```
 - `isMouseButton1Pressed()` to check if mouse button One has been pressed in the current frame (and was not pressed on the previous)
 - `isMouseButton2Down()` to check CONTINUOSLY if mouse button Two has been pressed
 - `isMouseButton2Pressed()` to check if mouse button Two has been pressed in the current frame (and was not pressed on the previous)
 
 ## Camera Manager
 
+The engine provides a simple camera manager to manage the game camera. It is used with the property `camera` of the main `Engine` class.
 The camera class allows to:
 
-- make the camera follow a gameObject with `focusOn(element: GameObject, currentScene: Scene)`
-- animate the camera with the `zoomTo(targetZoom, duration, ease, callback)` method.
-- move the camera with `moveTo(point: Point, duration, ease, callback)`
-- animate on a bezier curve with `animateOnBezierCurve(start: Point, controlOne: Point, controlTwo: Point, end: Point, callback)`
-- shake camera with `shake(duration: number, amplitude: number)`
+- make the camera follow a gameObject with the method `this.engine.camera.focusOn(element: GameObject, currentScene: Scene)`
+- animate the camera with the `this.engine.camera.zoomTo(targetZoom, duration, ease, callback)` method.
+- move the camera with `this.engine.camera.moveTo(point: Point, duration, ease, callback)`
+- animate on a bezier curve with `this.engine.camera.animateOnBezierCurve(start: Point, controlOne: Point, controlTwo: Point, end: Point, callback)`
+- shake camera with `this.engine.camera.shake(duration: number, amplitude: number)`
+- set the camera bounds with `this.engine.camera.setBounds(bounds: Rectangle)` <!-- TODO: -->
 
 ## Time Manager and Timers
 
@@ -181,29 +217,152 @@ It's possible to manage the game speed with the `setGameSpeed(speed)` and manage
 
 ## Event Manager
 
-It's possible to send events to gameObject or to gameObject groups with the method`sendEvent(GameEvent<BasePayload> | GameEventForGroup<BasePayload>)`.
+The engine provides a simple event manager to send and listen to events.
+It's possible to send events to gameObject or to gameObject groups with the method`sendEvent(GameEvent<BasePayload> | GameEventForGroup<BasePayload>)`. It is used with the property `events` of the main `Engine` class.
 
-The class GameObject implements the method `onEventHandler(event)` to listen to events.
+```typescript
+// queue a game event
+this.engine.events.sendEvent(
+  new GameEvent(this.engine.config.events?.Pickup, this.player, this.enemy, {
+    message: "You are dead!",
+  })
+);
+```
+
+The class GameObject implements the method `onEventHandler(event)` to listen to game events:
+
+```typescript
+// on a GameObject
+onEventHandler(event: GameEvent<BasePayload, BaseEventType> | GameEventForGroup<BasePayload, BaseEventType>) {
+  console.log(`GameObject ${this.name} received event:`, event);
+}
+
+```
 
 ## Localization
 
 The engine provide a sinple class to manage locale translations. Put in the assets folder a folder called `i18n/data` (or configure its name in the configuration object) and the engine will load the relevant json files on engine bootstrap. The default locale is the `navigator.language` so use as names of the .json files appropiate names.
 
+## GameStats Class
+
+The `GameStats` class is a utility class used to manage game statistics. The class provides methods to add, update, delete, and reset the values of these stats. It is used with the property `stats` of the main `Engine` class.
+
+Here's an example of how to use it on a game scene:
+
+```typescript
+// Add a new stat key
+this.engine.stats.addStatKey("score");
+
+// Update the value of a stat key
+this.engine.stats.updateStatKey("score", 100);
+
+// Delete a stat key
+this.engine.stats.deleteStatKey("score");
+
+// Reset specified stat keys to zero
+this.engine.stats.cleanStatKeys(["score"]);
+```
+
+## Storage Manager
+
+The engine provides a simple class to manage player saving in localstorage. It is used with the property `storage` of the main `Engine` class.
+
+```typescript
+this.engine.storage.save("player-score", { kills: 45, death: 12 });
+```
+
 ### Utils
 
-- [x] math functions for random
+- [x] Math functions for random
 - [x] Object pool
-- [x] Storage in localstorage
-- [x] Basic Game Logic class for win/lose conditions
 - [x] CrossHair management
 - [x] PIXI Filters management in dedicated class
 - [x] PIXI Particles in dedicated class
+
+## GameRoot Class
+
+The `GameRoot` class holds the current state of the game and provides methods to manipulate it and being a GameObject can receive GameEvents. It is used as a property of the main `Engine` class.
+
+Here's an example of how to use its methods:
+
+```typescript
+export const Config: GameConfig<{ score: number }> = {
+    name: 'My Game',
+   ...
+    // to manage game state as global object
+    state: {
+        score: 0,
+        lives:3
+    }
+};
+
+
+// in a scene
+this.engine.game.updateState({ score: 100 }); // OR
+this.engine.game.updateState((state)=> { ...state, score: state.score + 10 });
+
+// to get the state
+const score = this.engine.game.getState('score');
+
+// to listen to state changes TODO:
+this.engine.game.onStateChange('score', (newScore, oldScore) => {
+    console.log('Score changed from', oldScore, 'to', newScore);
+});
+
+//to reset state
+this.engine.game.resetState();
+```
 
 ## Debug
 
 It is possible to use the Chrome Extension [Pixijs Devtools](https://chromewebstore.google.com/detail/pixijs-devtools/aamddddknhcagpehecnhphigffljadon?pli=1) and check the engine object as window.$PE.
 
 To test physics use the 2d visualisation of the matter-js world by running in the browser devtools the function `window.$PE.physics.showPhisicsCanvas()` to show (and `window.$PE.physics.hidePhisicsCanvas()` to hide).
+
+## Game Logic
+
+The `GameLogic` class is responsible for managing the game's logic, checking the conditions that determine winning, losing, and triggering events in the game.
+
+The `engine.logic.registerGameLogicConditions(obj: GameObject, condition: 'WIN' | 'LOSE' | 'EVENT' = 'WIN')` method is used to register game logic conditions for a specific GameObject. The condition parameter determines whether the object is checked for a win condition, lose condition, or event condition. By default, the condition is set to 'WIN'.
+
+```typescript
+// the game logic is registered in the init() method of the scene
+this.engine.logic.registerGameLogicConditions(this.player, "LOSE");
+
+//in the player class add method to check the lose, win condition or specific game event
+  satisfyLoseGameCondition(): boolean {
+    let healthC = this.getComponent<HealthComponent>('HealthComponent')
+      if (healthC?.alive) {
+        return healthC.health < 0;
+      };
+      return false
+  }
+```
+
+The GameLogic track the game logic conditions every n frames (where n is defined in the property `framesToCheckLogic` of the configuration object) by checking the win conditions, lose conditions, and event conditions. If a win condition is satisfied, a GameWon event is triggered. If a lose condition is satisfied, a GameLose event is triggered. If an event condition is satisfied, a GameEvent event is triggered.
+
+## UIManager Class
+
+The `UIManager` class is responsible for managing user interface (UI) objects in the game. The class provides methods to add, remove, hide, and show GameObjects.
+
+Here's an example of how to use it in a game scene:
+
+```typescript
+// Add a GameObject to the UILayer
+this.engine.ui.addUIElement("PLAYER-LIFE_BAR", new PlayerLifeBar());
+
+// Remove GameObject from the UILayer
+this.engine.ui.removeUIElement("PLAYER-LIFE_BAR");
+
+// Show/Hide specific GameObject
+this.engine.ui.showUIElementByName("PLAYER-LIFE_BAR");
+this.engine.ui.hideUIElementByName("PLAYER-LIFE_BAR");
+
+// hide / show UILayer
+this.engine.ui.hideUILayer();
+this.engine.ui.showUILayer();
+this.engine.ui.toggleUILayerVisibility();
+```
 
 # Usage
 
@@ -221,21 +380,38 @@ To test physics use the 2d visualisation of the matter-js world by running in th
 > npm run build
 ```
 
-Before starting the app place your scenes in the `Scenes` folder, your entitites in your `entities` folder, the basic configuration of the game in `Config.ts` and you are good to go!.
+Before starting the app place your scenes in the `/Game/Scenes` folder, the basic configuration of the game in `/Game/Config.ts` and you are good to go!.
 
 ```typescript
-export const Config = {
+export const Config: GameConfig<{ score: number }> = {
   name: "My Game",
-  scenes: [FirstScene, SecondScene], // the first is the start Scene
-  storagePrefix: "my-game_",
+  scenes: [FirstScene, SecondScene, MatterScene, GraphicScene], // the first is the startScene
+  storagePrefix: "MyGame_", // to store in localstorage
+  engineLogPrefix: "[MY-ENGINE-2D]: ", // to log in console
   // defaultLocale: 'en',
   // localeFolder: 'i18n',
+  // set your input here...
   input: {
     UP: "w",
     DOWN: "s",
     RIGHT: "d",
     LEFT: "a",
-    PAUSE: "p",
+    DEBUG: "i",
+    ACTION: "e",
   },
+  // place your events here...
+  events: {
+    Collision: "Collision",
+    Pickup: "Pickup",
+    CustomEvent: "CustomEvent",
+    UpdateForUI: "UpdateForUI",
+  },
+  // to manage game state as global object
+  state: {
+    score: 0,
+    lives: 3,
+  },
+  // run gameLogic each n frame
+  framesToCheckLogic: [1, 30],
 };
 ```

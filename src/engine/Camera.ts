@@ -11,7 +11,10 @@ import { PixiPlugin } from "gsap/PixiPlugin";
 
 export type CameraLock = 'both' | 'horizontal' | 'vertical';
 
-export class Camera {
+/**
+ * Represents a camera used for rendering and controlling the view of a scene.
+ */
+export default class Camera {
 
     app: PIXI.Application<PIXI.ICanvas>;
     target: GameObject | null;
@@ -50,6 +53,13 @@ export class Camera {
         this.ease = ease;
     }
 
+    /**
+     * Locks the camera to a specific game object within the current scene.
+     * If no game object is provided, the camera will be locked to the center of the screen.
+     * @param element The game object to lock the camera to.
+     * @param currentScene The current scene containing the camera.
+     * @param mode The camera lock mode ('both', 'horizontal', 'vertical').
+     */
     lockTo(element: GameObject | null, currentScene: Scene, mode: CameraLock = 'both') {
         this.app.stage.removeChild(this.container);
         // se non passato focus al centro dello schermo
@@ -65,6 +75,7 @@ export class Camera {
     }
 
     update() {
+
         if (!this.target) return
 
         if (this.shakeDuration > 0) {
@@ -112,6 +123,16 @@ export class Camera {
         this.container.scale.set(this.zoomLevel);
     }
 
+    setBounds(maxX: number, maxY: number) {
+        // TODO: 
+    }
+
+
+    /**
+     * Shakes the camera for a specified duration and amplitude.
+     * @param duration The duration of the camera shake in milliseconds.
+     * @param amplitude The amplitude of the camera shake.
+     */
     shake(duration: number, amplitude: number) {
         this.shakeDuration = duration;
         this.shakeAmplitude = amplitude;

@@ -29,7 +29,7 @@ export class SecondScene extends Scene {
     async init() {
         await this.engine.loader.loadAssetsFolder('group2')
 
-        this.engine.ui.hide() // test UI
+        this.engine.ui.hideUILayer() // test UI
 
         // testing second load...
         const textFormat = this.engine.getAsset('text-format');

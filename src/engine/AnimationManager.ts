@@ -2,14 +2,18 @@ import { gsap } from "gsap";
 
 export class AnimationManager {
 
+
     /**
+     * Animates a single property of an object using GSAP.
      * 
-     * @param context the object to animate
-     * @param property the property
-     * @param amount  the final value of the property
-     * @param duration 
-     * @param ease 
-     * @param onComplete 
+     * @template T - The type of the object.
+     * @param {string} id - The ID of the animation.
+     * @param {T} context - The object to animate.
+     * @param {Object} change - The property changes to apply.
+     * @param {number} [duration=1] - The duration of the animation in seconds.
+     * @param {string | gsap.EaseFunction} [ease="easeInOut"] - The easing function to use.
+     * @param {() => void} [onComplete=() => {}] - The callback function to execute when the animation completes.
+     * @returns {gsap.Tween} - The GSAP tween object.
      */
     aminateOneObjectProperty<T>(
         id: string,

@@ -1,34 +1,69 @@
-import { GameEvent, GameEventForGroup } from "./EventManager";
-import { GameObject } from "./GameObject"
+import { GameObject } from "./GameObject";
 import { Entity } from './decorators';
-import { BasePayload, BaseEventType } from "./models/events";
 
-
-export const GAMEROOT = 'GAME-OBJECT-ROOT'
-
-export type GameState = {
-    [key: string]: any
-}
+export const GAMEROOT = "GAMEROOT"
 
 @Entity()
-export class GameRoot extends GameObject {
+export class GameRoot<GameState> extends GameObject {
 
-    state: GameState = {}
+    private state: GameState;
+    private initialState: GameState;
 
-    constructor(name: string = GAMEROOT) {
-        super(name);
+    constructor(initialState: GameState) {
+        super(GAMEROOT)
+        this.initialState = initialState;
+        this.state = initialState;
     }
 
-    // TODO: capire cosa farci...
-    setState(state: GameState) {
-        this.state = Object.assign({}, this.state, state)
+    /**
+     * Sets the state of the game.
+     * @param state - The new state to set 
+     * or a function that updates the current state.
+     */
+    setState(state: GameState | ((state: GameState) => GameState)) {
+        this.state = typeof state === 'function' ?
+            (state as (state: GameState) => GameState)(this.state)
+            : { ...this.state, ...state };
+
     }
 
+    /**
+     * Retrieves the value of a specific key from the game state.
+     * 
+     * @param key - The key of the state property to retrieve.
+     * @returns The value of the specified key from the game state.
+     */
+    getState(key: keyof GameState): GameState[keyof GameState] {
+        return this.state[key];
+    }
+
+    /**
+     * Resets the state of the game root to its initial state.
+     */
     resetState() {
-        this.state = {}
+        this.state = { ...this.initialState }
     }
 
-    onEventHandler(event: GameEvent<BasePayload, BaseEventType> | GameEventForGroup<BasePayload, BaseEventType>): void {
+    /**
+     * Listens for changes in the specified key of the game state and executes the provided callback function.
+     * @param key - The key of the state property to listen for changes.
+     * @param callback - The callback function to execute when the state property changes.
+     */
+    onStateChange(
+        key: keyof GameState,
+        callback: (newValue: GameState[keyof GameState], oldValue: GameState[keyof GameState]) => void
+    ) {
+        let currentValue = this.getState(key);
 
+        Object.defineProperty(this.state, key, {
+            get: () => currentValue,
+            set: (newValue) => {
+                const oldValue = currentValue;
+                currentValue = newValue;
+                callback(newValue, oldValue);
+            },
+            enumerable: true,
+            configurable: true,
+        });
     }
 }
