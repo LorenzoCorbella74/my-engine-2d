@@ -1,5 +1,4 @@
 import { BlurFilter } from "pixi.js";
-import { MyEngine2D } from "../../../engine/Engine";
 import { Scene } from "../../../engine/Scene";
 
 import { createTimelineAnimation } from './animations/timeline';
@@ -21,7 +20,7 @@ export class FirstScene extends Scene {
     timeline!: GSAPTimeline
 
     constructor() {
-        super(MyEngine2D)
+        super()
     }
 
     async init() {

@@ -16,6 +16,9 @@ import { SpriteComponent } from './components/sprite';
   }
 } */
 
+/**
+ * Represents a game object in the game engine.
+ */
 export class GameObject extends Container implements IGameConditionEntity, IGameObjectEventHandler {
 
   private _id!: string;
@@ -37,10 +40,33 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     console.log(`GameObject ${this.name} received event:`, event);
   }
 
-  // check for game logic
-  satisfyWinGameCondition(): boolean { return true }
-  satisfyLoseGameCondition(): boolean { return true }
-  satisfyProgressionGameCondition(key: string): GameEvent<BasePayload, BaseEventType> | null { return null }
+  /* ---------------- check for game logic ---------------- */
+
+  /**
+   * Checks if the game win condition is satisfied.
+   * @returns A boolean indicating whether the game win condition is satisfied.
+   */
+  satisfyWinGameCondition(): boolean {
+    return true
+  }
+
+  /**
+   * Checks if the game lose condition is satisfied.
+   * @returns {boolean} True if the game lose condition is satisfied, false otherwise.
+   */
+  satisfyLoseGameCondition(): boolean {
+    return true
+  }
+
+  /**
+   * Checks if the game condition specified by the given key is satisfied.
+   * 
+   * @param key - The key of the game condition to check.
+   * @returns A GameEvent object representing the game condition, or null if the condition is not satisfied.
+   */
+  satisfyProgressionGameCondition(key: string): GameEvent<BasePayload, BaseEventType> | null {
+    return null
+  }
 
   get id(): string {
     return this._id;
@@ -63,10 +89,10 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   }
 
   /**
- * Deletes the object from the engine repository and removes its associated components.
- *
- * @return {void} 
- */
+   * Deletes the object from the engine repositories and removes its associated components.
+   *
+   * @return {void} 
+   */
   kill() {
     this.engine.getRepos().gameObjectsIdMap.delete(this.id);
     this.engine.getRepos().gameObjectsNameMap.delete(this.name);
@@ -114,6 +140,10 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
 
   /* -------------------- COMPONENTS --------------------- */
 
+  /**
+   * Adds a component to the game object.
+   * @param component The component to add.
+   */
   addComponent<T extends Component>(component: T): void {
     // check component requirements
     if (this.checkDependencies(component)) {
@@ -123,11 +153,20 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     }
   }
 
+  /**
+   * Checks if the GameObject has a specific component.
+   * @param componentName - The name of the component to check.
+   * @returns True if the GameObject has the component, false otherwise.
+   */
   hasComponent(componentName: string): boolean {
     return this.components.has(componentName) && !!this.components.get(componentName);
   }
 
-  // Abilita un componente
+
+  /**
+   * Enables a component on the game object.
+   * @param componentName - The name of the component to enable.
+   */
   enableComponent(componentName: string): void {
     const component = this.getComponent(componentName);
     if (component) {
@@ -135,7 +174,11 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     }
   }
 
-  // Disabilita un componente
+
+  /**
+   * Disables a component of the game object.
+   * @param componentName - The name of the component to disable.
+   */
   disableComponent(componentName: string): void {
     const component = this.getComponent(componentName);
     if (component) {
@@ -143,13 +186,21 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     }
   }
 
-  // Rimuove un componente dall'entità
+
+  /**
+   * Removes a component from the game object.
+   * @param componentName - The name of the component to remove.
+   */
   removeComponent(componentName: string): void {
     this.components.delete(componentName);
-    // Puoi fare ulteriori azioni qui, se necessario
   }
 
-  // Restituisce il componente associato a un tipo specifico
+
+  /**
+   * Retrieves a component of type T from the GameObject.
+   * @param componentName - The name of the component to retrieve.
+   * @returns The component of type T, or undefined if the component does not exist.
+   */
   getComponent<T extends Component>(componentName: string): T | undefined {
     return this.components.get(componentName) as T;
   }
@@ -184,6 +235,10 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   }
 
 
+  /**
+   * Adds a tag or an array of tags to the GameObject.
+   * @param input - The tag(s) to add.
+   */
   addTag(input: string | string[]) {
     if (Array.isArray(input)) {
       for (let a = 0; a < input.length; a++) {
@@ -195,6 +250,12 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   }
 
 
+  /**
+   * Queries the GameObject based on the provided tag(s).
+   * @param input - The tag(s) to query. Can be a single string or an array of strings.
+   * @param mode - The query mode. Defaults to "AND". Possible values are "AND" and "OR".
+   * @returns True if the GameObject matches the tag(s) based on the query mode, otherwise false.
+   */
   queryTag(input: string | string[], mode = "AND") {
     if (Array.isArray(input)) {
       if (mode === "AND") {
@@ -207,6 +268,10 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     }
   }
 
+  /**
+   * Deletes a tag or an array of tags from the GameObject.
+   * @param {string | string[]} input - The tag(s) to be deleted.
+   */
   deleteTag(input: string | string[]) {
     if (Array.isArray(input)) {
       for (let a = 0; a < input.length; a++) {
@@ -217,6 +282,9 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
     }
   }
 
+  /**
+   * Clears all the tags associated with the game object.
+   */
   clearTags() {
     this._tags.clear();
   }

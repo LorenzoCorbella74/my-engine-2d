@@ -1,5 +1,5 @@
 import { Container } from "pixi.js";
-import { Engine } from "./Engine";
+import { Engine, MyEngine2D } from "./Engine";
 import { GameObject } from "./GameObject";
 import { DefaultComponentNames } from "./models/component-names.enum";
 import { RigidBodyComponent } from "./components/rigidBody";
@@ -11,8 +11,10 @@ import { RigidBodyComponent } from "./components/rigidBody";
  * NOTE: The width and height of a container is 0 if it has no children or empty.
  */
 export class Scene extends Container {
-    constructor(public engine: Engine) {
+    engine: Engine
+    constructor() {
         super();
+        this.engine = MyEngine2D;
     }
 
     /**

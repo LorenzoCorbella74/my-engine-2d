@@ -22,7 +22,7 @@ export class MatterScene extends Scene {
     textCoord!: Text
 
     constructor() {
-        super(MyEngine2D)
+        super()
     }
 
     async init() {

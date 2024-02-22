@@ -6,9 +6,6 @@ import { GraphicScene } from './Scenes/GraphicScene'
 
 import { GameConfig } from "../engine/models/config";
 
-
-
-
 export const Config: GameConfig<{ score: number }> = {
     name: 'My Game',
     scenes: [FirstScene, SecondScene, MatterScene, GraphicScene],  // the first is the startScene

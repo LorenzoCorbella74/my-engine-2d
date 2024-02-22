@@ -18,6 +18,7 @@
 - [ ] Camera: ease + movimento solo quando si esce da un rettangolo centrale e non quando siamo agli estremi della scena
 - [ ] resize della game area / dimensioni dei gameObject dinamiche in funzioni delle dimensioni dello schermo?
 - [ ] mappa e path finding
+- [] fullscreen mode
 
 - [x] limiting mouse movement to vertical axis, horizonthal axis ed ad un area specifica rettangolare.
 

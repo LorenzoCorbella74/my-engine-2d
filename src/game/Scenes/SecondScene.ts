@@ -2,7 +2,6 @@ import { Player } from '../entities/player';
 import { Enemy } from '../entities/enemy';
 
 import { Graphics, Text } from "pixi.js";
-import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
@@ -23,7 +22,7 @@ export class SecondScene extends Scene {
     testTrigger!: Trigger;
 
     constructor() {
-        super(MyEngine2D)
+        super()
     }
 
     async init() {

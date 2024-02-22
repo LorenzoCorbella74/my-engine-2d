@@ -1,6 +1,5 @@
 
 import { Graphics } from "pixi.js";
-import { MyEngine2D } from "../../engine/Engine";
 import { Scene } from "../../engine/Scene";
 import { GameGraphics } from "../../engine/GameGraphics";
 
@@ -11,7 +10,7 @@ export class GraphicScene extends Scene {
     line!: Graphics;
 
     constructor() {
-        super(MyEngine2D)
+        super()
     }
 
     async init() {

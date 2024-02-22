@@ -30,6 +30,7 @@ export class Player extends GameObject {
         this.addComponent(new BoundingBoxComponent(this));
     }
 
+
     satisfyLoseGameCondition(): boolean {
         let healthC = this.getComponent<HealthComponent>('HealthComponent')
         if (healthC?.alive) {

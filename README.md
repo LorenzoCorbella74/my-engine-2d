@@ -31,6 +31,8 @@ The engine provides a series of abstractions, contained in the `engine` folder, 
 - [Game Logic](#game-logic)
 - [UIManager](#uimanager-class)
 
+Due to the fact that the engine is in continuous development, the documentation is not exhaustive and the features are not yet complete. Please be patient and feel free to contribute.
+
 ## Asset Manager
 
 It is possible to load asincronously the resources placed in the assets folder and subdivided in group folder. Each folder can contain specific scene resources organised in the following mandatory sub folders:
@@ -140,7 +142,7 @@ Game scenes extend PIXI.Container and allow in the init method to load asincrono
 
 ```typescript
 export class Scene extends Container {
-  constructor(public engine: Engine) {
+  constructor() {
     super();
   }
 
@@ -415,3 +417,5 @@ export const Config: GameConfig<{ score: number }> = {
   framesToCheckLogic: [1, 30],
 };
 ```
+
+## VSC Snippets
