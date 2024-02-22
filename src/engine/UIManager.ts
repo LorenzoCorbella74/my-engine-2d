@@ -1,51 +1,71 @@
 import { Application, Container } from "pixi.js";
 import { GameObject } from "./GameObject";
 
+const DEFAULT_LAYER = 'default';
+
 /**
- * Manages the UI layer in the game engine.
+ * Manages the UI layers in the game engine.
  */
 export class UIManager {
-    private uiLayer: Container;
-    private uiObjects: Map<string, GameObject>;
+    private nextZIndex = 20;
+    private uiLayers: Map<string, Container> = new Map<string, Container>()
+    private uiObjects: Map<string, GameObject> = new Map<string, GameObject>();
 
-    constructor(app: Application) {
-        this.uiLayer = new Container();
-        this.uiObjects = new Map<string, GameObject>();
-        this.uiLayer.zIndex = 20;
-        app.stage.addChild(this.uiLayer);
+    constructor(private app: Application) {
+        this.createDefaultLayer();
     }
 
     /**
-     * Sets the UI layer for the UIManager.
-     * @param layer - The container representing the UI layer.
+     * Creates a default UI layer.
      */
-    setUILayer(layer: Container): void {
-        this.uiLayer = layer;
+    private createDefaultLayer(): void {
+        const defaultLayer = new Container();
+        defaultLayer.zIndex = this.nextZIndex;
+        this.nextZIndex++;
+        this.uiLayers.set(DEFAULT_LAYER, defaultLayer);
+        this.app.stage.addChild(defaultLayer);
     }
 
     /**
-     * Adds a UI element to the UIManager.
+     * Adds a UI layer to the UIManager.
+     * @param name - The name of the new UI layer.
+     */
+    addUILayer(name: string): void {
+        if (!this.uiLayers.has(name)) {
+            const layer = new Container();
+            layer.zIndex = this.nextZIndex;
+            this.uiLayers.set(name, layer);
+            this.app.stage.addChild(layer);
+        }
+    }
+
+    /**
+     * Adds a UI element to the specified UI layer.
      * @param uiElement - The UI element to be added.
+     * @param name - The name of the UI layer to add the element to.
      */
-    addUIElement(uiElement: GameObject): void {
+    addUIElement(uiElement: GameObject, layerName?: string): void {
+        const layer = this.uiLayers.get(layerName ? layerName : DEFAULT_LAYER)! as Container;
         this.uiObjects.set(uiElement.name, uiElement);
-        this.uiLayer.addChild(uiElement);
-        // this.uiLayer.children.sort((a, b) => a.zIndex - b.zIndex);
+        layer.addChild(uiElement);
     }
 
     /**
-     * Removes a UI element from the UI layer.
+     * Removes a UI element from the specified UI layer.
      * @param uiElement - The UI element to be removed.
+     * @param layerName - The name of the UI layer to remove the element from (optional).
      */
-    removeUIElement(uiElement: string | GameObject): void {
+    removeUIElement(uiElement: string | GameObject, layerName?: string): void {
         if (typeof uiElement === "string") {
             const gameObject = this.uiObjects.get(uiElement);
             if (gameObject) {
-                this.uiLayer.removeChild(gameObject);
+                const layer = this.uiLayers.get(layerName ? layerName : DEFAULT_LAYER)! as Container;
+                layer.removeChild(gameObject);
                 this.uiObjects.delete(uiElement);
             }
-        } else {
-            this.uiLayer.removeChild(uiElement);
+        } else if (uiElement instanceof GameObject) {
+            const layer = this.uiLayers.get(layerName ? layerName : DEFAULT_LAYER)! as Container;
+            layer.removeChild(uiElement);
             this.uiObjects.forEach((value, key) => {
                 if (value === uiElement) {
                     this.uiObjects.delete(key);
@@ -77,23 +97,36 @@ export class UIManager {
     }
 
     /**
-     * Hides the UI layer.
+     * Hides the UI layer by setting its visibility to false.
+     * @param name - The name of the UI layer to be hidden.
      */
-    hideUILayer(): void {
-        this.uiLayer.visible = false;
+    hideUILayer(name: string): void {
+        const uiLayer = this.uiLayers.get(name);
+        if (uiLayer) {
+            uiLayer.visible = false;
+        }
     }
 
     /**
      * Shows the UI layer by setting its visibility to true.
+     * @param name - The name of the UI layer to be shown.
      */
-    showUILayer() {
-        this.uiLayer.visible = true;
+    showUILayer(name: string) {
+        const uiLayer = this.uiLayers.get(name);
+        if (uiLayer) {
+            uiLayer.visible = true;
+        }
     }
 
+
     /**
-     * Toggles the visibility of the UI layer.
+     * Toggles the visibility of a UI layer.
+     * @param name - The name of the UI layer to toggle.
      */
-    toggleUILayerVisibility(): void {
-        this.uiLayer.visible = !this.uiLayer.visible;
+    toggleUILayerVisibility(name: string): void {
+        const uiLayer = this.uiLayers.get(name);
+        if (uiLayer) {
+            uiLayer.visible = !uiLayer.visible;
+        }
     }
 }

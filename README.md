@@ -37,7 +37,7 @@ Due to the fact that the engine is in continuous development, the documentation 
 
 It is possible to use the Chrome Extension [Pixijs Devtools](https://chromewebstore.google.com/detail/pixijs-devtools/aamddddknhcagpehecnhphigffljadon?pli=1) and check the engine object as `window.$PE`.
 
-To test physics use the 2d visualisation of the matter-js world by running in the browser devtools the function `window.$PE.physics.showPhisicsCanvas()` to show (and `window.$PE.physics.hidePhisicsCanvas()` to hide).
+To test physics use the 2d visualisation of the matter-js world by running in the browser devtools the function `$PE.physics.showPhisicsCanvas()` to show and `$PE.physics.hidePhisicsCanvas()` to hide.
 
 ## Usage &#128296;
 
@@ -55,7 +55,7 @@ To test physics use the 2d visualisation of the matter-js world by running in th
 > npm run build
 ```
 
-Before starting the app place your scenes in the `/Game/Scenes` folder, the basic configuration of the game in `/Game/Config.ts` and you are good to go!.
+Before starting the app place your scenes in the `src/Game/Scenes` folder, the basic configuration of the game in `src/Game/Config.ts` and you are good to go!.
 
 ```typescript
 export const Config: GameConfig<{ score: number }> = {
