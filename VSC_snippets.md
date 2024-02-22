@@ -52,4 +52,4 @@ To have a better experience with the VSC, you can define the following snippets:
 
 For a complete list of all the variables that you can use in the snippets, see the [official documentation](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax). and [avariables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
 
-[back](README.md)
+[back](./README.md#Features)
