@@ -8,6 +8,7 @@ import { GameConfig } from "../engine/models/config";
 
 export const Config: GameConfig<{ score: number }> = {
     name: 'My Game',
+    fullscreen: true,
     scenes: [FirstScene, SecondScene, MatterScene, GraphicScene],  // the first is the startScene
     storagePrefix: 'MyGame_',
     engineLogPrefix: '[MY-ENGINE-2D]: ',
@@ -41,5 +42,8 @@ export const Config: GameConfig<{ score: number }> = {
         score: 0
     },
     // run gameLogic each n frame
-    framesToCheckLogic: [1, 30]
+    framesToCheckLogic: [1, 30],
+    // aspectRatio: '16:9' as default. Can be, 16:10, 4:3, 3:2 , 1:1
+    // fullscreen: true (default false)
+
 };

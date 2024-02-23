@@ -32,6 +32,7 @@ import { LocalizationManager } from "./LocalizationManager";
 import { UIManager } from "./UIManager";
 import { GameRoot } from "./GameRoot";
 import { GameStats } from "./GameStats";
+import { ScreenManager } from "./ScreenManager";
 
 const stats = new Stats();
 
@@ -41,6 +42,7 @@ export class Engine {
 
     public loader!: AssetManager;
     public sounds!: SoundManager;
+    public screen!: ScreenManager;
     public storage!: StorageDB;
     public time!: TimeManager;
     public scenes!: SceneManager;
@@ -75,12 +77,13 @@ export class Engine {
         // Aggiorna le dimensioni dell'applicazione in base alle nuove dimensioni della finestra
         this.app.renderer.resize(window.innerWidth, window.innerHeight);
         if (this.app.view) {
-            // TODO: resize event listener
-             /* this.app.view */document.addEventListener('resize', (ev: Event) => {
-            const { innerWidth, innerHeight } = ev.target as Window;
-            const scene = this.scenes.currentScene;
-            this.scenes.currentScene?.scale.set(/* renderer.width */ innerWidth / scene.width, /* renderer.height */ innerHeight / scene.height);
-        });
+            document.addEventListener('resize', (ev: Event) => {
+                // const { innerWidth, innerHeight } = ev.target as Window;
+                // const scene = this.scenes.currentScene;
+                // this.scenes.currentScene?.scale.set(/* renderer.width */ innerWidth / scene.width, /* renderer.height */ innerHeight / scene.height);
+                this.scenes.currentScene?.updateSizeAndOrigin();
+                this.scenes.currentScene?.updateScale();
+            });
         }
     }
 
@@ -103,6 +106,16 @@ export class Engine {
         return this.repo;
     }
 
+    toggleFullscreen(element: HTMLElement) {
+        if (!document.fullscreenElement) {
+            element.requestFullscreen().catch((error) => {
+                console.error('Fullscreen not available', error);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
     async run(config: GameConfig<any>) {
         console.clear();
 
@@ -119,13 +132,18 @@ export class Engine {
             resizeTo: window, // FUNZIONA ?????
             autoStart: false,
             // antialias: true, performance !!!
-            autoDensity: true,
+            autoDensity: true,  // Handles high DPI screens
             powerPreference: "high-performance",
             backgroundColor: 0x31383E,
-            resolution: devicePixelRatio
+            resolution: devicePixelRatio,
         });
 
+
         document.body.appendChild(this.app.view as HTMLCanvasElement);
+
+        if (config.fullscreen) {
+            this.toggleFullscreen(document.body);
+        }
 
         if (import.meta.env.DEV) {
             stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -140,6 +158,7 @@ export class Engine {
         window.$PE = MyEngine2D             // debug
 
         this.math = math;
+        this.screen = new ScreenManager(this)
         this.storage = new StorageDB(config.storagePrefix);
         this.sounds = new SoundManager();
         this.animation = new AnimationManager();

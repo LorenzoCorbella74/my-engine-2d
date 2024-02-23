@@ -17,6 +17,12 @@ this.engine.getAsset("rocket-launcher");
 
 [back](./README.md#Features)
 
+## ScreenManager
+
+The `ScreenManager` manages the dimensions of the game screen and the origin and scale of the game scene. It uses the `aspectRatio` property from the engine's configuration object to determine the width and height of the game screen. This ensures that the game is displayed correctly across different devices and screen sizes and the current game scene is appropiately sized and placed.
+
+[back](./README.md#Features)
+
 ## GameObject Architecture and ECS
 
 Thanks to the `Entity` decorator it is possible to instanciate Gameobject with an unique id and add them automatically to the current scene.

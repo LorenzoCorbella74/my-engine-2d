@@ -15,6 +15,20 @@ export class Scene extends Container {
     constructor() {
         super();
         this.engine = MyEngine2D;
+        this.updateSizeAndOrigin();
+    }
+
+    updateSizeAndOrigin() {
+        const { width, height, x, y } = this.engine.screen.calculateSceneDimensionAndOrigin();
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+    }
+
+    updateScale() {
+        const { x, y } = this.engine.screen.scale;
+        this.scale.set(x, y);
     }
 
     /**

@@ -15,6 +15,7 @@ I have always been fascinated by video game engines and my-engine-2d is my effor
 The engine provides a series of abstractions, contained in the `engine` folder, that allow to speed up the creation of a 2D game in WebGL.
 
 - [Asset Manager](./Docs.md#asset-manager)
+- [ScreenManager](./Docs.md#screenmanager)
 - [GameObject Architecture and ECS](./Docs.md#gameobject-architecture-and-ecs)
 - [Sound Manager](./Docs.md#sound-manager)
 - [Scene Manager](./Docs.md#scene-manager)
@@ -31,7 +32,7 @@ The engine provides a series of abstractions, contained in the `engine` folder, 
 - [Game Logic](./Docs.md#game-logic)
 - [UIManager](./Docs.md#uimanager-class)
 
-Due to the fact that the engine is in continuous development, the documentation is not exhaustive and the features are not yet complete. Please be patient and feel free to contribute &#128521;.
+Due to the fact that the engine is in continuous development, **the documentation is not exhaustive and the features are not yet complete**. Please be patient and feel free to contribute &#128521;.
 
 ## Debug &#128301;
 
@@ -88,6 +89,8 @@ export const Config: GameConfig<{ score: number }> = {
   },
   // run gameLogic each n frame
   framesToCheckLogic: [1, 30],
+  // aspectRatio: '16:9' as default. Can be, 16:10, 4:3, 3:2 , 1:1
+  // fullscreen: true (default false)
 };
 ```
 

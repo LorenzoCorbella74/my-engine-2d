@@ -118,7 +118,6 @@ export class UIManager {
         }
     }
 
-
     /**
      * Toggles the visibility of a UI layer.
      * @param name - The name of the UI layer to toggle.
