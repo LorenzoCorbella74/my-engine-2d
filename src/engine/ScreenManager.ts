@@ -31,9 +31,8 @@ export class ScreenManager {
     private updateScale() {
         const { width, height } = this.engine.app.screen;
         if (width !== this.startWidth || height !== this.startHeight) {
-            this.scaleX = Math.ceil(width / this.startWidth);
+            this.scaleX = width / this.startWidth;
             this.scaleY = height / this.startHeight;
-            this.calculateSceneDimensionAndOrigin();
         }
     }
 
