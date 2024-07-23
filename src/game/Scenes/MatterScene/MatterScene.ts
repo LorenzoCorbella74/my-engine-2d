@@ -1,6 +1,6 @@
 import { Player } from '../../entities/player';
-import { Graphics, Sprite, TilingSprite, Text } from "pixi.js";
-import { MyEngine2D } from "../../../engine/Engine";
+import { Graphics, Sprite, TilingSprite, Text, Texture } from "pixi.js";
+
 import { Scene } from "../../../engine/Scene";
 import { GameObject } from '../../../engine/GameObject';
 
@@ -8,6 +8,7 @@ import { GROUP, RigidBodyComponent } from '../../../engine/components/rigidBody'
 import { Obstacle } from './entities/obstacle';
 import { createTestCrosshair } from '../../entities/crosshair';
 import { DefaultComponentNames } from '../../../engine/models/component-names.enum';
+import { Emitter } from '@barvynkoa/particle-emitter';
 
 export class MatterScene extends Scene {
 
@@ -20,6 +21,7 @@ export class MatterScene extends Scene {
     tilingSprite!: TilingSprite;
 
     textCoord!: Text
+    playerEmitter!: Emitter;
 
     constructor() {
         super()
@@ -53,16 +55,40 @@ export class MatterScene extends Scene {
         // crosshair
         this.crosshair = this.engine.crosshair.activateOnCurrentScene(this, crossHair);
 
-       /*  this.textCoord = new Text("Coord:", {
-            fontSize: 12,
-            lineHeight: 20,
-            letterSpacing: 0,
-            fill: 0xffffff,
-            align: "center"
+
+        this.playerEmitter = this.engine.emitter.addEmitter({
+            lifetime: { min: 0.1, max: 30 },
+            frequency: 0.01,
+            spawnChance: 0.1,
+            particlesPerWave: 1,
+            emitterLifetime: 120,
+            maxParticles: 1000,
+            pos: { x: this.player.x, y: this.player.y },
+            autoUpdate: true,
+            behaviors: [
+                {
+                    type: 'spawnShape',
+                    config: { type: 'torus', data: { x: 0, y: 0, radius: 100 } },
+                },
+                { type: 'textureSingle', config: { texture: Texture.WHITE } },
+            ]
+        });
+
+        this.engine.emitter.activate(this.playerEmitter);
+
+        this.textCoord = new Text({
+            text: "x:0 - y:0",
+            style: {
+                fontSize: 14,
+                fill: 0xffffff,
+                lineHeight: 20,
+                letterSpacing: 0,
+                align: "center"
+            }
         });
         this.textCoord.anchor.set(0.5);
         this.textCoord.resolution = 8;
-        this.addChild(this.textCoord) */
+        this.addChild(this.textCoord)
     }
 
 
@@ -87,17 +113,19 @@ export class MatterScene extends Scene {
         // playerSprite.setRotation(angle);
         playerRigidBody.setRotation(angle)
 
-        // const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)!.rigidBody.position
-        // this.textCoord.x = Math.ceil(xp)
-        // this.textCoord.y = Math.ceil(yp) - 32
-        // this.textCoord.text = `x:${Math.ceil(xp)} - y:${Math.ceil(yp)}`
+        const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)!.rigidBody.position
+        this.textCoord.x = Math.ceil(xp)
+        this.textCoord.y = Math.ceil(yp) - 32
+        this.textCoord.text = `x:${Math.ceil(xp)} - y:${Math.ceil(yp)}`
+
+
+        this.playerEmitter.updateSpawnPos(this.player.x, this.player.y);
+
 
         // TODO: test hasLineOfSight
         this.engine.time.runOnFrameNum([30], (frameNumber: number) => {
             this.engine.log(`Player hasLineOfSight: ${frameNumber}`, this.engine.physics.hasLineOfSight(this.player, this.obstacle2))
         })
-
-
 
         if (this.engine.keyboard.iskeyDownOnce('O')) {
             this.engine.log("the 'O' key has been pressed....")

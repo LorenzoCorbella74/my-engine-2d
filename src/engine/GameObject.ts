@@ -32,6 +32,7 @@ export class GameObject extends Container implements IGameConditionEntity, IGame
   constructor(name: string) {
     super()
     this._name = name;
+    this.label = name; // Pixijs V8
     this.engine = MyEngine2D
   }
 

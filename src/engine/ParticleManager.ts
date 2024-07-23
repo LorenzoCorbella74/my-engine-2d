@@ -1,5 +1,5 @@
 import { Application } from 'pixi.js';
-import * as particles from '@pixi/particle-emitter'; // https://github.com/pixijs/particle-emitter
+import * as particles from '@barvynkoa/particle-emitter'; // '@pixi/particle-emitter'; // https://github.com/pixijs/particle-emitter
 
 /**
  * Manages the creation, removal, activation, deactivation, and updating of particle emitters.

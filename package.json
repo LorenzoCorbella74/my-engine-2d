@@ -16,7 +16,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "@pixi/particle-emitter": "^5.0.8",
+    "@barvynkoa/particle-emitter": "^0.0.1",
     "@pixi/sound": "^6.0.0",
     "gsap": "^3.12.5",
     "matter-js": "^0.19.0",
