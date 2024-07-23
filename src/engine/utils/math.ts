@@ -32,7 +32,7 @@ function clamp(x: number, min = 0, max = 1) {
   return Math.max(min, Math.min(x, max));
 }
 
-function distance(a: ObservablePoint<any> | undefined, b: ObservablePoint<any> | undefined) {
+function distance(a: Point | undefined, b: Point | undefined) {
   if (a && b) {
     const dx = a.x - b.x;
     const dy = a.y - b.y;

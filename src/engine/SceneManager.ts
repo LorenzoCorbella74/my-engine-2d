@@ -65,16 +65,16 @@ export class SceneManager {
                         duration,
                         onComplete: () => {
                             this.removeOldScene(this.currentScene.constructor.name, destroyScene);
-                            this.setupNewScene(sceneName);
+                            this.setupNewScene(sceneName, animate, duration);
                         }
                     })
                 } else {
                     this.removeOldScene(this.currentScene.constructor.name, destroyScene);
-                    this.setupNewScene(sceneName);
+                    this.setupNewScene(sceneName, animate, duration);
                 }
             } else {
                 // first run
-                this.setupNewScene(sceneName);
+                this.setupNewScene(sceneName, animate, duration);
             }
         } else {
             MyEngine2D.log(`Scene "${sceneName}" not found`);
