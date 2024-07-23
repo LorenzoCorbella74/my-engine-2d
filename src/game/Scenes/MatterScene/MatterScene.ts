@@ -9,6 +9,7 @@ import { Obstacle } from './entities/obstacle';
 import { createTestCrosshair } from '../../entities/crosshair';
 import { DefaultComponentNames } from '../../../engine/models/component-names.enum';
 import { Emitter } from '@barvynkoa/particle-emitter';
+import { ring } from './ring';
 
 export class MatterScene extends Scene {
 
@@ -57,14 +58,14 @@ export class MatterScene extends Scene {
 
 
         this.playerEmitter = this.engine.emitter.addEmitter({
-            lifetime: { min: 0.1, max: 30 },
+            lifetime: { min: 1, max: 5 },
             frequency: 0.01,
             spawnChance: 0.1,
             particlesPerWave: 1,
             emitterLifetime: 120,
-            maxParticles: 1000,
+            maxParticles: 100,
             pos: { x: this.player.x, y: this.player.y },
-            autoUpdate: true,
+           /*  autoUpdate: true, */
             behaviors: [
                 {
                     type: 'spawnShape',
@@ -119,7 +120,10 @@ export class MatterScene extends Scene {
         this.textCoord.text = `x:${Math.ceil(xp)} - y:${Math.ceil(yp)}`
 
 
-        this.playerEmitter.updateSpawnPos(this.player.x, this.player.y);
+        this.playerEmitter.updateSpawnPos(
+            this.player.x/* - this.engine.camera.container.x */, 
+            this.player.y /* - this.engine.camera.container.y */
+        );
 
 
         // TODO: test hasLineOfSight
@@ -166,7 +170,7 @@ export class MatterScene extends Scene {
             this.engine.crosshair.toggle()
         }
         if (this.engine.keyboard.iskeyDownOnce('N')) {
-
+            this.engine.emitter.addEmitter(ring)
         }
     }
 }

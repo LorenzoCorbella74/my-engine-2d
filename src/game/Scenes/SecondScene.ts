@@ -5,16 +5,14 @@ import { Graphics, Text } from "pixi.js";
 import { Scene } from "../../engine/Scene";
 import { GameObject } from '../../engine/GameObject';
 import { GameEvent, GameEventForGroup } from '../../engine/EventManager';
-import { RigidBodyComponent } from '../../engine/components/rigidBody';
 
 import { Power2 } from 'gsap'
 import { Trigger } from '../../engine/templates/trigger';
-import { DefaultComponentNames } from '../../engine/models/component-names.enum';
 
 export class SecondScene extends Scene {
 
     text!: Text
-    textCoord!: Text
+
 
     player!: GameObject;
     enemy1!: GameObject;
@@ -28,28 +26,17 @@ export class SecondScene extends Scene {
     async init() {
         await this.engine.loader.loadAssetsFolder('group2')
 
-        this.engine.ui.hideUILayer() // test UI
+        this.engine.ui.hideUILayer('Layer1') // test UI
 
         // testing second load...
         const textFormat = this.engine.getAsset('text-format');
         // for text see https://codesandbox.io/s/8q7hs?file=/src/Scene.js:218-312
-        this.text = new Text("Hello, I move with the elapsedTime \n😀", textFormat);
+        this.text = new Text({...textFormat, text: "Hello, I move with the elapsedTime \n😀"});
         this.text.anchor.set(0.5);
         this.text.resolution = 8;
         this.text.x = window.innerWidth / 2;
         this.text.y = window.innerHeight / 2;
         this.addChild(this.text)
-
-        this.textCoord = new Text("Coord:", {
-            fontSize: 12,
-            lineHeight: 20,
-            letterSpacing: 0,
-            fill: 0xffffff,
-            align: "center"
-        });
-        this.textCoord.anchor.set(0.5);
-        this.textCoord.resolution = 8;
-        this.addChild(this.textCoord)
 
         // PLAYER
         this.player = new Player('Player', 'player')
@@ -84,15 +71,6 @@ export class SecondScene extends Scene {
     update(delta: number) {
         this.text.x = Math.sin(this.engine.time.getElapsedTime()) * window.innerWidth / 8;
 
-        // UI
-        const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)!.rigidBody.position
-        this.textCoord.x = Math.ceil(xp)
-        this.textCoord.y = Math.ceil(yp) - 32
-        this.textCoord.text = `x:${this.textCoord.x} - y:${this.textCoord.y + 32}`
-
-        // DEBUG
-        this.textCoord.visible = this.engine.debug
-
         // update gameObjects
         super.update(delta)
 
@@ -117,15 +95,17 @@ export class SecondScene extends Scene {
         if (this.engine.keyboard.iskeyDownOnce('B')) {
             console.time('camera.followPath')
             let graphics = new Graphics()
-                .lineStyle(2, 0xaaaaaa, 1)
-                .moveTo(200, 20)
-                .lineTo(200, 200)
+            .moveTo(200, 20)
+            .lineTo(200, 200)
                 .arcTo(350, 200, 450, 900, 100)
                 .lineTo(200, 500)
                 .lineTo(700, 100)
                 .bezierCurveTo(700, 100, 700, 400, 100, 100)
-                .endFill();
-            this.engine.camera.followPath(graphics, 3, () => {
+                .stroke({width:2, color:0xaaaaaa, alpha: 1});
+                console.log('graphics.getBounds()!', graphics.getBounds(), /* graphics.graphicsData[0].shape.points */) // 
+
+            let path =[200,20, 200,200, 350, 200, 450, 900, 200, 500, 700, 100, 700, 400, 100, 100]
+            this.engine.camera.followPath(path, 3, () => {
                 console.timeEnd('camera.followPath')
                 console.log('camera.followPath done!')
             })

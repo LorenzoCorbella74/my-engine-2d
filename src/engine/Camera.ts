@@ -213,13 +213,13 @@ export default class Camera {
             return { x, y };
         }
         let point = new PIXI.Graphics();
-        
+
         point.fill(0xDE3249);
         point.circle(startPoint.x, startPoint.y, 5);
-        point.stroke({width:0})
+        point.stroke({ width: 0 })
         point.visible = false;
         const bezier = new PIXI.Graphics();
-        bezier.stroke({width: 1, color: 0x000000, alpha:1});
+        bezier.stroke({ width: 1, color: 0x000000, alpha: 1 });
         // punto iniziale
         bezier.x = startPoint.x;
         bezier.y = startPoint.y;
@@ -279,37 +279,33 @@ export default class Camera {
 
 
     // TODO: animate on a path https://codepen.io/GreenSock/pen/JjWqMQG
+    // https://codepen.io/magi-a/pen/MWgdqvX
+    // https://gsap.com/community/forums/topic/32489-align-particles-to-motionpath-in-pixi/
     followPath(
-        graphics: PIXI.Graphics,
+        points: number[],
         duration: number = 1,
         callback: () => void = () => { }
     ) {
-        // this.engine.scenes.currentScene.addChild(graphics);
-        // graphics.visible = true
-// 
-        // let points =  (graphics.getBounds.s.graphicsData[0].shape as PIXI.Polygon).points;  // TODO:
-        // let values = [];
-// 
-        // for (let i = 0; i < points.length; i += 2) {
-        //     values.push({ x: points[i], y: points[i + 1] });
-        // }
-        // console.log(values);
-        // this.resetToDefaultCamera(values[0]);
-// 
-        // gsap.to(this.target, {
-        //     duration,
-        //     motionPath: {
-        //         path: values,
-        //         curviness: 0,
-        //         fromCurrent: false
-        //     },
-        //     onUpdate: () => {
-        //         // graphics.visible = this.engine.debug;
-        //     },
-        //     onComplete: () => {
-        //         callback();
-        //     }
-        // });
+        let values = [];
+        for (let i = 0; i < points.length; i += 2) {
+            values.push({ x: points[i], y: points[i + 1] });
+        }
+        console.log(values);
+        this.resetToDefaultCamera(values[0]);
+        gsap.to(this.target, {
+            duration,
+            motionPath: {
+                path: values,
+                curviness: 0,
+                fromCurrent: false
+            },
+            onUpdate: () => {
+                // graphics.visible = this.engine.debug;
+            },
+            onComplete: () => {
+                callback();
+            }
+        });
     }
 
 }

@@ -4,7 +4,7 @@ I have always been fascinated by video game engines and my-engine-2d is my effor
 
 - [Pixijs v.8.2.5](https://pixijs.com/) for rendering 2D assets,
 - [Pixi Sounds v.6](https://pixijs.io/sound/examples/index.html) for sounds,
-- [Pixi Particle Emitter v.5.0.8](https://github.com/pixijs/particle-emitter) for particles (as of 07/2024 the package is not updated for PixiJs V8 and this [fork](@barvynkoa/particle-emitter) was used to other this [issue](https://github.com/pixijs/particle-emitter/issues/211)),
+- [Pixi Particle Emitter v.5.0.8](https://github.com/pixijs/particle-emitter) for particles (as of 07/2024 the package is not updated for PixiJs V8 and this [fork](@barvynkoa/particle-emitter) was used ([official thread](https://github.com/pixijs/particle-emitter/issues/211)),
 - [GSAP V3 + pixiPlugin](https://greensock.com/docs/v3/Plugins/PixiPlugin) for animations,
 - [Matter-js](https://github.com/liabru/matter-js/tree/master) for physics,
 - [Vite](https://vitejs.dev/) for fast builds and HMR,
@@ -93,5 +93,9 @@ export const Config: GameConfig<{ score: number }> = {
   // fullscreen: true (default false)
 };
 ```
+
+## References:
+- [Migration to V8](https://pixijs.com/8.x/guides/migrations/v8#3-deprecated-features)
+- [optimisation](https://cprimozic.net/notes/posts/pixi-js-optimizations/)
 
 ## [VSC Snippets](./VSC_snippets.md)

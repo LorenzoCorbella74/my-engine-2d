@@ -71,7 +71,8 @@ export class FirstScene extends Scene {
 
 
         // add UI element
-        this.engine.ui.addUIElement(new UITextExample('UItest', 'Testo in UI: XxX'));
+        this.engine.ui.addUILayer('Layer1');
+        this.engine.ui.addUIElement(new UITextExample('UItest', 'Testo in UI: XxX'), 'Layer1');
     }
 
     update(dt: number) {
