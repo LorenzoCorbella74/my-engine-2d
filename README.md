@@ -2,8 +2,8 @@
 
 I have always been fascinated by video game engines and my-engine-2d is my effort in typescript and WebGL to learn how to build one. To not reinvent the wheel the engine is based on the following technologies:
 
-- [Pixijs v.7.2](https://pixijs.com/) for rendering 2D assets,
-- [Pixi Sounds v.5](https://pixijs.io/sound/examples/index.html) for sounds,
+- [Pixijs v.8.2.5](https://pixijs.com/) for rendering 2D assets,
+- [Pixi Sounds v.6](https://pixijs.io/sound/examples/index.html) for sounds,
 - [Pixi Particle Emitter v.5.0.8](https://github.com/pixijs/particle-emitter) for particles,
 - [GSAP V3 + pixiPlugin](https://greensock.com/docs/v3/Plugins/PixiPlugin) for animations,
 - [Matter-js](https://github.com/liabru/matter-js/tree/master) for physics,

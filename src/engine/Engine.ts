@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Texture, Application, ICanvas } from "pixi.js";
+import { Texture } from "pixi.js";
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
@@ -37,7 +37,7 @@ import { ScreenManager } from "./ScreenManager";
 const stats = new Stats();
 
 export class Engine {
-    app!: Application<ICanvas>;
+    app!: PIXI.Application<any>;
     config!: GameConfig<any>;
 
     public loader!: AssetManager;
@@ -76,7 +76,7 @@ export class Engine {
     handleResize() {
         // Aggiorna le dimensioni dell'applicazione in base alle nuove dimensioni della finestra
         this.app.renderer.resize(window.innerWidth, window.innerHeight);
-        if (this.app.view) {
+        if (this.app?.canvas) {
             document.addEventListener('resize', (ev: Event) => {
                 // const { innerWidth, innerHeight } = ev.target as Window;
                 // const scene = this.scenes.currentScene;
@@ -106,14 +106,38 @@ export class Engine {
         return this.repo;
     }
 
-    toggleFullscreen(element: HTMLElement) {
-        if (!document.fullscreenElement) {
-            element.requestFullscreen().catch((error) => {
-                console.error('Fullscreen not available', error);
-            });
-        } else {
-            document.exitFullscreen();
-        }
+
+    /**
+     * 
+     * NOT WORKING
+     * Failed to execute 'requestFullscreen' on 'Element': API can only be initiated by a user gesture.
+     */
+    toggleFullscreen(element: HTMLElement & {
+        webkitRequestFullScreen: Function,
+        mozRequestFullScreen: Function,
+        msRequestFullscreen: Function
+    }
+    ) {
+        element.addEventListener('click', function () {
+            if (element.requestFullscreen) {
+                element.requestFullscreen().catch((error) => {
+                    console.error('Fullscreen not available', error);
+                });
+            } else if (element.webkitRequestFullScreen) {
+                element.webkitRequestFullScreen().catch((error: any) => {
+                    console.error('Fullscreen not available', error);
+                });
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen().catch((error: any) => {
+                    console.error('Fullscreen not available', error);
+                });
+            } else if (element.msRequestFullscreen) {
+                element.msRequestFullscreen().catch((error: any) => {
+                    console.error('Fullscreen not available', error);
+                });
+            }
+        })
+        element.click();
     }
 
     async run(config: GameConfig<any>) {
@@ -127,7 +151,9 @@ export class Engine {
 
         this.config = config;
 
-        this.app = new PIXI.Application({
+        this.app = await new PIXI.Application();
+        
+        await this.app.init({
             // backgroundAlpha: 0, // transparent
             resizeTo: window, // FUNZIONA ?????
             autoStart: false,
@@ -139,10 +165,11 @@ export class Engine {
         });
 
 
-        document.body.appendChild(this.app.view as HTMLCanvasElement);
+        document.body.appendChild(this.app.canvas as HTMLCanvasElement);
 
+        // NOT WORKING TILL USER CLICK ON CANVAS !!!!
         if (config.fullscreen) {
-            this.toggleFullscreen(document.body);
+            this.toggleFullscreen(document.body as any);
         }
 
         if (import.meta.env.DEV) {

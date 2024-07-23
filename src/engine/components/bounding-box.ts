@@ -24,8 +24,8 @@ export class BoundingBoxComponent extends Component {
         if (hasSprite || hasGraphics) {
             this.source = this.entity?.getComponent<SpriteComponent>(DefaultComponentNames.Sprite)?.sprite as Sprite || this.entity?.getComponent<GraphicsComponent>(DefaultComponentNames.Graphics)?.graphics as Graphics
             const { x, y, width, height, anchor } = this.source;
-            this.bb.lineStyle(2.5, 0xFF0000);
-            this.bb.drawRect(x - anchor?.x * width, y - anchor?.y * height, width, height);
+            this.bb.stroke({width:2.5, color: 0xFF0000});
+            this.bb.rect(x - anchor?.x * width, y - anchor?.y * height, width, height);
             this.bb.visible = false; // default hidden
             // console.log(`Bounding Box: width ${this.bb.width}px and height ${this.bb.height}px - x:${this.bb.x}px y:${this.bb.y}px`);
             this.engine.scenes.currentScene.addChild(this.bb);

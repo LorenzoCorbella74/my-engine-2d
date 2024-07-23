@@ -12,9 +12,12 @@ export class Debug2UIManager {
     constructor(app: Application, displayDuration: number = 750) {
         this.displayDuration = displayDuration;
 
-        this.debugText = new Text('', {
-            fontSize: 14,
-            fill: 0xffffff,
+        this.debugText = new Text({
+            text: '',
+            style: {
+                fontSize: 14,
+                fill: 0xffffff,
+            },
         });
         this.debugText.position.set(150, 32);
         app.stage.addChild(this.debugText);

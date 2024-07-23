@@ -24,8 +24,8 @@ export class PhysicManager {
                 element: document.querySelector('#phisic-debugger') as HTMLCanvasElement,
                 engine: this.physicsEngine,
                 options: {
-                    width: this.engine.app.view.width,
-                    height: this.engine.app.view.height,
+                    width: this.engine.app.canvas.width,
+                    height: this.engine.app.canvas.height,
                     wireframes: true,
                     background: 'transparent',
                     wireframeBackground: 'transparent'

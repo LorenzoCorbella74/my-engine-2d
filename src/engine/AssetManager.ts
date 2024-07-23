@@ -67,10 +67,11 @@ export default class AssetManager {
                     if (group === 'i18n') {
                         this.localeManager.availableLocales.push(asset.name);
                     }
-                    Assets.add(asset.name, asset.url);
+                    Assets.add({alias: asset.name, src: asset.url}); 
                 }
             }
-            const resources = await Assets.load(groupAssets.map((asset) => asset.name));
+            let allAssetsButAudio = groupAssets.filter(asset=> asset.category !== 'audio');
+            const resources = await Assets.load(allAssetsButAudio.map((asset) => asset.name));
             console.log(`✅ Loaded assets group ${group}: `, resources);
             // updating global resource cache
             if (group !== 'i18n') {

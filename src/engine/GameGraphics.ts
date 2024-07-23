@@ -5,29 +5,26 @@ export class GameGraphics {
 
     constructor(parent: Container) {
         this.graphic = new Graphics();
-        // parent.addChild(this.graphic);
+        parent.addChild(this.graphic);
     }
 
     drawRectangle(x: number, y: number, width: number, height: number, color: number = 0xFFFFFF, alpha: number = 1) {
-        this.graphic.beginFill(color, alpha);
-        this.graphic.drawRect(x, y, width, height);
-        this.graphic.endFill();
+        this.graphic.rect(x, y, width, height);
+        this.graphic.fill(color);
         this.graphic.position.set(x, y);    
         return this.graphic
     }
 
     drawCircle(x: number, y: number, radius: number, color: number = 0xFFFFFF, alpha: number = 1) {
-        this.graphic.beginFill(color, alpha);
-        this.graphic.drawCircle(x, y, radius);
-        this.graphic.endFill();
+        this.graphic.circle(x, y, radius);
+        this.graphic.fill(color);
         return this.graphic
     }
 
     drawLine(x1: number, y1: number, x2: number, y2: number, color: number = 0xFFFFFF, alpha: number = 1, thickness: number = 1) {
-        this.graphic.lineStyle(thickness, color, alpha);
         this.graphic.moveTo(x1, y1);
         this.graphic.lineTo(x2, y2);
-        this.graphic.lineStyle();
+        this.graphic.stroke({ width: thickness, color, alpha });
         return this.graphic
     }
 

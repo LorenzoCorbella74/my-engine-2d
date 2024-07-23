@@ -27,14 +27,14 @@ export class MatterScene extends Scene {
 
     async init() {
         // background tile
-        const texture = MyEngine2D.getTexture('tile')
-        this.tilingSprite = new TilingSprite(
-            texture,
-            this.engine.app.screen.width * 4, this.engine.app.screen.height * 4,  //this.engine.app.screen.width, this.engine.app.screen.height,
-        );
-        this.tilingSprite.tileScale.x = 0.05 /* texture.width / MyEngine2D.app.screen.width */
-        this.tilingSprite.tileScale.y = 0.05 /* texture.height / MyEngine2D.app.screen.width */
-        this.addChild(this.tilingSprite);
+        // const texture = MyEngine2D.getTexture('tile')
+        // this.tilingSprite = new TilingSprite(
+        //     texture,
+        //     this.engine.app.screen.width * 4, this.engine.app.screen.height * 4,  //this.engine.app.screen.width, this.engine.app.screen.height,
+        // );
+        // this.tilingSprite.tileScale.x = 0.05 /* texture.width / MyEngine2D.app.screen.width */
+        // this.tilingSprite.tileScale.y = 0.05 /* texture.height / MyEngine2D.app.screen.width */
+        // this.addChild(this.tilingSprite);
 
         // test MATTER-JS
         this.obstacle = new Obstacle('Obstacle', 100, 50, 200, 100);
@@ -47,10 +47,13 @@ export class MatterScene extends Scene {
         // focus della camera sul player nella scena corrente
         this.engine.camera.lockTo(this.player, this)
 
-        // crosshair
-        this.crosshair = this.engine.crosshair.activateOnCurrentScene(this, createTestCrosshair(this.engine));
+        let crossHair = createTestCrosshair(this.engine)
+        this.addChild(crossHair);
 
-        this.textCoord = new Text("Coord:", {
+        // crosshair
+        this.crosshair = this.engine.crosshair.activateOnCurrentScene(this, crossHair);
+
+       /*  this.textCoord = new Text("Coord:", {
             fontSize: 12,
             lineHeight: 20,
             letterSpacing: 0,
@@ -59,7 +62,7 @@ export class MatterScene extends Scene {
         });
         this.textCoord.anchor.set(0.5);
         this.textCoord.resolution = 8;
-        this.addChild(this.textCoord)
+        this.addChild(this.textCoord) */
     }
 
 
@@ -67,11 +70,11 @@ export class MatterScene extends Scene {
     update(delta: number) {
 
         // titling sprite as fized background
-        this.tilingSprite.tilePosition.x = -this.x;
-        this.tilingSprite.tilePosition.y = -this.y;
+        // this.tilingSprite.tilePosition.x = -this.x;
+        // this.tilingSprite.tilePosition.y = -this.y;
         // https://github.com/pixijs/pixijs/issues/5235 TILEPRITE ISSUE ???
-        this.tilingSprite.tilePosition.x %= this.tilingSprite.texture.width;
-        this.tilingSprite.tilePosition.y %= this.tilingSprite.texture.height;
+        // this.tilingSprite.tilePosition.x %= this.tilingSprite.texture.width;
+        // this.tilingSprite.tilePosition.y %= this.tilingSprite.texture.height;
 
         // update gameObjects
         super.update(delta)
@@ -84,10 +87,10 @@ export class MatterScene extends Scene {
         // playerSprite.setRotation(angle);
         playerRigidBody.setRotation(angle)
 
-        const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)!.rigidBody.position
-        this.textCoord.x = Math.ceil(xp)
-        this.textCoord.y = Math.ceil(yp) - 32
-        this.textCoord.text = `x:${Math.ceil(xp)} - y:${Math.ceil(yp)}`
+        // const { x: xp, y: yp } = this.player.getComponent<RigidBodyComponent>(DefaultComponentNames.RigidBody)!.rigidBody.position
+        // this.textCoord.x = Math.ceil(xp)
+        // this.textCoord.y = Math.ceil(yp) - 32
+        // this.textCoord.text = `x:${Math.ceil(xp)} - y:${Math.ceil(yp)}`
 
         // TODO: test hasLineOfSight
         this.engine.time.runOnFrameNum([30], (frameNumber: number) => {

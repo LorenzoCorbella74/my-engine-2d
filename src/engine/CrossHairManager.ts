@@ -52,8 +52,8 @@ export class CrossHairManager {
      * Shows the crosshair.
      */
     show() {
-        if (MyEngine2D.app.view.style) {
-            MyEngine2D.app.view.style.cursor = 'none';
+        if (MyEngine2D.app.canvas.style) {
+            MyEngine2D.app.canvas.style.cursor = 'none';
             this.crosshair.visible = true;
         }
     }
@@ -62,9 +62,9 @@ export class CrossHairManager {
      * Hides the crosshair.
      */
     hide() {
-        if (MyEngine2D.app.view.style) {
+        if (MyEngine2D.app.canvas.style) {
             this.crosshair.visible = false;
-            MyEngine2D.app.view.style.cursor = 'default';
+            MyEngine2D.app.canvas.style.cursor = 'default';
         }
     }
 

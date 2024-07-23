@@ -8,8 +8,8 @@ export function createTimelineAnimation(context: Sprite): GSAPTimeline {
 
     // Animazione di scaling, posizione e rotazione usando GSAP
     timeline.to(context, {
-        x: engine.app.view.width / 2,
-        y: engine.app.view.height / 2,
+        x: engine.app.canvas.width / 2,
+        y: engine.app.canvas.height / 2,
         rotation: Math.PI * 2,
         // scaleX: 4,
         // scaleY: 4,

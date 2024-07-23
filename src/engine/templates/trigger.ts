@@ -18,10 +18,9 @@ export class Trigger extends GameObject {
         super('trigger:' + name);
         // set the position in global space
         this.setPosition(rectangle.x, rectangle.y)
-
         let triggerBox = new Graphics();
-        triggerBox.beginFill(0xff0000);
-        triggerBox.drawRect(0, 0, rectangle.width, rectangle.height);
+        triggerBox.rect(0, 0, rectangle.width, rectangle.height);
+        triggerBox.fill(0xff0000);
         triggerBox.visible = false;  // TODO: check!!!
 
         this.addComponent(new GraphicsComponent(this, triggerBox))

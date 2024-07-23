@@ -11,25 +11,24 @@ export class UITextExample extends GameObject {
         this.y = window.innerHeight - 100;
 
         // for text see https://codesandbox.io/s/8q7hs?file=/src/Scene.js:218-312
-        const textFormat = {
-            "fontFamily": "Arial",
-            "dropShadow": true,
-            "dropShadowAlpha": 0.8,
-            "dropShadowAngle": 2.1,
-            "dropShadowBlur": 4,
-            "dropShadowColor": "0x111111",
-            "dropShadowDistance": 5,
-            "fill": [
-                "#ffffff"
-            ],
-            "stroke": "#004620",
-            "fontSize": 32,
-            "fontWeight": "lighter",
-            "lineJoin": "round",
-            "strokeThickness": 12,
-            "align": "center"
-        };
-        const textE = new Text(text, textFormat as TextStyle);
+        const skewStyle = new TextStyle({
+            fontFamily: 'Arial',
+            dropShadow: {
+                alpha: 0.8,
+                angle: 2.1,
+                blur: 4,
+                color: '0x111111',
+                distance: 10,
+            },
+            fill: '#ffffff',
+            stroke: { color: '#004620', width: 12, join: 'round' },
+            fontSize: 60,
+            fontWeight: 'lighter',
+        });
+        const textE = new Text({
+            text: text,
+            style: skewStyle,
+        });;
         textE.anchor.set(0.5);
         textE.resolution = 8;
         this.addComponent(new TextComponent(this, textE, 0, 0));

@@ -64,7 +64,7 @@ export class FirstScene extends Scene {
         console.log(this.engine.getAsset("test"));
 
         // 4.Recover SOUNDS (mp3) from assets cache 
-        // this.engine.sounds.playSound("mp3_test");
+        this.engine.sounds.playSound("mp3_test");
 
         // test Storage
         this.engine.storage.save('test-engine', { lore: 'is ok!' })

@@ -33,8 +33,8 @@ export class PositionalSoundEmitterComponent extends Component {
             this.sound = this.engine.sounds.playSound(soundKey, this.calculateVolume(this.minDistance));
             if (this.sound) {
                 const { x, y } = this.entity;
-                this.soundContainer.lineStyle(2.5, 0xFF0000);
-                this.soundContainer.drawRect(x - 0.5 * 32, y - 0.5 * 32, 32, 32);
+                this.soundContainer.stroke({width:2.5, color:0xFF0000});
+                this.soundContainer.rect(x - 0.5 * 32, y - 0.5 * 32, 32, 32);
                 this.soundContainer.visible = false; // default hidden
             } else {
                 this.engine.error('Sound not found');

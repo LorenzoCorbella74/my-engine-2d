@@ -1,18 +1,18 @@
 {
     "fontFamily": "Arial",
-    "dropShadow": true,
-    "dropShadowAlpha": 0.8,
-    "dropShadowAngle": 2.1,
-    "dropShadowBlur": 4,
-    "dropShadowColor": "0x111111",
-    "dropShadowDistance": 5,
-    "fill": [
-        "#ffffff"
-    ],
-    "stroke": "#004620",
+    "dropShadow": {
+        "alpha": 0.8,
+        "angle": 2.1,
+        "blur": 4,
+        "color": "0x111111",
+        "distance": 10
+    },
+    "fill": "#ffffff",
+    "stroke": {
+        "color": "#004620",
+        "width": 12,
+        "join": "round"
+    },
     "fontSize": 60,
-    "fontWeight": "lighter",
-    "lineJoin": "round",
-    "strokeThickness": 12,
-    "align": "center"
+    "fontWeight": "lighter"
 }

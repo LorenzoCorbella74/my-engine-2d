@@ -1,24 +1,24 @@
-import { Filter, DisplayObject, ColorMatrixFilter } from 'pixi.js';
+import { Container, Filter } from 'pixi.js';
 import gsap from 'gsap';
 
 export class FiltersManager {
 
     // Aggiungi un filtro a un oggetto PIXI
-    addFilter(target: DisplayObject, filter: Filter): void {
+    addFilter(target: Container, filter: Filter): void {
         target.filters = target.filters || [];
-        target.filters.push(filter);
+        target.filters = [filter];      // TODO: 
     }
 
     // Rimuovi un filtro da un oggetto PIXI
-    removeFilter(target: DisplayObject, filter: Filter): void {
+    removeFilter(target: Container, filter: Filter): void {
         if (target.filters) {
-            target.filters = target.filters.filter((existingFilter) => existingFilter !== filter);
+            target.filters = [];    // TODO:
         }
     }
 
     // Anima l'applicazione di un filtro utilizzando GSAP
     animateFilter(
-        target: DisplayObject,
+        target: Container,
         filter: Filter,
         duration: number = 1,
         animationObject: any
