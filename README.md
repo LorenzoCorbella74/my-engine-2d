@@ -42,21 +42,25 @@ To test physics use the 2d visualisation of the matter-js world by running in th
 
 ## Usage &#128296;
 
+Download the [companion cli](https://github.com/LorenzoCorbella74/mye2d-cli) to create a game project, and start adding scenes and gameobject!
 ```bash
-# clone engine with
-> npx degit https://github.com/LorenzoCorbella74/my-engine-2d.git <game-folder>
-
-# install dependancied
-> npm install
+# download the my-engine-2d CLI
+> npm install -g mye2d@0.0.6
+# create a game project in a folder <project_name>
+> mye2D --new <project_name>
 
 # start dev
 > npm run dev
 
 # Build for production
 > npm run build
+
+# add game scenes and gameobject
+> mye2D --scene <scene_name>
+> mye2D  --gameobject <name> <scene_name>
 ```
 
-Before starting the app place your scenes in the `src/Game/Scenes` folder, the basic configuration of the game in `src/Game/Config.ts` and you are good to go!.
+Game scenes are placed in the `src/Game/Scenes` folder, while the basic configuration of the game is in `src/Game/Config.ts`.
 
 ```typescript
 export const Config: GameConfig<{ score: number }> = {
